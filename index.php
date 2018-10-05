@@ -1,1 +1,2 @@
-<h1>One day I will be a writer!</h1>
+<?php get_header(); ?>
+<?php get_footer(); ?>
