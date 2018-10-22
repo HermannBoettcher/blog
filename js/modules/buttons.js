@@ -1,91 +1,157 @@
+'use strict';
+
 (function ($) {
+  $(document).ready(function () {
 
-  $(document).ready(() => {
+    // jQuery reverse
+    $.fn.reverse = [].reverse;
 
-    $(document).on('mouseenter', '.fixed-action-btn', function () {
-
-      const $this = $(this);
+    // Hover behaviour: make sure this doesn't work on .click-to-toggle FABs!
+    $(document).on('mouseenter.fixedActionBtn', '.fixed-action-btn:not(.click-to-toggle)', function () {
+      var $this = $(this);
       openFABMenu($this);
     });
-
-    $(document).on('mouseleave', '.fixed-action-btn', function () {
-
-      const $this = $(this);
+    $(document).on('mouseleave.fixedActionBtn', '.fixed-action-btn:not(.click-to-toggle)', function () {
+      var $this = $(this);
       closeFABMenu($this);
     });
 
-    $(document).on('click', '.fixed-action-btn > a', function () {
-
-      const $this = $(this);
-      const $menu = $this.parent();
-
-      $menu.hasClass('active') ? openFABMenu($menu) : closeFABMenu($menu);
-
+    // Toggle-on-click behaviour.
+    $(document).on('click.fixedActionBtn', '.fixed-action-btn.click-to-toggle > a', function () {
+      var $this = $(this);
+      var $menu = $this.parent();
       if ($menu.hasClass('active')) {
-
         closeFABMenu($menu);
       } else {
-
         openFABMenu($menu);
       }
     });
   });
 
   $.fn.extend({
-    openFAB() {
-
+    openFAB: function openFAB() {
       openFABMenu($(this));
     },
-    closeFAB() {
-
+    closeFAB: function closeFAB() {
       closeFABMenu($(this));
     }
   });
 
-  const openFABMenu = btn => {
+  var openFABMenu = function openFABMenu(btn) {
+    var $this = btn;
+    if ($this.hasClass('active') === false) {
 
-    const fab = btn;
-    if (!fab.hasClass('active')) {
+      // Get direction option
+      var horizontal = $this.hasClass('horizontal');
+      var offsetY = void 0,
+          offsetX = void 0;
 
-      fab.addClass('active');
-      const btnList = document.querySelectorAll('ul .btn-floating');
-      btnList.forEach(el => {
+      if (horizontal === true) {
+        offsetX = 40;
+      } else {
+        offsetY = 40;
+      }
 
-        el.classList.add('shown');
+      $this.addClass('active');
+      $this.find('ul .btn-floating').velocity({
+        scaleY: '.4',
+        scaleX: '.4',
+        translateY: offsetY + 'px',
+        translateX: offsetX + 'px'
+      }, {
+        duration: 0
+      });
+
+      var time = 0;
+      $this.find('ul .btn-floating').reverse().each(function () {
+        $(this).velocity({
+          opacity: '1',
+          scaleX: '1',
+          scaleY: '1',
+          translateY: '0',
+          translateX: '0'
+        }, {
+          duration: 80,
+          delay: time
+        });
+        time += 40;
       });
     }
   };
 
-  const closeFABMenu = btn => {
+  var closeFABMenu = function closeFABMenu(btn) {
+    $this = btn;
+    // Get direction option
+    var horizontal = $this.hasClass('horizontal');
+    var offsetY = void 0,
+        offsetX = void 0;
 
-    const fab = btn;
+    if (horizontal === true) {
+      offsetX = 40;
+    } else {
+      offsetY = 40;
+    }
 
-    fab.removeClass('active');
-    const btnList = document.querySelectorAll('ul .btn-floating');
-    btnList.forEach(el => {
-
-      el.classList.remove('shown');
+    $this.removeClass('active');
+    var time = 0;
+    $this.find('ul .btn-floating').velocity('stop', true);
+    $this.find('ul .btn-floating').velocity({
+      opacity: '0',
+      scaleX: '.4',
+      scaleY: '.4',
+      translateY: offsetY + 'px',
+      translateX: offsetX + 'px'
+    }, {
+      duration: 80
     });
   };
 
-  $('.fixed-action-btn > .btn-floating').on('click', e => {
-
-    e.preventDefault();
-    toggleFABMenu($('.fixed-action-btn'));
-
-    return false;
+  $('.fixed-action-btn').on({
+    click: function click(e) {
+      e.preventDefault();
+      toggleFABMenu($('.fixed-action-btn'));
+      return false;
+    }
   });
 
   function toggleFABMenu(btn) {
 
-    const elem = btn;
+    $this = btn;
+    if ($this.hasClass('active') === false) {
+      $this.addClass('active');
+      $this.find('ul .btn-floating').velocity({
+        scaleY: '.4',
+        scaleX: '.4',
+        translateY: '40px'
+      }, {
+        duration: 0
+      });
 
-    if (elem.hasClass('active')) {
-
-      closeFABMenu(elem);
+      var time = 0;
+      $this.find('ul .btn-floating').reverse().each(function () {
+        $(this).velocity({
+          opacity: '1',
+          scaleX: '1',
+          scaleY: '1',
+          translateY: '0'
+        }, {
+          duration: 80,
+          delay: time
+        });
+        time += 40;
+      });
     } else {
-
-      openFABMenu(elem);
+      $this.removeClass('active');
+      var _time = 0;
+      $this.find('ul .btn-floating').velocity('stop', true);
+      $this.find('ul .btn-floating').velocity({
+        opacity: '0',
+        scaleX: '.4',
+        scaleY: '.4',
+        translateY: '40px'
+      }, {
+        duration: 80
+      });
     }
   }
 })(jQuery);

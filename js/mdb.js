@@ -1,6 +1,6 @@
 /*!
  * Material Design for Bootstrap 4
- * Version: MDB PRO 4.5.11
+ * Version: MDB PRO 4.5.1
  *
  *
  * Copyright: Material Design for Bootstrap
@@ -57,7 +57,6 @@
   jquery.sticky.js
   scrollbar.js
   chips.js
-  ofi.js
   jarallax.js
   jarallax-video.js
   mdb-autocomplete.js
@@ -280,13 +279,13 @@ m.isFunction(t)&&t(null,!0)}),f.queue(a,m.isString(v)?v:"",[])),"stop"===y?(i(a)
 /*!
  * Chart.js
  * http://chartjs.org/
- * Version: 2.7.2
+ * Version: 2.7.1
  *
- * Copyright 2018 Chart.js Contributors
+ * Copyright 2017 Nick Downie
  * Released under the MIT license
  * https://github.com/chartjs/Chart.js/blob/master/LICENSE.md
  */
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Chart = f()}})(function(){var define,module,exports;return (function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Chart = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
 },{}],2:[function(require,module,exports){
 /* MIT license */
@@ -1960,24 +1959,23 @@ Chart.defaults = require(25);
 Chart.Element = require(26);
 Chart.elements = require(40);
 Chart.Interaction = require(28);
-Chart.layouts = require(30);
 Chart.platform = require(48);
-Chart.plugins = require(31);
-Chart.Ticks = require(34);
 
+require(31)(Chart);
 require(22)(Chart);
 require(23)(Chart);
 require(24)(Chart);
+require(30)(Chart);
 require(33)(Chart);
 require(32)(Chart);
 require(35)(Chart);
 
-require(55)(Chart);
-require(53)(Chart);
 require(54)(Chart);
+require(52)(Chart);
+require(53)(Chart);
+require(55)(Chart);
 require(56)(Chart);
 require(57)(Chart);
-require(58)(Chart);
 
 // Controllers must be loaded after elements
 // See Chart.core.datasetController.dataElementType
@@ -1998,12 +1996,15 @@ require(13)(Chart);
 require(14)(Chart);
 
 // Loading built-it plugins
-var plugins = require(49);
-for (var k in plugins) {
-	if (plugins.hasOwnProperty(k)) {
-		Chart.plugins.register(plugins[k]);
-	}
-}
+var plugins = [];
+
+plugins.push(
+	require(49)(Chart),
+	require(50)(Chart),
+	require(51)(Chart)
+);
+
+Chart.plugins.register(plugins);
 
 Chart.platform.initialize();
 
@@ -2015,43 +2016,6 @@ if (typeof window !== 'undefined') {
 // DEPRECATIONS
 
 /**
- * Provided for backward compatibility, not available anymore
- * @namespace Chart.Legend
- * @deprecated since version 2.1.5
- * @todo remove at version 3
- * @private
- */
-Chart.Legend = plugins.legend._element;
-
-/**
- * Provided for backward compatibility, not available anymore
- * @namespace Chart.Title
- * @deprecated since version 2.1.5
- * @todo remove at version 3
- * @private
- */
-Chart.Title = plugins.title._element;
-
-/**
- * Provided for backward compatibility, use Chart.plugins instead
- * @namespace Chart.pluginService
- * @deprecated since version 2.1.5
- * @todo remove at version 3
- * @private
- */
-Chart.pluginService = Chart.plugins;
-
-/**
- * Provided for backward compatibility, inheriting from Chart.PlugingBase has no
- * effect, instead simply create/register plugins via plain JavaScript objects.
- * @interface Chart.PluginBase
- * @deprecated since version 2.5.0
- * @todo remove at version 3
- * @private
- */
-Chart.PluginBase = Chart.Element.extend({});
-
-/**
  * Provided for backward compatibility, use Chart.helpers.canvas instead.
  * @namespace Chart.canvasHelpers
  * @deprecated since version 2.6.0
@@ -2060,16 +2024,7 @@ Chart.PluginBase = Chart.Element.extend({});
  */
 Chart.canvasHelpers = Chart.helpers.canvas;
 
-/**
- * Provided for backward compatibility, use Chart.layouts instead.
- * @namespace Chart.layoutService
- * @deprecated since version 2.8.0
- * @todo remove at version 3
- * @private
- */
-Chart.layoutService = Chart.layouts;
-
-},{"10":10,"11":11,"12":12,"13":13,"14":14,"15":15,"16":16,"17":17,"18":18,"19":19,"20":20,"21":21,"22":22,"23":23,"24":24,"25":25,"26":26,"27":27,"28":28,"29":29,"30":30,"31":31,"32":32,"33":33,"34":34,"35":35,"40":40,"45":45,"48":48,"49":49,"53":53,"54":54,"55":55,"56":56,"57":57,"58":58,"8":8,"9":9}],8:[function(require,module,exports){
+},{"10":10,"11":11,"12":12,"13":13,"14":14,"15":15,"16":16,"17":17,"18":18,"19":19,"20":20,"21":21,"22":22,"23":23,"24":24,"25":25,"26":26,"27":27,"28":28,"29":29,"30":30,"31":31,"32":32,"33":33,"35":35,"40":40,"45":45,"48":48,"49":49,"50":50,"51":51,"52":52,"53":53,"54":54,"55":55,"56":56,"57":57,"8":8,"9":9}],8:[function(require,module,exports){
 'use strict';
 
 module.exports = function(Chart) {
@@ -2254,93 +2209,6 @@ defaults._set('horizontalBar', {
 	}
 });
 
-/**
- * Computes the "optimal" sample size to maintain bars equally sized while preventing overlap.
- * @private
- */
-function computeMinSampleSize(scale, pixels) {
-	var min = scale.isHorizontal() ? scale.width : scale.height;
-	var ticks = scale.getTicks();
-	var prev, curr, i, ilen;
-
-	for (i = 1, ilen = pixels.length; i < ilen; ++i) {
-		min = Math.min(min, pixels[i] - pixels[i - 1]);
-	}
-
-	for (i = 0, ilen = ticks.length; i < ilen; ++i) {
-		curr = scale.getPixelForTick(i);
-		min = i > 0 ? Math.min(min, curr - prev) : min;
-		prev = curr;
-	}
-
-	return min;
-}
-
-/**
- * Computes an "ideal" category based on the absolute bar thickness or, if undefined or null,
- * uses the smallest interval (see computeMinSampleSize) that prevents bar overlapping. This
- * mode currently always generates bars equally sized (until we introduce scriptable options?).
- * @private
- */
-function computeFitCategoryTraits(index, ruler, options) {
-	var thickness = options.barThickness;
-	var count = ruler.stackCount;
-	var curr = ruler.pixels[index];
-	var size, ratio;
-
-	if (helpers.isNullOrUndef(thickness)) {
-		size = ruler.min * options.categoryPercentage;
-		ratio = options.barPercentage;
-	} else {
-		// When bar thickness is enforced, category and bar percentages are ignored.
-		// Note(SB): we could add support for relative bar thickness (e.g. barThickness: '50%')
-		// and deprecate barPercentage since this value is ignored when thickness is absolute.
-		size = thickness * count;
-		ratio = 1;
-	}
-
-	return {
-		chunk: size / count,
-		ratio: ratio,
-		start: curr - (size / 2)
-	};
-}
-
-/**
- * Computes an "optimal" category that globally arranges bars side by side (no gap when
- * percentage options are 1), based on the previous and following categories. This mode
- * generates bars with different widths when data are not evenly spaced.
- * @private
- */
-function computeFlexCategoryTraits(index, ruler, options) {
-	var pixels = ruler.pixels;
-	var curr = pixels[index];
-	var prev = index > 0 ? pixels[index - 1] : null;
-	var next = index < pixels.length - 1 ? pixels[index + 1] : null;
-	var percent = options.categoryPercentage;
-	var start, size;
-
-	if (prev === null) {
-		// first data: its size is double based on the next point or,
-		// if it's also the last data, we use the scale end extremity.
-		prev = curr - (next === null ? ruler.end - curr : next - curr);
-	}
-
-	if (next === null) {
-		// last data: its size is also double based on the previous point.
-		next = curr + curr - prev;
-	}
-
-	start = curr - ((curr - prev) / 2) * percent;
-	size = ((next - prev) / 2) * percent;
-
-	return {
-		chunk: size / ruler.stackCount,
-		ratio: options.barPercentage,
-		start: start
-	};
-}
-
 module.exports = function(Chart) {
 
 	Chart.controllers.bar = Chart.DatasetController.extend({
@@ -2447,12 +2315,10 @@ module.exports = function(Chart) {
 		},
 
 		/**
-		 * Returns the stacks based on groups and bar visibility.
-		 * @param {Number} [last] - The dataset index
-		 * @returns {Array} The stack list
+		 * Returns the effective number of stacks based on groups and bar visibility.
 		 * @private
 		 */
-		_getStacks: function(last) {
+		getStackCount: function(last) {
 			var me = this;
 			var chart = me.chart;
 			var scale = me.getIndexScale();
@@ -2471,33 +2337,15 @@ module.exports = function(Chart) {
 				}
 			}
 
-			return stacks;
-		},
-
-		/**
-		 * Returns the effective number of stacks based on groups and bar visibility.
-		 * @private
-		 */
-		getStackCount: function() {
-			return this._getStacks().length;
+			return stacks.length;
 		},
 
 		/**
 		 * Returns the stack index for the given dataset based on groups and bar visibility.
-		 * @param {Number} [datasetIndex] - The dataset index
-		 * @param {String} [name] - The stack name to find
-		 * @returns {Number} The stack index
 		 * @private
 		 */
-		getStackIndex: function(datasetIndex, name) {
-			var stacks = this._getStacks(datasetIndex);
-			var index = (name !== undefined)
-				? stacks.indexOf(name)
-				: -1; // indexOf returns -1 if element is not present
-
-			return (index === -1)
-				? stacks.length - 1
-				: index;
+		getStackIndex: function(datasetIndex) {
+			return this.getStackCount(datasetIndex) - 1;
 		},
 
 		/**
@@ -2508,22 +2356,17 @@ module.exports = function(Chart) {
 			var scale = me.getIndexScale();
 			var stackCount = me.getStackCount();
 			var datasetIndex = me.index;
+			var pixels = [];
 			var isHorizontal = scale.isHorizontal();
 			var start = isHorizontal ? scale.left : scale.top;
 			var end = start + (isHorizontal ? scale.width : scale.height);
-			var pixels = [];
-			var i, ilen, min;
+			var i, ilen;
 
 			for (i = 0, ilen = me.getMeta().data.length; i < ilen; ++i) {
 				pixels.push(scale.getPixelForValue(null, i, datasetIndex));
 			}
 
-			min = helpers.isNullOrUndef(scale.options.barThickness)
-				? computeMinSampleSize(scale, pixels)
-				: -1;
-
 			return {
-				min: min,
 				pixels: pixels,
 				start: start,
 				end: end,
@@ -2583,21 +2426,50 @@ module.exports = function(Chart) {
 		calculateBarIndexPixels: function(datasetIndex, index, ruler) {
 			var me = this;
 			var options = ruler.scale.options;
-			var range = options.barThickness === 'flex'
-				? computeFlexCategoryTraits(index, ruler, options)
-				: computeFitCategoryTraits(index, ruler, options);
+			var stackIndex = me.getStackIndex(datasetIndex);
+			var pixels = ruler.pixels;
+			var base = pixels[index];
+			var length = pixels.length;
+			var start = ruler.start;
+			var end = ruler.end;
+			var leftSampleSize, rightSampleSize, leftCategorySize, rightCategorySize, fullBarSize, size;
 
-			var stackIndex = me.getStackIndex(datasetIndex, me.getMeta().stack);
-			var center = range.start + (range.chunk * stackIndex) + (range.chunk / 2);
-			var size = Math.min(
-				helpers.valueOrDefault(options.maxBarThickness, Infinity),
-				range.chunk * range.ratio);
+			if (length === 1) {
+				leftSampleSize = base > start ? base - start : end - base;
+				rightSampleSize = base < end ? end - base : base - start;
+			} else {
+				if (index > 0) {
+					leftSampleSize = (base - pixels[index - 1]) / 2;
+					if (index === length - 1) {
+						rightSampleSize = leftSampleSize;
+					}
+				}
+				if (index < length - 1) {
+					rightSampleSize = (pixels[index + 1] - base) / 2;
+					if (index === 0) {
+						leftSampleSize = rightSampleSize;
+					}
+				}
+			}
+
+			leftCategorySize = leftSampleSize * options.categoryPercentage;
+			rightCategorySize = rightSampleSize * options.categoryPercentage;
+			fullBarSize = (leftCategorySize + rightCategorySize) / ruler.stackCount;
+			size = fullBarSize * options.barPercentage;
+
+			size = Math.min(
+				helpers.valueOrDefault(options.barThickness, size),
+				helpers.valueOrDefault(options.maxBarThickness, Infinity));
+
+			base -= leftCategorySize;
+			base += fullBarSize * stackIndex;
+			base += (fullBarSize - size) / 2;
 
 			return {
-				base: center - size / 2,
-				head: center + size / 2,
-				center: center,
-				size: size
+				size: size,
+				base: base,
+				head: base + size,
+				center: base + size / 2
 			};
 		},
 
@@ -3120,7 +2992,7 @@ module.exports = function(Chart) {
 		calculateCircumference: function(value) {
 			var total = this.getMeta().total;
 			if (total > 0 && !isNaN(value)) {
-				return (Math.PI * 2.0) * (Math.abs(value) / total);
+				return (Math.PI * 2.0) * (value / total);
 			}
 			return 0;
 		},
@@ -4098,11 +3970,10 @@ module.exports = function(Chart) {
 var defaults = require(25);
 var helpers = require(45);
 var Interaction = require(28);
-var layouts = require(30);
 var platform = require(48);
-var plugins = require(31);
 
 module.exports = function(Chart) {
+	var plugins = Chart.plugins;
 
 	// Create a dictionary of chart types, to allow for extension of existing types
 	Chart.types = {};
@@ -4141,21 +4012,17 @@ module.exports = function(Chart) {
 	function updateConfig(chart) {
 		var newOptions = chart.options;
 
-		helpers.each(chart.scales, function(scale) {
-			layouts.removeBox(chart, scale);
-		});
+		// Update Scale(s) with options
+		if (newOptions.scale) {
+			chart.scale.options = newOptions.scale;
+		} else if (newOptions.scales) {
+			newOptions.scales.xAxes.concat(newOptions.scales.yAxes).forEach(function(scaleOptions) {
+				chart.scales[scaleOptions.id].options = scaleOptions;
+			});
+		}
 
-		newOptions = helpers.configMerge(
-			Chart.defaults.global,
-			Chart.defaults[chart.config.type],
-			newOptions);
-
-		chart.options = chart.config.options = newOptions;
-		chart.ensureScalesHaveIDs();
-		chart.buildOrUpdateScales();
 		// Tooltip
 		chart.tooltip._options = newOptions.tooltips;
-		chart.tooltip.initialize();
 	}
 
 	function positionIsHorizontal(position) {
@@ -4243,7 +4110,7 @@ module.exports = function(Chart) {
 
 			// Make sure scales have IDs and are built before we build any controllers.
 			me.ensureScalesHaveIDs();
-			me.buildOrUpdateScales();
+			me.buildScales();
 			me.initToolTip();
 
 			// After init plugin notification
@@ -4323,15 +4190,11 @@ module.exports = function(Chart) {
 		/**
 		 * Builds a map of scale ID to scale object for future lookup.
 		 */
-		buildOrUpdateScales: function() {
+		buildScales: function() {
 			var me = this;
 			var options = me.options;
-			var scales = me.scales || {};
+			var scales = me.scales = {};
 			var items = [];
-			var updated = Object.keys(scales).reduce(function(obj, id) {
-				obj[id] = false;
-				return obj;
-			}, {});
 
 			if (options.scales) {
 				items = items.concat(
@@ -4355,35 +4218,24 @@ module.exports = function(Chart) {
 
 			helpers.each(items, function(item) {
 				var scaleOptions = item.options;
-				var id = scaleOptions.id;
 				var scaleType = helpers.valueOrDefault(scaleOptions.type, item.dtype);
+				var scaleClass = Chart.scaleService.getScaleConstructor(scaleType);
+				if (!scaleClass) {
+					return;
+				}
 
 				if (positionIsHorizontal(scaleOptions.position) !== positionIsHorizontal(item.dposition)) {
 					scaleOptions.position = item.dposition;
 				}
 
-				updated[id] = true;
-				var scale = null;
-				if (id in scales && scales[id].type === scaleType) {
-					scale = scales[id];
-					scale.options = scaleOptions;
-					scale.ctx = me.ctx;
-					scale.chart = me;
-				} else {
-					var scaleClass = Chart.scaleService.getScaleConstructor(scaleType);
-					if (!scaleClass) {
-						return;
-					}
-					scale = new scaleClass({
-						id: id,
-						type: scaleType,
-						options: scaleOptions,
-						ctx: me.ctx,
-						chart: me
-					});
-					scales[scale.id] = scale;
-				}
+				var scale = new scaleClass({
+					id: scaleOptions.id,
+					options: scaleOptions,
+					ctx: me.ctx,
+					chart: me
+				});
 
+				scales[scale.id] = scale;
 				scale.mergeTicksOptions();
 
 				// TODO(SB): I think we should be able to remove this custom case (options.scale)
@@ -4393,14 +4245,6 @@ module.exports = function(Chart) {
 					me.scale = scale;
 				}
 			});
-			// clear up discarded scales
-			helpers.each(updated, function(hasUpdated, id) {
-				if (!hasUpdated) {
-					delete scales[id];
-				}
-			});
-
-			me.scales = scales;
 
 			Chart.scaleService.addScalesToLayout(this);
 		},
@@ -4424,7 +4268,6 @@ module.exports = function(Chart) {
 
 				if (meta.controller) {
 					meta.controller.updateIndex(datasetIndex);
-					meta.controller.linkScales();
 				} else {
 					var ControllerClass = Chart.controllers[meta.type];
 					if (ControllerClass === undefined) {
@@ -4471,10 +4314,6 @@ module.exports = function(Chart) {
 
 			updateConfig(me);
 
-			// plugins options references might have change, let's invalidate the cache
-			// https://github.com/chartjs/Chart.js/issues/5111#issuecomment-355934167
-			plugins._invalidate(me);
-
 			if (plugins.notify(me, 'beforeUpdate') === false) {
 				return;
 			}
@@ -4493,11 +4332,9 @@ module.exports = function(Chart) {
 			me.updateLayout();
 
 			// Can only reset the new controllers after the scales have been updated
-			if (me.options.animation && me.options.animation.duration) {
-				helpers.each(newControllers, function(controller) {
-					controller.reset();
-				});
-			}
+			helpers.each(newControllers, function(controller) {
+				controller.reset();
+			});
 
 			me.updateDatasets();
 
@@ -4535,7 +4372,7 @@ module.exports = function(Chart) {
 				return;
 			}
 
-			layouts.update(this, this.width, this.height);
+			Chart.layoutService.update(this, this.width, this.height);
 
 			/**
 			 * Provided for backward compatibility, use `afterLayout` instead.
@@ -4949,15 +4786,7 @@ module.exports = function(Chart) {
 			me._bufferedRequest = null;
 
 			var changed = me.handleEvent(e);
-			// for smooth tooltip animations issue #4989
-			// the tooltip should be the source of change
-			// Animation check workaround:
-			// tooltip._start will be null when tooltip isn't animating
-			if (tooltip) {
-				changed = tooltip._start
-					? tooltip.handleEvent(e)
-					: changed | tooltip.handleEvent(e);
-			}
+			changed |= tooltip && tooltip.handleEvent(e);
 
 			plugins.notify(me, 'afterEvent', [e]);
 
@@ -5041,7 +4870,7 @@ module.exports = function(Chart) {
 	Chart.Controller = Chart;
 };
 
-},{"25":25,"28":28,"30":30,"31":31,"45":45,"48":48}],24:[function(require,module,exports){
+},{"25":25,"28":28,"45":45,"48":48}],24:[function(require,module,exports){
 'use strict';
 
 var helpers = require(45);
@@ -5155,10 +4984,10 @@ module.exports = function(Chart) {
 			var meta = me.getMeta();
 			var dataset = me.getDataset();
 
-			if (meta.xAxisID === null || !(meta.xAxisID in me.chart.scales)) {
+			if (meta.xAxisID === null) {
 				meta.xAxisID = dataset.xAxisID || me.chart.options.scales.xAxes[0].id;
 			}
-			if (meta.yAxisID === null || !(meta.yAxisID in me.chart.scales)) {
+			if (meta.yAxisID === null) {
 				meta.yAxisID = dataset.yAxisID || me.chart.options.scales.yAxes[0].id;
 			}
 		},
@@ -5666,13 +5495,7 @@ module.exports = function(Chart) {
 			return Math.log10(x);
 		} :
 		function(x) {
-			var exponent = Math.log(x) * Math.LOG10E; // Math.LOG10E = 1 / Math.LN10.
-			// Check for whole powers of 10,
-			// which due to floating point rounding error should be corrected.
-			var powerOf10 = Math.round(exponent);
-			var isPowerOf10 = x === Math.pow(10, powerOf10);
-
-			return isPowerOf10 ? powerOf10 : exponent;
+			return Math.log(x) / Math.LN10;
 		};
 	helpers.toRadians = function(degrees) {
 		return degrees * (Math.PI / 180);
@@ -6025,10 +5848,8 @@ module.exports = function(Chart) {
 		// If no style has been set on the canvas, the render size is used as display size,
 		// making the chart visually bigger, so let's enforce it to the "correct" values.
 		// See https://github.com/chartjs/Chart.js/issues/3575
-		if (!canvas.style.height && !canvas.style.width) {
-			canvas.style.height = height + 'px';
-			canvas.style.width = width + 'px';
-		}
+		canvas.style.height = height + 'px';
+		canvas.style.width = width + 'px';
 	};
 	// -- Canvas methods
 	helpers.fontString = function(pixelSize, fontStyle, fontFamily) {
@@ -6505,807 +6326,823 @@ module.exports = function() {
 
 var helpers = require(45);
 
-function filterByPosition(array, position) {
-	return helpers.where(array, function(v) {
-		return v.position === position;
-	});
-}
+module.exports = function(Chart) {
 
-function sortByWeight(array, reverse) {
-	array.forEach(function(v, i) {
-		v._tmpIndex_ = i;
-		return v;
-	});
-	array.sort(function(a, b) {
-		var v0 = reverse ? b : a;
-		var v1 = reverse ? a : b;
-		return v0.weight === v1.weight ?
-			v0._tmpIndex_ - v1._tmpIndex_ :
-			v0.weight - v1.weight;
-	});
-	array.forEach(function(v) {
-		delete v._tmpIndex_;
-	});
-}
-
-/**
- * @interface ILayoutItem
- * @prop {String} position - The position of the item in the chart layout. Possible values are
- * 'left', 'top', 'right', 'bottom', and 'chartArea'
- * @prop {Number} weight - The weight used to sort the item. Higher weights are further away from the chart area
- * @prop {Boolean} fullWidth - if true, and the item is horizontal, then push vertical boxes down
- * @prop {Function} isHorizontal - returns true if the layout item is horizontal (ie. top or bottom)
- * @prop {Function} update - Takes two parameters: width and height. Returns size of item
- * @prop {Function} getPadding -  Returns an object with padding on the edges
- * @prop {Number} width - Width of item. Must be valid after update()
- * @prop {Number} height - Height of item. Must be valid after update()
- * @prop {Number} left - Left edge of the item. Set by layout system and cannot be used in update
- * @prop {Number} top - Top edge of the item. Set by layout system and cannot be used in update
- * @prop {Number} right - Right edge of the item. Set by layout system and cannot be used in update
- * @prop {Number} bottom - Bottom edge of the item. Set by layout system and cannot be used in update
- */
-
-// The layout service is very self explanatory.  It's responsible for the layout within a chart.
-// Scales, Legends and Plugins all rely on the layout service and can easily register to be placed anywhere they need
-// It is this service's responsibility of carrying out that layout.
-module.exports = {
-	defaults: {},
-
-	/**
-	 * Register a box to a chart.
-	 * A box is simply a reference to an object that requires layout. eg. Scales, Legend, Title.
-	 * @param {Chart} chart - the chart to use
-	 * @param {ILayoutItem} item - the item to add to be layed out
-	 */
-	addBox: function(chart, item) {
-		if (!chart.boxes) {
-			chart.boxes = [];
-		}
-
-		// initialize item with default values
-		item.fullWidth = item.fullWidth || false;
-		item.position = item.position || 'top';
-		item.weight = item.weight || 0;
-
-		chart.boxes.push(item);
-	},
-
-	/**
-	 * Remove a layoutItem from a chart
-	 * @param {Chart} chart - the chart to remove the box from
-	 * @param {Object} layoutItem - the item to remove from the layout
-	 */
-	removeBox: function(chart, layoutItem) {
-		var index = chart.boxes ? chart.boxes.indexOf(layoutItem) : -1;
-		if (index !== -1) {
-			chart.boxes.splice(index, 1);
-		}
-	},
-
-	/**
-	 * Sets (or updates) options on the given `item`.
-	 * @param {Chart} chart - the chart in which the item lives (or will be added to)
-	 * @param {Object} item - the item to configure with the given options
-	 * @param {Object} options - the new item options.
-	 */
-	configure: function(chart, item, options) {
-		var props = ['fullWidth', 'position', 'weight'];
-		var ilen = props.length;
-		var i = 0;
-		var prop;
-
-		for (; i < ilen; ++i) {
-			prop = props[i];
-			if (options.hasOwnProperty(prop)) {
-				item[prop] = options[prop];
-			}
-		}
-	},
-
-	/**
-	 * Fits boxes of the given chart into the given size by having each box measure itself
-	 * then running a fitting algorithm
-	 * @param {Chart} chart - the chart
-	 * @param {Number} width - the width to fit into
-	 * @param {Number} height - the height to fit into
-	 */
-	update: function(chart, width, height) {
-		if (!chart) {
-			return;
-		}
-
-		var layoutOptions = chart.options.layout || {};
-		var padding = helpers.options.toPadding(layoutOptions.padding);
-		var leftPadding = padding.left;
-		var rightPadding = padding.right;
-		var topPadding = padding.top;
-		var bottomPadding = padding.bottom;
-
-		var leftBoxes = filterByPosition(chart.boxes, 'left');
-		var rightBoxes = filterByPosition(chart.boxes, 'right');
-		var topBoxes = filterByPosition(chart.boxes, 'top');
-		var bottomBoxes = filterByPosition(chart.boxes, 'bottom');
-		var chartAreaBoxes = filterByPosition(chart.boxes, 'chartArea');
-
-		// Sort boxes by weight. A higher weight is further away from the chart area
-		sortByWeight(leftBoxes, true);
-		sortByWeight(rightBoxes, false);
-		sortByWeight(topBoxes, true);
-		sortByWeight(bottomBoxes, false);
-
-		// Essentially we now have any number of boxes on each of the 4 sides.
-		// Our canvas looks like the following.
-		// The areas L1 and L2 are the left axes. R1 is the right axis, T1 is the top axis and
-		// B1 is the bottom axis
-		// There are also 4 quadrant-like locations (left to right instead of clockwise) reserved for chart overlays
-		// These locations are single-box locations only, when trying to register a chartArea location that is already taken,
-		// an error will be thrown.
-		//
-		// |----------------------------------------------------|
-		// |                  T1 (Full Width)                   |
-		// |----------------------------------------------------|
-		// |    |    |                 T2                  |    |
-		// |    |----|-------------------------------------|----|
-		// |    |    | C1 |                           | C2 |    |
-		// |    |    |----|                           |----|    |
-		// |    |    |                                     |    |
-		// | L1 | L2 |           ChartArea (C0)            | R1 |
-		// |    |    |                                     |    |
-		// |    |    |----|                           |----|    |
-		// |    |    | C3 |                           | C4 |    |
-		// |    |----|-------------------------------------|----|
-		// |    |    |                 B1                  |    |
-		// |----------------------------------------------------|
-		// |                  B2 (Full Width)                   |
-		// |----------------------------------------------------|
-		//
-		// What we do to find the best sizing, we do the following
-		// 1. Determine the minimum size of the chart area.
-		// 2. Split the remaining width equally between each vertical axis
-		// 3. Split the remaining height equally between each horizontal axis
-		// 4. Give each layout the maximum size it can be. The layout will return it's minimum size
-		// 5. Adjust the sizes of each axis based on it's minimum reported size.
-		// 6. Refit each axis
-		// 7. Position each axis in the final location
-		// 8. Tell the chart the final location of the chart area
-		// 9. Tell any axes that overlay the chart area the positions of the chart area
-
-		// Step 1
-		var chartWidth = width - leftPadding - rightPadding;
-		var chartHeight = height - topPadding - bottomPadding;
-		var chartAreaWidth = chartWidth / 2; // min 50%
-		var chartAreaHeight = chartHeight / 2; // min 50%
-
-		// Step 2
-		var verticalBoxWidth = (width - chartAreaWidth) / (leftBoxes.length + rightBoxes.length);
-
-		// Step 3
-		var horizontalBoxHeight = (height - chartAreaHeight) / (topBoxes.length + bottomBoxes.length);
-
-		// Step 4
-		var maxChartAreaWidth = chartWidth;
-		var maxChartAreaHeight = chartHeight;
-		var minBoxSizes = [];
-
-		function getMinimumBoxSize(box) {
-			var minSize;
-			var isHorizontal = box.isHorizontal();
-
-			if (isHorizontal) {
-				minSize = box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, horizontalBoxHeight);
-				maxChartAreaHeight -= minSize.height;
-			} else {
-				minSize = box.update(verticalBoxWidth, maxChartAreaHeight);
-				maxChartAreaWidth -= minSize.width;
-			}
-
-			minBoxSizes.push({
-				horizontal: isHorizontal,
-				minSize: minSize,
-				box: box,
-			});
-		}
-
-		helpers.each(leftBoxes.concat(rightBoxes, topBoxes, bottomBoxes), getMinimumBoxSize);
-
-		// If a horizontal box has padding, we move the left boxes over to avoid ugly charts (see issue #2478)
-		var maxHorizontalLeftPadding = 0;
-		var maxHorizontalRightPadding = 0;
-		var maxVerticalTopPadding = 0;
-		var maxVerticalBottomPadding = 0;
-
-		helpers.each(topBoxes.concat(bottomBoxes), function(horizontalBox) {
-			if (horizontalBox.getPadding) {
-				var boxPadding = horizontalBox.getPadding();
-				maxHorizontalLeftPadding = Math.max(maxHorizontalLeftPadding, boxPadding.left);
-				maxHorizontalRightPadding = Math.max(maxHorizontalRightPadding, boxPadding.right);
-			}
+	function filterByPosition(array, position) {
+		return helpers.where(array, function(v) {
+			return v.position === position;
 		});
+	}
 
-		helpers.each(leftBoxes.concat(rightBoxes), function(verticalBox) {
-			if (verticalBox.getPadding) {
-				var boxPadding = verticalBox.getPadding();
-				maxVerticalTopPadding = Math.max(maxVerticalTopPadding, boxPadding.top);
-				maxVerticalBottomPadding = Math.max(maxVerticalBottomPadding, boxPadding.bottom);
-			}
+	function sortByWeight(array, reverse) {
+		array.forEach(function(v, i) {
+			v._tmpIndex_ = i;
+			return v;
 		});
+		array.sort(function(a, b) {
+			var v0 = reverse ? b : a;
+			var v1 = reverse ? a : b;
+			return v0.weight === v1.weight ?
+				v0._tmpIndex_ - v1._tmpIndex_ :
+				v0.weight - v1.weight;
+		});
+		array.forEach(function(v) {
+			delete v._tmpIndex_;
+		});
+	}
 
-		// At this point, maxChartAreaHeight and maxChartAreaWidth are the size the chart area could
-		// be if the axes are drawn at their minimum sizes.
-		// Steps 5 & 6
-		var totalLeftBoxesWidth = leftPadding;
-		var totalRightBoxesWidth = rightPadding;
-		var totalTopBoxesHeight = topPadding;
-		var totalBottomBoxesHeight = bottomPadding;
+	/**
+	 * @interface ILayoutItem
+	 * @prop {String} position - The position of the item in the chart layout. Possible values are
+	 * 'left', 'top', 'right', 'bottom', and 'chartArea'
+	 * @prop {Number} weight - The weight used to sort the item. Higher weights are further away from the chart area
+	 * @prop {Boolean} fullWidth - if true, and the item is horizontal, then push vertical boxes down
+	 * @prop {Function} isHorizontal - returns true if the layout item is horizontal (ie. top or bottom)
+	 * @prop {Function} update - Takes two parameters: width and height. Returns size of item
+	 * @prop {Function} getPadding -  Returns an object with padding on the edges
+	 * @prop {Number} width - Width of item. Must be valid after update()
+	 * @prop {Number} height - Height of item. Must be valid after update()
+	 * @prop {Number} left - Left edge of the item. Set by layout system and cannot be used in update
+	 * @prop {Number} top - Top edge of the item. Set by layout system and cannot be used in update
+	 * @prop {Number} right - Right edge of the item. Set by layout system and cannot be used in update
+	 * @prop {Number} bottom - Bottom edge of the item. Set by layout system and cannot be used in update
+	 */
 
-		// Function to fit a box
-		function fitBox(box) {
-			var minBoxSize = helpers.findNextWhere(minBoxSizes, function(minBox) {
-				return minBox.box === box;
-			});
+	// The layout service is very self explanatory.  It's responsible for the layout within a chart.
+	// Scales, Legends and Plugins all rely on the layout service and can easily register to be placed anywhere they need
+	// It is this service's responsibility of carrying out that layout.
+	Chart.layoutService = {
+		defaults: {},
 
-			if (minBoxSize) {
-				if (box.isHorizontal()) {
-					var scaleMargin = {
-						left: Math.max(totalLeftBoxesWidth, maxHorizontalLeftPadding),
-						right: Math.max(totalRightBoxesWidth, maxHorizontalRightPadding),
-						top: 0,
-						bottom: 0
-					};
+		/**
+		 * Register a box to a chart.
+		 * A box is simply a reference to an object that requires layout. eg. Scales, Legend, Title.
+		 * @param {Chart} chart - the chart to use
+		 * @param {ILayoutItem} item - the item to add to be layed out
+		 */
+		addBox: function(chart, item) {
+			if (!chart.boxes) {
+				chart.boxes = [];
+			}
 
-					// Don't use min size here because of label rotation. When the labels are rotated, their rotation highly depends
-					// on the margin. Sometimes they need to increase in size slightly
-					box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, chartHeight / 2, scaleMargin);
-				} else {
-					box.update(minBoxSize.minSize.width, maxChartAreaHeight);
+			// initialize item with default values
+			item.fullWidth = item.fullWidth || false;
+			item.position = item.position || 'top';
+			item.weight = item.weight || 0;
+
+			chart.boxes.push(item);
+		},
+
+		/**
+		 * Remove a layoutItem from a chart
+		 * @param {Chart} chart - the chart to remove the box from
+		 * @param {Object} layoutItem - the item to remove from the layout
+		 */
+		removeBox: function(chart, layoutItem) {
+			var index = chart.boxes ? chart.boxes.indexOf(layoutItem) : -1;
+			if (index !== -1) {
+				chart.boxes.splice(index, 1);
+			}
+		},
+
+		/**
+		 * Sets (or updates) options on the given `item`.
+		 * @param {Chart} chart - the chart in which the item lives (or will be added to)
+		 * @param {Object} item - the item to configure with the given options
+		 * @param {Object} options - the new item options.
+		 */
+		configure: function(chart, item, options) {
+			var props = ['fullWidth', 'position', 'weight'];
+			var ilen = props.length;
+			var i = 0;
+			var prop;
+
+			for (; i < ilen; ++i) {
+				prop = props[i];
+				if (options.hasOwnProperty(prop)) {
+					item[prop] = options[prop];
 				}
 			}
-		}
+		},
 
-		// Update, and calculate the left and right margins for the horizontal boxes
-		helpers.each(leftBoxes.concat(rightBoxes), fitBox);
+		/**
+		 * Fits boxes of the given chart into the given size by having each box measure itself
+		 * then running a fitting algorithm
+		 * @param {Chart} chart - the chart
+		 * @param {Number} width - the width to fit into
+		 * @param {Number} height - the height to fit into
+		 */
+		update: function(chart, width, height) {
+			if (!chart) {
+				return;
+			}
 
-		helpers.each(leftBoxes, function(box) {
-			totalLeftBoxesWidth += box.width;
-		});
+			var layoutOptions = chart.options.layout || {};
+			var padding = helpers.options.toPadding(layoutOptions.padding);
+			var leftPadding = padding.left;
+			var rightPadding = padding.right;
+			var topPadding = padding.top;
+			var bottomPadding = padding.bottom;
 
-		helpers.each(rightBoxes, function(box) {
-			totalRightBoxesWidth += box.width;
-		});
+			var leftBoxes = filterByPosition(chart.boxes, 'left');
+			var rightBoxes = filterByPosition(chart.boxes, 'right');
+			var topBoxes = filterByPosition(chart.boxes, 'top');
+			var bottomBoxes = filterByPosition(chart.boxes, 'bottom');
+			var chartAreaBoxes = filterByPosition(chart.boxes, 'chartArea');
 
-		// Set the Left and Right margins for the horizontal boxes
-		helpers.each(topBoxes.concat(bottomBoxes), fitBox);
+			// Sort boxes by weight. A higher weight is further away from the chart area
+			sortByWeight(leftBoxes, true);
+			sortByWeight(rightBoxes, false);
+			sortByWeight(topBoxes, true);
+			sortByWeight(bottomBoxes, false);
 
-		// Figure out how much margin is on the top and bottom of the vertical boxes
-		helpers.each(topBoxes, function(box) {
-			totalTopBoxesHeight += box.height;
-		});
+			// Essentially we now have any number of boxes on each of the 4 sides.
+			// Our canvas looks like the following.
+			// The areas L1 and L2 are the left axes. R1 is the right axis, T1 is the top axis and
+			// B1 is the bottom axis
+			// There are also 4 quadrant-like locations (left to right instead of clockwise) reserved for chart overlays
+			// These locations are single-box locations only, when trying to register a chartArea location that is already taken,
+			// an error will be thrown.
+			//
+			// |----------------------------------------------------|
+			// |                  T1 (Full Width)                   |
+			// |----------------------------------------------------|
+			// |    |    |                 T2                  |    |
+			// |    |----|-------------------------------------|----|
+			// |    |    | C1 |                           | C2 |    |
+			// |    |    |----|                           |----|    |
+			// |    |    |                                     |    |
+			// | L1 | L2 |           ChartArea (C0)            | R1 |
+			// |    |    |                                     |    |
+			// |    |    |----|                           |----|    |
+			// |    |    | C3 |                           | C4 |    |
+			// |    |----|-------------------------------------|----|
+			// |    |    |                 B1                  |    |
+			// |----------------------------------------------------|
+			// |                  B2 (Full Width)                   |
+			// |----------------------------------------------------|
+			//
+			// What we do to find the best sizing, we do the following
+			// 1. Determine the minimum size of the chart area.
+			// 2. Split the remaining width equally between each vertical axis
+			// 3. Split the remaining height equally between each horizontal axis
+			// 4. Give each layout the maximum size it can be. The layout will return it's minimum size
+			// 5. Adjust the sizes of each axis based on it's minimum reported size.
+			// 6. Refit each axis
+			// 7. Position each axis in the final location
+			// 8. Tell the chart the final location of the chart area
+			// 9. Tell any axes that overlay the chart area the positions of the chart area
 
-		helpers.each(bottomBoxes, function(box) {
-			totalBottomBoxesHeight += box.height;
-		});
+			// Step 1
+			var chartWidth = width - leftPadding - rightPadding;
+			var chartHeight = height - topPadding - bottomPadding;
+			var chartAreaWidth = chartWidth / 2; // min 50%
+			var chartAreaHeight = chartHeight / 2; // min 50%
 
-		function finalFitVerticalBox(box) {
-			var minBoxSize = helpers.findNextWhere(minBoxSizes, function(minSize) {
-				return minSize.box === box;
+			// Step 2
+			var verticalBoxWidth = (width - chartAreaWidth) / (leftBoxes.length + rightBoxes.length);
+
+			// Step 3
+			var horizontalBoxHeight = (height - chartAreaHeight) / (topBoxes.length + bottomBoxes.length);
+
+			// Step 4
+			var maxChartAreaWidth = chartWidth;
+			var maxChartAreaHeight = chartHeight;
+			var minBoxSizes = [];
+
+			function getMinimumBoxSize(box) {
+				var minSize;
+				var isHorizontal = box.isHorizontal();
+
+				if (isHorizontal) {
+					minSize = box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, horizontalBoxHeight);
+					maxChartAreaHeight -= minSize.height;
+				} else {
+					minSize = box.update(verticalBoxWidth, chartAreaHeight);
+					maxChartAreaWidth -= minSize.width;
+				}
+
+				minBoxSizes.push({
+					horizontal: isHorizontal,
+					minSize: minSize,
+					box: box,
+				});
+			}
+
+			helpers.each(leftBoxes.concat(rightBoxes, topBoxes, bottomBoxes), getMinimumBoxSize);
+
+			// If a horizontal box has padding, we move the left boxes over to avoid ugly charts (see issue #2478)
+			var maxHorizontalLeftPadding = 0;
+			var maxHorizontalRightPadding = 0;
+			var maxVerticalTopPadding = 0;
+			var maxVerticalBottomPadding = 0;
+
+			helpers.each(topBoxes.concat(bottomBoxes), function(horizontalBox) {
+				if (horizontalBox.getPadding) {
+					var boxPadding = horizontalBox.getPadding();
+					maxHorizontalLeftPadding = Math.max(maxHorizontalLeftPadding, boxPadding.left);
+					maxHorizontalRightPadding = Math.max(maxHorizontalRightPadding, boxPadding.right);
+				}
 			});
 
-			var scaleMargin = {
-				left: 0,
-				right: 0,
-				top: totalTopBoxesHeight,
-				bottom: totalBottomBoxesHeight
-			};
+			helpers.each(leftBoxes.concat(rightBoxes), function(verticalBox) {
+				if (verticalBox.getPadding) {
+					var boxPadding = verticalBox.getPadding();
+					maxVerticalTopPadding = Math.max(maxVerticalTopPadding, boxPadding.top);
+					maxVerticalBottomPadding = Math.max(maxVerticalBottomPadding, boxPadding.bottom);
+				}
+			});
 
-			if (minBoxSize) {
-				box.update(minBoxSize.minSize.width, maxChartAreaHeight, scaleMargin);
+			// At this point, maxChartAreaHeight and maxChartAreaWidth are the size the chart area could
+			// be if the axes are drawn at their minimum sizes.
+			// Steps 5 & 6
+			var totalLeftBoxesWidth = leftPadding;
+			var totalRightBoxesWidth = rightPadding;
+			var totalTopBoxesHeight = topPadding;
+			var totalBottomBoxesHeight = bottomPadding;
+
+			// Function to fit a box
+			function fitBox(box) {
+				var minBoxSize = helpers.findNextWhere(minBoxSizes, function(minBox) {
+					return minBox.box === box;
+				});
+
+				if (minBoxSize) {
+					if (box.isHorizontal()) {
+						var scaleMargin = {
+							left: Math.max(totalLeftBoxesWidth, maxHorizontalLeftPadding),
+							right: Math.max(totalRightBoxesWidth, maxHorizontalRightPadding),
+							top: 0,
+							bottom: 0
+						};
+
+						// Don't use min size here because of label rotation. When the labels are rotated, their rotation highly depends
+						// on the margin. Sometimes they need to increase in size slightly
+						box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, chartHeight / 2, scaleMargin);
+					} else {
+						box.update(minBoxSize.minSize.width, maxChartAreaHeight);
+					}
+				}
 			}
-		}
 
-		// Let the left layout know the final margin
-		helpers.each(leftBoxes.concat(rightBoxes), finalFitVerticalBox);
+			// Update, and calculate the left and right margins for the horizontal boxes
+			helpers.each(leftBoxes.concat(rightBoxes), fitBox);
 
-		// Recalculate because the size of each layout might have changed slightly due to the margins (label rotation for instance)
-		totalLeftBoxesWidth = leftPadding;
-		totalRightBoxesWidth = rightPadding;
-		totalTopBoxesHeight = topPadding;
-		totalBottomBoxesHeight = bottomPadding;
-
-		helpers.each(leftBoxes, function(box) {
-			totalLeftBoxesWidth += box.width;
-		});
-
-		helpers.each(rightBoxes, function(box) {
-			totalRightBoxesWidth += box.width;
-		});
-
-		helpers.each(topBoxes, function(box) {
-			totalTopBoxesHeight += box.height;
-		});
-		helpers.each(bottomBoxes, function(box) {
-			totalBottomBoxesHeight += box.height;
-		});
-
-		// We may be adding some padding to account for rotated x axis labels
-		var leftPaddingAddition = Math.max(maxHorizontalLeftPadding - totalLeftBoxesWidth, 0);
-		totalLeftBoxesWidth += leftPaddingAddition;
-		totalRightBoxesWidth += Math.max(maxHorizontalRightPadding - totalRightBoxesWidth, 0);
-
-		var topPaddingAddition = Math.max(maxVerticalTopPadding - totalTopBoxesHeight, 0);
-		totalTopBoxesHeight += topPaddingAddition;
-		totalBottomBoxesHeight += Math.max(maxVerticalBottomPadding - totalBottomBoxesHeight, 0);
-
-		// Figure out if our chart area changed. This would occur if the dataset layout label rotation
-		// changed due to the application of the margins in step 6. Since we can only get bigger, this is safe to do
-		// without calling `fit` again
-		var newMaxChartAreaHeight = height - totalTopBoxesHeight - totalBottomBoxesHeight;
-		var newMaxChartAreaWidth = width - totalLeftBoxesWidth - totalRightBoxesWidth;
-
-		if (newMaxChartAreaWidth !== maxChartAreaWidth || newMaxChartAreaHeight !== maxChartAreaHeight) {
 			helpers.each(leftBoxes, function(box) {
-				box.height = newMaxChartAreaHeight;
+				totalLeftBoxesWidth += box.width;
 			});
 
 			helpers.each(rightBoxes, function(box) {
-				box.height = newMaxChartAreaHeight;
+				totalRightBoxesWidth += box.width;
 			});
 
+			// Set the Left and Right margins for the horizontal boxes
+			helpers.each(topBoxes.concat(bottomBoxes), fitBox);
+
+			// Figure out how much margin is on the top and bottom of the vertical boxes
 			helpers.each(topBoxes, function(box) {
-				if (!box.fullWidth) {
-					box.width = newMaxChartAreaWidth;
-				}
+				totalTopBoxesHeight += box.height;
 			});
 
 			helpers.each(bottomBoxes, function(box) {
-				if (!box.fullWidth) {
-					box.width = newMaxChartAreaWidth;
-				}
+				totalBottomBoxesHeight += box.height;
 			});
 
-			maxChartAreaHeight = newMaxChartAreaHeight;
-			maxChartAreaWidth = newMaxChartAreaWidth;
-		}
+			function finalFitVerticalBox(box) {
+				var minBoxSize = helpers.findNextWhere(minBoxSizes, function(minSize) {
+					return minSize.box === box;
+				});
 
-		// Step 7 - Position the boxes
-		var left = leftPadding + leftPaddingAddition;
-		var top = topPadding + topPaddingAddition;
+				var scaleMargin = {
+					left: 0,
+					right: 0,
+					top: totalTopBoxesHeight,
+					bottom: totalBottomBoxesHeight
+				};
 
-		function placeBox(box) {
-			if (box.isHorizontal()) {
-				box.left = box.fullWidth ? leftPadding : totalLeftBoxesWidth;
-				box.right = box.fullWidth ? width - rightPadding : totalLeftBoxesWidth + maxChartAreaWidth;
-				box.top = top;
-				box.bottom = top + box.height;
-
-				// Move to next point
-				top = box.bottom;
-
-			} else {
-
-				box.left = left;
-				box.right = left + box.width;
-				box.top = totalTopBoxesHeight;
-				box.bottom = totalTopBoxesHeight + maxChartAreaHeight;
-
-				// Move to next point
-				left = box.right;
+				if (minBoxSize) {
+					box.update(minBoxSize.minSize.width, maxChartAreaHeight, scaleMargin);
+				}
 			}
+
+			// Let the left layout know the final margin
+			helpers.each(leftBoxes.concat(rightBoxes), finalFitVerticalBox);
+
+			// Recalculate because the size of each layout might have changed slightly due to the margins (label rotation for instance)
+			totalLeftBoxesWidth = leftPadding;
+			totalRightBoxesWidth = rightPadding;
+			totalTopBoxesHeight = topPadding;
+			totalBottomBoxesHeight = bottomPadding;
+
+			helpers.each(leftBoxes, function(box) {
+				totalLeftBoxesWidth += box.width;
+			});
+
+			helpers.each(rightBoxes, function(box) {
+				totalRightBoxesWidth += box.width;
+			});
+
+			helpers.each(topBoxes, function(box) {
+				totalTopBoxesHeight += box.height;
+			});
+			helpers.each(bottomBoxes, function(box) {
+				totalBottomBoxesHeight += box.height;
+			});
+
+			// We may be adding some padding to account for rotated x axis labels
+			var leftPaddingAddition = Math.max(maxHorizontalLeftPadding - totalLeftBoxesWidth, 0);
+			totalLeftBoxesWidth += leftPaddingAddition;
+			totalRightBoxesWidth += Math.max(maxHorizontalRightPadding - totalRightBoxesWidth, 0);
+
+			var topPaddingAddition = Math.max(maxVerticalTopPadding - totalTopBoxesHeight, 0);
+			totalTopBoxesHeight += topPaddingAddition;
+			totalBottomBoxesHeight += Math.max(maxVerticalBottomPadding - totalBottomBoxesHeight, 0);
+
+			// Figure out if our chart area changed. This would occur if the dataset layout label rotation
+			// changed due to the application of the margins in step 6. Since we can only get bigger, this is safe to do
+			// without calling `fit` again
+			var newMaxChartAreaHeight = height - totalTopBoxesHeight - totalBottomBoxesHeight;
+			var newMaxChartAreaWidth = width - totalLeftBoxesWidth - totalRightBoxesWidth;
+
+			if (newMaxChartAreaWidth !== maxChartAreaWidth || newMaxChartAreaHeight !== maxChartAreaHeight) {
+				helpers.each(leftBoxes, function(box) {
+					box.height = newMaxChartAreaHeight;
+				});
+
+				helpers.each(rightBoxes, function(box) {
+					box.height = newMaxChartAreaHeight;
+				});
+
+				helpers.each(topBoxes, function(box) {
+					if (!box.fullWidth) {
+						box.width = newMaxChartAreaWidth;
+					}
+				});
+
+				helpers.each(bottomBoxes, function(box) {
+					if (!box.fullWidth) {
+						box.width = newMaxChartAreaWidth;
+					}
+				});
+
+				maxChartAreaHeight = newMaxChartAreaHeight;
+				maxChartAreaWidth = newMaxChartAreaWidth;
+			}
+
+			// Step 7 - Position the boxes
+			var left = leftPadding + leftPaddingAddition;
+			var top = topPadding + topPaddingAddition;
+
+			function placeBox(box) {
+				if (box.isHorizontal()) {
+					box.left = box.fullWidth ? leftPadding : totalLeftBoxesWidth;
+					box.right = box.fullWidth ? width - rightPadding : totalLeftBoxesWidth + maxChartAreaWidth;
+					box.top = top;
+					box.bottom = top + box.height;
+
+					// Move to next point
+					top = box.bottom;
+
+				} else {
+
+					box.left = left;
+					box.right = left + box.width;
+					box.top = totalTopBoxesHeight;
+					box.bottom = totalTopBoxesHeight + maxChartAreaHeight;
+
+					// Move to next point
+					left = box.right;
+				}
+			}
+
+			helpers.each(leftBoxes.concat(topBoxes), placeBox);
+
+			// Account for chart width and height
+			left += maxChartAreaWidth;
+			top += maxChartAreaHeight;
+
+			helpers.each(rightBoxes, placeBox);
+			helpers.each(bottomBoxes, placeBox);
+
+			// Step 8
+			chart.chartArea = {
+				left: totalLeftBoxesWidth,
+				top: totalTopBoxesHeight,
+				right: totalLeftBoxesWidth + maxChartAreaWidth,
+				bottom: totalTopBoxesHeight + maxChartAreaHeight
+			};
+
+			// Step 9
+			helpers.each(chartAreaBoxes, function(box) {
+				box.left = chart.chartArea.left;
+				box.top = chart.chartArea.top;
+				box.right = chart.chartArea.right;
+				box.bottom = chart.chartArea.bottom;
+
+				box.update(maxChartAreaWidth, maxChartAreaHeight);
+			});
 		}
-
-		helpers.each(leftBoxes.concat(topBoxes), placeBox);
-
-		// Account for chart width and height
-		left += maxChartAreaWidth;
-		top += maxChartAreaHeight;
-
-		helpers.each(rightBoxes, placeBox);
-		helpers.each(bottomBoxes, placeBox);
-
-		// Step 8
-		chart.chartArea = {
-			left: totalLeftBoxesWidth,
-			top: totalTopBoxesHeight,
-			right: totalLeftBoxesWidth + maxChartAreaWidth,
-			bottom: totalTopBoxesHeight + maxChartAreaHeight
-		};
-
-		// Step 9
-		helpers.each(chartAreaBoxes, function(box) {
-			box.left = chart.chartArea.left;
-			box.top = chart.chartArea.top;
-			box.right = chart.chartArea.right;
-			box.bottom = chart.chartArea.bottom;
-
-			box.update(maxChartAreaWidth, maxChartAreaHeight);
-		});
-	}
+	};
 };
 
 },{"45":45}],31:[function(require,module,exports){
 'use strict';
 
 var defaults = require(25);
+var Element = require(26);
 var helpers = require(45);
 
 defaults._set('global', {
 	plugins: {}
 });
 
-/**
- * The plugin service singleton
- * @namespace Chart.plugins
- * @since 2.1.0
- */
-module.exports = {
-	/**
-	 * Globally registered plugins.
-	 * @private
-	 */
-	_plugins: [],
+module.exports = function(Chart) {
 
 	/**
-	 * This identifier is used to invalidate the descriptors cache attached to each chart
-	 * when a global plugin is registered or unregistered. In this case, the cache ID is
-	 * incremented and descriptors are regenerated during following API calls.
-	 * @private
+	 * The plugin service singleton
+	 * @namespace Chart.plugins
+	 * @since 2.1.0
 	 */
-	_cacheId: 0,
+	Chart.plugins = {
+		/**
+		 * Globally registered plugins.
+		 * @private
+		 */
+		_plugins: [],
 
-	/**
-	 * Registers the given plugin(s) if not already registered.
-	 * @param {Array|Object} plugins plugin instance(s).
-	 */
-	register: function(plugins) {
-		var p = this._plugins;
-		([]).concat(plugins).forEach(function(plugin) {
-			if (p.indexOf(plugin) === -1) {
-				p.push(plugin);
-			}
-		});
+		/**
+		 * This identifier is used to invalidate the descriptors cache attached to each chart
+		 * when a global plugin is registered or unregistered. In this case, the cache ID is
+		 * incremented and descriptors are regenerated during following API calls.
+		 * @private
+		 */
+		_cacheId: 0,
 
-		this._cacheId++;
-	},
+		/**
+		 * Registers the given plugin(s) if not already registered.
+		 * @param {Array|Object} plugins plugin instance(s).
+		 */
+		register: function(plugins) {
+			var p = this._plugins;
+			([]).concat(plugins).forEach(function(plugin) {
+				if (p.indexOf(plugin) === -1) {
+					p.push(plugin);
+				}
+			});
 
-	/**
-	 * Unregisters the given plugin(s) only if registered.
-	 * @param {Array|Object} plugins plugin instance(s).
-	 */
-	unregister: function(plugins) {
-		var p = this._plugins;
-		([]).concat(plugins).forEach(function(plugin) {
-			var idx = p.indexOf(plugin);
-			if (idx !== -1) {
-				p.splice(idx, 1);
-			}
-		});
+			this._cacheId++;
+		},
 
-		this._cacheId++;
-	},
+		/**
+		 * Unregisters the given plugin(s) only if registered.
+		 * @param {Array|Object} plugins plugin instance(s).
+		 */
+		unregister: function(plugins) {
+			var p = this._plugins;
+			([]).concat(plugins).forEach(function(plugin) {
+				var idx = p.indexOf(plugin);
+				if (idx !== -1) {
+					p.splice(idx, 1);
+				}
+			});
 
-	/**
-	 * Remove all registered plugins.
-	 * @since 2.1.5
-	 */
-	clear: function() {
-		this._plugins = [];
-		this._cacheId++;
-	},
+			this._cacheId++;
+		},
 
-	/**
-	 * Returns the number of registered plugins?
-	 * @returns {Number}
-	 * @since 2.1.5
-	 */
-	count: function() {
-		return this._plugins.length;
-	},
+		/**
+		 * Remove all registered plugins.
+		 * @since 2.1.5
+		 */
+		clear: function() {
+			this._plugins = [];
+			this._cacheId++;
+		},
 
-	/**
-	 * Returns all registered plugin instances.
-	 * @returns {Array} array of plugin objects.
-	 * @since 2.1.5
-	 */
-	getAll: function() {
-		return this._plugins;
-	},
+		/**
+		 * Returns the number of registered plugins?
+		 * @returns {Number}
+		 * @since 2.1.5
+		 */
+		count: function() {
+			return this._plugins.length;
+		},
 
-	/**
-	 * Calls enabled plugins for `chart` on the specified hook and with the given args.
-	 * This method immediately returns as soon as a plugin explicitly returns false. The
-	 * returned value can be used, for instance, to interrupt the current action.
-	 * @param {Object} chart - The chart instance for which plugins should be called.
-	 * @param {String} hook - The name of the plugin method to call (e.g. 'beforeUpdate').
-	 * @param {Array} [args] - Extra arguments to apply to the hook call.
-	 * @returns {Boolean} false if any of the plugins return false, else returns true.
-	 */
-	notify: function(chart, hook, args) {
-		var descriptors = this.descriptors(chart);
-		var ilen = descriptors.length;
-		var i, descriptor, plugin, params, method;
+		/**
+		 * Returns all registered plugin instances.
+		 * @returns {Array} array of plugin objects.
+		 * @since 2.1.5
+		 */
+		getAll: function() {
+			return this._plugins;
+		},
 
-		for (i = 0; i < ilen; ++i) {
-			descriptor = descriptors[i];
-			plugin = descriptor.plugin;
-			method = plugin[hook];
-			if (typeof method === 'function') {
-				params = [chart].concat(args || []);
-				params.push(descriptor.options);
-				if (method.apply(plugin, params) === false) {
-					return false;
+		/**
+		 * Calls enabled plugins for `chart` on the specified hook and with the given args.
+		 * This method immediately returns as soon as a plugin explicitly returns false. The
+		 * returned value can be used, for instance, to interrupt the current action.
+		 * @param {Object} chart - The chart instance for which plugins should be called.
+		 * @param {String} hook - The name of the plugin method to call (e.g. 'beforeUpdate').
+		 * @param {Array} [args] - Extra arguments to apply to the hook call.
+		 * @returns {Boolean} false if any of the plugins return false, else returns true.
+		 */
+		notify: function(chart, hook, args) {
+			var descriptors = this.descriptors(chart);
+			var ilen = descriptors.length;
+			var i, descriptor, plugin, params, method;
+
+			for (i = 0; i < ilen; ++i) {
+				descriptor = descriptors[i];
+				plugin = descriptor.plugin;
+				method = plugin[hook];
+				if (typeof method === 'function') {
+					params = [chart].concat(args || []);
+					params.push(descriptor.options);
+					if (method.apply(plugin, params) === false) {
+						return false;
+					}
 				}
 			}
-		}
 
-		return true;
-	},
+			return true;
+		},
 
-	/**
-	 * Returns descriptors of enabled plugins for the given chart.
-	 * @returns {Array} [{ plugin, options }]
-	 * @private
-	 */
-	descriptors: function(chart) {
-		var cache = chart.$plugins || (chart.$plugins = {});
-		if (cache.id === this._cacheId) {
-			return cache.descriptors;
-		}
-
-		var plugins = [];
-		var descriptors = [];
-		var config = (chart && chart.config) || {};
-		var options = (config.options && config.options.plugins) || {};
-
-		this._plugins.concat(config.plugins || []).forEach(function(plugin) {
-			var idx = plugins.indexOf(plugin);
-			if (idx !== -1) {
-				return;
+		/**
+		 * Returns descriptors of enabled plugins for the given chart.
+		 * @returns {Array} [{ plugin, options }]
+		 * @private
+		 */
+		descriptors: function(chart) {
+			var cache = chart._plugins || (chart._plugins = {});
+			if (cache.id === this._cacheId) {
+				return cache.descriptors;
 			}
 
-			var id = plugin.id;
-			var opts = options[id];
-			if (opts === false) {
-				return;
-			}
+			var plugins = [];
+			var descriptors = [];
+			var config = (chart && chart.config) || {};
+			var options = (config.options && config.options.plugins) || {};
 
-			if (opts === true) {
-				opts = helpers.clone(defaults.global.plugins[id]);
-			}
+			this._plugins.concat(config.plugins || []).forEach(function(plugin) {
+				var idx = plugins.indexOf(plugin);
+				if (idx !== -1) {
+					return;
+				}
 
-			plugins.push(plugin);
-			descriptors.push({
-				plugin: plugin,
-				options: opts || {}
+				var id = plugin.id;
+				var opts = options[id];
+				if (opts === false) {
+					return;
+				}
+
+				if (opts === true) {
+					opts = helpers.clone(defaults.global.plugins[id]);
+				}
+
+				plugins.push(plugin);
+				descriptors.push({
+					plugin: plugin,
+					options: opts || {}
+				});
 			});
-		});
 
-		cache.descriptors = descriptors;
-		cache.id = this._cacheId;
-		return descriptors;
-	},
+			cache.descriptors = descriptors;
+			cache.id = this._cacheId;
+			return descriptors;
+		}
+	};
 
 	/**
-	 * Invalidates cache for the given chart: descriptors hold a reference on plugin option,
-	 * but in some cases, this reference can be changed by the user when updating options.
-	 * https://github.com/chartjs/Chart.js/issues/5111#issuecomment-355934167
+	 * Plugin extension hooks.
+	 * @interface IPlugin
+	 * @since 2.1.0
+	 */
+	/**
+	 * @method IPlugin#beforeInit
+	 * @desc Called before initializing `chart`.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Object} options - The plugin options.
+	 */
+	/**
+	 * @method IPlugin#afterInit
+	 * @desc Called after `chart` has been initialized and before the first update.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Object} options - The plugin options.
+	 */
+	/**
+	 * @method IPlugin#beforeUpdate
+	 * @desc Called before updating `chart`. If any plugin returns `false`, the update
+	 * is cancelled (and thus subsequent render(s)) until another `update` is triggered.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Object} options - The plugin options.
+	 * @returns {Boolean} `false` to cancel the chart update.
+	 */
+	/**
+	 * @method IPlugin#afterUpdate
+	 * @desc Called after `chart` has been updated and before rendering. Note that this
+	 * hook will not be called if the chart update has been previously cancelled.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Object} options - The plugin options.
+	 */
+	/**
+	 * @method IPlugin#beforeDatasetsUpdate
+ 	 * @desc Called before updating the `chart` datasets. If any plugin returns `false`,
+	 * the datasets update is cancelled until another `update` is triggered.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Object} options - The plugin options.
+	 * @returns {Boolean} false to cancel the datasets update.
+	 * @since version 2.1.5
+	 */
+	/**
+	 * @method IPlugin#afterDatasetsUpdate
+	 * @desc Called after the `chart` datasets have been updated. Note that this hook
+	 * will not be called if the datasets update has been previously cancelled.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Object} options - The plugin options.
+	 * @since version 2.1.5
+	 */
+	/**
+	 * @method IPlugin#beforeDatasetUpdate
+ 	 * @desc Called before updating the `chart` dataset at the given `args.index`. If any plugin
+	 * returns `false`, the datasets update is cancelled until another `update` is triggered.
+	 * @param {Chart} chart - The chart instance.
+	 * @param {Object} args - The call arguments.
+	 * @param {Number} args.index - The dataset index.
+	 * @param {Object} args.meta - The dataset metadata.
+	 * @param {Object} options - The plugin options.
+	 * @returns {Boolean} `false` to cancel the chart datasets drawing.
+	 */
+	/**
+	 * @method IPlugin#afterDatasetUpdate
+ 	 * @desc Called after the `chart` datasets at the given `args.index` has been updated. Note
+	 * that this hook will not be called if the datasets update has been previously cancelled.
+	 * @param {Chart} chart - The chart instance.
+	 * @param {Object} args - The call arguments.
+	 * @param {Number} args.index - The dataset index.
+	 * @param {Object} args.meta - The dataset metadata.
+	 * @param {Object} options - The plugin options.
+	 */
+	/**
+	 * @method IPlugin#beforeLayout
+	 * @desc Called before laying out `chart`. If any plugin returns `false`,
+	 * the layout update is cancelled until another `update` is triggered.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Object} options - The plugin options.
+	 * @returns {Boolean} `false` to cancel the chart layout.
+	 */
+	/**
+	 * @method IPlugin#afterLayout
+	 * @desc Called after the `chart` has been layed out. Note that this hook will not
+	 * be called if the layout update has been previously cancelled.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Object} options - The plugin options.
+	 */
+	/**
+	 * @method IPlugin#beforeRender
+	 * @desc Called before rendering `chart`. If any plugin returns `false`,
+	 * the rendering is cancelled until another `render` is triggered.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Object} options - The plugin options.
+	 * @returns {Boolean} `false` to cancel the chart rendering.
+	 */
+	/**
+	 * @method IPlugin#afterRender
+	 * @desc Called after the `chart` has been fully rendered (and animation completed). Note
+	 * that this hook will not be called if the rendering has been previously cancelled.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Object} options - The plugin options.
+	 */
+	/**
+	 * @method IPlugin#beforeDraw
+	 * @desc Called before drawing `chart` at every animation frame specified by the given
+	 * easing value. If any plugin returns `false`, the frame drawing is cancelled until
+	 * another `render` is triggered.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Number} easingValue - The current animation value, between 0.0 and 1.0.
+	 * @param {Object} options - The plugin options.
+	 * @returns {Boolean} `false` to cancel the chart drawing.
+	 */
+	/**
+	 * @method IPlugin#afterDraw
+	 * @desc Called after the `chart` has been drawn for the specific easing value. Note
+	 * that this hook will not be called if the drawing has been previously cancelled.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Number} easingValue - The current animation value, between 0.0 and 1.0.
+	 * @param {Object} options - The plugin options.
+	 */
+	/**
+	 * @method IPlugin#beforeDatasetsDraw
+ 	 * @desc Called before drawing the `chart` datasets. If any plugin returns `false`,
+	 * the datasets drawing is cancelled until another `render` is triggered.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Number} easingValue - The current animation value, between 0.0 and 1.0.
+	 * @param {Object} options - The plugin options.
+	 * @returns {Boolean} `false` to cancel the chart datasets drawing.
+	 */
+	/**
+	 * @method IPlugin#afterDatasetsDraw
+	 * @desc Called after the `chart` datasets have been drawn. Note that this hook
+	 * will not be called if the datasets drawing has been previously cancelled.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Number} easingValue - The current animation value, between 0.0 and 1.0.
+	 * @param {Object} options - The plugin options.
+	 */
+	/**
+	 * @method IPlugin#beforeDatasetDraw
+ 	 * @desc Called before drawing the `chart` dataset at the given `args.index` (datasets
+	 * are drawn in the reverse order). If any plugin returns `false`, the datasets drawing
+	 * is cancelled until another `render` is triggered.
+	 * @param {Chart} chart - The chart instance.
+	 * @param {Object} args - The call arguments.
+	 * @param {Number} args.index - The dataset index.
+	 * @param {Object} args.meta - The dataset metadata.
+	 * @param {Number} args.easingValue - The current animation value, between 0.0 and 1.0.
+	 * @param {Object} options - The plugin options.
+	 * @returns {Boolean} `false` to cancel the chart datasets drawing.
+	 */
+	/**
+	 * @method IPlugin#afterDatasetDraw
+ 	 * @desc Called after the `chart` datasets at the given `args.index` have been drawn
+	 * (datasets are drawn in the reverse order). Note that this hook will not be called
+	 * if the datasets drawing has been previously cancelled.
+	 * @param {Chart} chart - The chart instance.
+	 * @param {Object} args - The call arguments.
+	 * @param {Number} args.index - The dataset index.
+	 * @param {Object} args.meta - The dataset metadata.
+	 * @param {Number} args.easingValue - The current animation value, between 0.0 and 1.0.
+	 * @param {Object} options - The plugin options.
+	 */
+	/**
+  	 * @method IPlugin#beforeTooltipDraw
+	 * @desc Called before drawing the `tooltip`. If any plugin returns `false`,
+	 * the tooltip drawing is cancelled until another `render` is triggered.
+	 * @param {Chart} chart - The chart instance.
+	 * @param {Object} args - The call arguments.
+	 * @param {Object} args.tooltip - The tooltip.
+	 * @param {Number} args.easingValue - The current animation value, between 0.0 and 1.0.
+	 * @param {Object} options - The plugin options.
+	 * @returns {Boolean} `false` to cancel the chart tooltip drawing.
+  	 */
+	/**
+ 	 * @method IPlugin#afterTooltipDraw
+  	 * @desc Called after drawing the `tooltip`. Note that this hook will not
+ 	 * be called if the tooltip drawing has been previously cancelled.
+ 	 * @param {Chart} chart - The chart instance.
+ 	 * @param {Object} args - The call arguments.
+ 	 * @param {Object} args.tooltip - The tooltip.
+	 * @param {Number} args.easingValue - The current animation value, between 0.0 and 1.0.
+ 	 * @param {Object} options - The plugin options.
+ 	 */
+	/**
+	 * @method IPlugin#beforeEvent
+ 	 * @desc Called before processing the specified `event`. If any plugin returns `false`,
+	 * the event will be discarded.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {IEvent} event - The event object.
+	 * @param {Object} options - The plugin options.
+	 */
+	/**
+	 * @method IPlugin#afterEvent
+	 * @desc Called after the `event` has been consumed. Note that this hook
+	 * will not be called if the `event` has been previously discarded.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {IEvent} event - The event object.
+	 * @param {Object} options - The plugin options.
+	 */
+	/**
+	 * @method IPlugin#resize
+	 * @desc Called after the chart as been resized.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Number} size - The new canvas display size (eq. canvas.style width & height).
+	 * @param {Object} options - The plugin options.
+	 */
+	/**
+	 * @method IPlugin#destroy
+	 * @desc Called after the chart as been destroyed.
+	 * @param {Chart.Controller} chart - The chart instance.
+	 * @param {Object} options - The plugin options.
+	 */
+
+	/**
+	 * Provided for backward compatibility, use Chart.plugins instead
+	 * @namespace Chart.pluginService
+	 * @deprecated since version 2.1.5
+	 * @todo remove at version 3
 	 * @private
 	 */
-	_invalidate: function(chart) {
-		delete chart.$plugins;
-	}
+	Chart.pluginService = Chart.plugins;
+
+	/**
+	 * Provided for backward compatibility, inheriting from Chart.PlugingBase has no
+	 * effect, instead simply create/register plugins via plain JavaScript objects.
+	 * @interface Chart.PluginBase
+	 * @deprecated since version 2.5.0
+	 * @todo remove at version 3
+	 * @private
+	 */
+	Chart.PluginBase = Element.extend({});
 };
 
-/**
- * Plugin extension hooks.
- * @interface IPlugin
- * @since 2.1.0
- */
-/**
- * @method IPlugin#beforeInit
- * @desc Called before initializing `chart`.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Object} options - The plugin options.
- */
-/**
- * @method IPlugin#afterInit
- * @desc Called after `chart` has been initialized and before the first update.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Object} options - The plugin options.
- */
-/**
- * @method IPlugin#beforeUpdate
- * @desc Called before updating `chart`. If any plugin returns `false`, the update
- * is cancelled (and thus subsequent render(s)) until another `update` is triggered.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Object} options - The plugin options.
- * @returns {Boolean} `false` to cancel the chart update.
- */
-/**
- * @method IPlugin#afterUpdate
- * @desc Called after `chart` has been updated and before rendering. Note that this
- * hook will not be called if the chart update has been previously cancelled.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Object} options - The plugin options.
- */
-/**
- * @method IPlugin#beforeDatasetsUpdate
- * @desc Called before updating the `chart` datasets. If any plugin returns `false`,
- * the datasets update is cancelled until another `update` is triggered.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Object} options - The plugin options.
- * @returns {Boolean} false to cancel the datasets update.
- * @since version 2.1.5
-*/
-/**
- * @method IPlugin#afterDatasetsUpdate
- * @desc Called after the `chart` datasets have been updated. Note that this hook
- * will not be called if the datasets update has been previously cancelled.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Object} options - The plugin options.
- * @since version 2.1.5
- */
-/**
- * @method IPlugin#beforeDatasetUpdate
- * @desc Called before updating the `chart` dataset at the given `args.index`. If any plugin
- * returns `false`, the datasets update is cancelled until another `update` is triggered.
- * @param {Chart} chart - The chart instance.
- * @param {Object} args - The call arguments.
- * @param {Number} args.index - The dataset index.
- * @param {Object} args.meta - The dataset metadata.
- * @param {Object} options - The plugin options.
- * @returns {Boolean} `false` to cancel the chart datasets drawing.
- */
-/**
- * @method IPlugin#afterDatasetUpdate
- * @desc Called after the `chart` datasets at the given `args.index` has been updated. Note
- * that this hook will not be called if the datasets update has been previously cancelled.
- * @param {Chart} chart - The chart instance.
- * @param {Object} args - The call arguments.
- * @param {Number} args.index - The dataset index.
- * @param {Object} args.meta - The dataset metadata.
- * @param {Object} options - The plugin options.
- */
-/**
- * @method IPlugin#beforeLayout
- * @desc Called before laying out `chart`. If any plugin returns `false`,
- * the layout update is cancelled until another `update` is triggered.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Object} options - The plugin options.
- * @returns {Boolean} `false` to cancel the chart layout.
- */
-/**
- * @method IPlugin#afterLayout
- * @desc Called after the `chart` has been layed out. Note that this hook will not
- * be called if the layout update has been previously cancelled.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Object} options - The plugin options.
- */
-/**
- * @method IPlugin#beforeRender
- * @desc Called before rendering `chart`. If any plugin returns `false`,
- * the rendering is cancelled until another `render` is triggered.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Object} options - The plugin options.
- * @returns {Boolean} `false` to cancel the chart rendering.
- */
-/**
- * @method IPlugin#afterRender
- * @desc Called after the `chart` has been fully rendered (and animation completed). Note
- * that this hook will not be called if the rendering has been previously cancelled.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Object} options - The plugin options.
- */
-/**
- * @method IPlugin#beforeDraw
- * @desc Called before drawing `chart` at every animation frame specified by the given
- * easing value. If any plugin returns `false`, the frame drawing is cancelled until
- * another `render` is triggered.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Number} easingValue - The current animation value, between 0.0 and 1.0.
- * @param {Object} options - The plugin options.
- * @returns {Boolean} `false` to cancel the chart drawing.
- */
-/**
- * @method IPlugin#afterDraw
- * @desc Called after the `chart` has been drawn for the specific easing value. Note
- * that this hook will not be called if the drawing has been previously cancelled.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Number} easingValue - The current animation value, between 0.0 and 1.0.
- * @param {Object} options - The plugin options.
- */
-/**
- * @method IPlugin#beforeDatasetsDraw
- * @desc Called before drawing the `chart` datasets. If any plugin returns `false`,
- * the datasets drawing is cancelled until another `render` is triggered.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Number} easingValue - The current animation value, between 0.0 and 1.0.
- * @param {Object} options - The plugin options.
- * @returns {Boolean} `false` to cancel the chart datasets drawing.
- */
-/**
- * @method IPlugin#afterDatasetsDraw
- * @desc Called after the `chart` datasets have been drawn. Note that this hook
- * will not be called if the datasets drawing has been previously cancelled.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Number} easingValue - The current animation value, between 0.0 and 1.0.
- * @param {Object} options - The plugin options.
- */
-/**
- * @method IPlugin#beforeDatasetDraw
- * @desc Called before drawing the `chart` dataset at the given `args.index` (datasets
- * are drawn in the reverse order). If any plugin returns `false`, the datasets drawing
- * is cancelled until another `render` is triggered.
- * @param {Chart} chart - The chart instance.
- * @param {Object} args - The call arguments.
- * @param {Number} args.index - The dataset index.
- * @param {Object} args.meta - The dataset metadata.
- * @param {Number} args.easingValue - The current animation value, between 0.0 and 1.0.
- * @param {Object} options - The plugin options.
- * @returns {Boolean} `false` to cancel the chart datasets drawing.
- */
-/**
- * @method IPlugin#afterDatasetDraw
- * @desc Called after the `chart` datasets at the given `args.index` have been drawn
- * (datasets are drawn in the reverse order). Note that this hook will not be called
- * if the datasets drawing has been previously cancelled.
- * @param {Chart} chart - The chart instance.
- * @param {Object} args - The call arguments.
- * @param {Number} args.index - The dataset index.
- * @param {Object} args.meta - The dataset metadata.
- * @param {Number} args.easingValue - The current animation value, between 0.0 and 1.0.
- * @param {Object} options - The plugin options.
- */
-/**
- * @method IPlugin#beforeTooltipDraw
- * @desc Called before drawing the `tooltip`. If any plugin returns `false`,
- * the tooltip drawing is cancelled until another `render` is triggered.
- * @param {Chart} chart - The chart instance.
- * @param {Object} args - The call arguments.
- * @param {Object} args.tooltip - The tooltip.
- * @param {Number} args.easingValue - The current animation value, between 0.0 and 1.0.
- * @param {Object} options - The plugin options.
- * @returns {Boolean} `false` to cancel the chart tooltip drawing.
- */
-/**
- * @method IPlugin#afterTooltipDraw
- * @desc Called after drawing the `tooltip`. Note that this hook will not
- * be called if the tooltip drawing has been previously cancelled.
- * @param {Chart} chart - The chart instance.
- * @param {Object} args - The call arguments.
- * @param {Object} args.tooltip - The tooltip.
- * @param {Number} args.easingValue - The current animation value, between 0.0 and 1.0.
- * @param {Object} options - The plugin options.
- */
-/**
- * @method IPlugin#beforeEvent
- * @desc Called before processing the specified `event`. If any plugin returns `false`,
- * the event will be discarded.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {IEvent} event - The event object.
- * @param {Object} options - The plugin options.
- */
-/**
- * @method IPlugin#afterEvent
- * @desc Called after the `event` has been consumed. Note that this hook
- * will not be called if the `event` has been previously discarded.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {IEvent} event - The event object.
- * @param {Object} options - The plugin options.
- */
-/**
- * @method IPlugin#resize
- * @desc Called after the chart as been resized.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Number} size - The new canvas display size (eq. canvas.style width & height).
- * @param {Object} options - The plugin options.
- */
-/**
- * @method IPlugin#destroy
- * @desc Called after the chart as been destroyed.
- * @param {Chart.Controller} chart - The chart instance.
- * @param {Object} options - The plugin options.
- */
-
-},{"25":25,"45":45}],32:[function(require,module,exports){
+},{"25":25,"26":26,"45":45}],32:[function(require,module,exports){
 'use strict';
 
 var defaults = require(25);
@@ -8013,11 +7850,10 @@ module.exports = function(Chart) {
 
 			var itemsToDraw = [];
 
-			var axisWidth = me.options.gridLines.lineWidth;
-			var xTickStart = options.position === 'right' ? me.right : me.right - axisWidth - tl;
-			var xTickEnd = options.position === 'right' ? me.right + tl : me.right;
-			var yTickStart = options.position === 'bottom' ? me.top + axisWidth : me.bottom - tl - axisWidth;
-			var yTickEnd = options.position === 'bottom' ? me.top + axisWidth + tl : me.bottom + axisWidth;
+			var xTickStart = options.position === 'right' ? me.left : me.right - tl;
+			var xTickEnd = options.position === 'right' ? me.left + tl : me.right;
+			var yTickStart = options.position === 'bottom' ? me.top : me.bottom - tl;
+			var yTickEnd = options.position === 'bottom' ? me.top + tl : me.bottom;
 
 			helpers.each(ticks, function(tick, index) {
 				// autoskipper skipped this tick (#4635)
@@ -8073,7 +7909,7 @@ module.exports = function(Chart) {
 					ty1 = yTickStart;
 					ty2 = yTickEnd;
 					y1 = chartArea.top;
-					y2 = chartArea.bottom + axisWidth;
+					y2 = chartArea.bottom;
 				} else {
 					var isLeft = options.position === 'left';
 					var labelXOffset;
@@ -8099,7 +7935,7 @@ module.exports = function(Chart) {
 					tx1 = xTickStart;
 					tx2 = xTickEnd;
 					x1 = chartArea.left;
-					x2 = chartArea.right + axisWidth;
+					x2 = chartArea.right;
 					ty1 = ty2 = y1 = y2 = yLineValue;
 				}
 
@@ -8165,15 +8001,11 @@ module.exports = function(Chart) {
 
 					var label = itemToDraw.label;
 					if (helpers.isArray(label)) {
-						var lineCount = label.length;
-						var lineHeight = tickFont.size * 1.5;
-						var y = me.isHorizontal() ? 0 : -lineHeight * (lineCount - 1) / 2;
-
-						for (var i = 0; i < lineCount; ++i) {
+						for (var i = 0, y = 0; i < label.length; ++i) {
 							// We just make sure the multiline element is a string here..
 							context.fillText('' + label[i], 0, y);
 							// apply same lineSpacing as calculated @ L#320
-							y += lineHeight;
+							y += (tickFont.size * 1.5);
 						}
 					} else {
 						context.fillText(label, 0, 0);
@@ -8219,9 +8051,9 @@ module.exports = function(Chart) {
 				context.lineWidth = helpers.valueAtIndexOrDefault(gridLines.lineWidth, 0);
 				context.strokeStyle = helpers.valueAtIndexOrDefault(gridLines.color, 0);
 				var x1 = me.left;
-				var x2 = me.right + axisWidth;
+				var x2 = me.right;
 				var y1 = me.top;
-				var y2 = me.bottom + axisWidth;
+				var y2 = me.bottom;
 
 				var aliasPixel = helpers.aliasPixel(context.lineWidth);
 				if (isHorizontal) {
@@ -8248,7 +8080,6 @@ module.exports = function(Chart) {
 
 var defaults = require(25);
 var helpers = require(45);
-var layouts = require(30);
 
 module.exports = function(Chart) {
 
@@ -8285,13 +8116,13 @@ module.exports = function(Chart) {
 				scale.fullWidth = scale.options.fullWidth;
 				scale.position = scale.options.position;
 				scale.weight = scale.options.weight;
-				layouts.addBox(chart, scale);
+				Chart.layoutService.addBox(chart, scale);
 			});
 		}
 	};
 };
 
-},{"25":25,"30":30,"45":45}],34:[function(require,module,exports){
+},{"25":25,"45":45}],34:[function(require,module,exports){
 'use strict';
 
 var helpers = require(45);
@@ -8301,6 +8132,140 @@ var helpers = require(45);
  * @namespace Chart.Ticks
  */
 module.exports = {
+	/**
+	 * Namespace to hold generators for different types of ticks
+	 * @namespace Chart.Ticks.generators
+	 */
+	generators: {
+		/**
+		 * Interface for the options provided to the numeric tick generator
+		 * @interface INumericTickGenerationOptions
+		 */
+		/**
+		 * The maximum number of ticks to display
+		 * @name INumericTickGenerationOptions#maxTicks
+		 * @type Number
+		 */
+		/**
+		 * The distance between each tick.
+		 * @name INumericTickGenerationOptions#stepSize
+		 * @type Number
+		 * @optional
+		 */
+		/**
+		 * Forced minimum for the ticks. If not specified, the minimum of the data range is used to calculate the tick minimum
+		 * @name INumericTickGenerationOptions#min
+		 * @type Number
+		 * @optional
+		 */
+		/**
+		 * The maximum value of the ticks. If not specified, the maximum of the data range is used to calculate the tick maximum
+		 * @name INumericTickGenerationOptions#max
+		 * @type Number
+		 * @optional
+		 */
+
+		/**
+		 * Generate a set of linear ticks
+		 * @method Chart.Ticks.generators.linear
+		 * @param generationOptions {INumericTickGenerationOptions} the options used to generate the ticks
+		 * @param dataRange {IRange} the range of the data
+		 * @returns {Array<Number>} array of tick values
+		 */
+		linear: function(generationOptions, dataRange) {
+			var ticks = [];
+			// To get a "nice" value for the tick spacing, we will use the appropriately named
+			// "nice number" algorithm. See http://stackoverflow.com/questions/8506881/nice-label-algorithm-for-charts-with-minimum-ticks
+			// for details.
+
+			var spacing;
+			if (generationOptions.stepSize && generationOptions.stepSize > 0) {
+				spacing = generationOptions.stepSize;
+			} else {
+				var niceRange = helpers.niceNum(dataRange.max - dataRange.min, false);
+				spacing = helpers.niceNum(niceRange / (generationOptions.maxTicks - 1), true);
+			}
+			var niceMin = Math.floor(dataRange.min / spacing) * spacing;
+			var niceMax = Math.ceil(dataRange.max / spacing) * spacing;
+
+			// If min, max and stepSize is set and they make an evenly spaced scale use it.
+			if (generationOptions.min && generationOptions.max && generationOptions.stepSize) {
+				// If very close to our whole number, use it.
+				if (helpers.almostWhole((generationOptions.max - generationOptions.min) / generationOptions.stepSize, spacing / 1000)) {
+					niceMin = generationOptions.min;
+					niceMax = generationOptions.max;
+				}
+			}
+
+			var numSpaces = (niceMax - niceMin) / spacing;
+			// If very close to our rounded value, use it.
+			if (helpers.almostEquals(numSpaces, Math.round(numSpaces), spacing / 1000)) {
+				numSpaces = Math.round(numSpaces);
+			} else {
+				numSpaces = Math.ceil(numSpaces);
+			}
+
+			// Put the values into the ticks array
+			ticks.push(generationOptions.min !== undefined ? generationOptions.min : niceMin);
+			for (var j = 1; j < numSpaces; ++j) {
+				ticks.push(niceMin + (j * spacing));
+			}
+			ticks.push(generationOptions.max !== undefined ? generationOptions.max : niceMax);
+
+			return ticks;
+		},
+
+		/**
+		 * Generate a set of logarithmic ticks
+		 * @method Chart.Ticks.generators.logarithmic
+		 * @param generationOptions {INumericTickGenerationOptions} the options used to generate the ticks
+		 * @param dataRange {IRange} the range of the data
+		 * @returns {Array<Number>} array of tick values
+		 */
+		logarithmic: function(generationOptions, dataRange) {
+			var ticks = [];
+			var valueOrDefault = helpers.valueOrDefault;
+
+			// Figure out what the max number of ticks we can support it is based on the size of
+			// the axis area. For now, we say that the minimum tick spacing in pixels must be 50
+			// We also limit the maximum number of ticks to 11 which gives a nice 10 squares on
+			// the graph
+			var tickVal = valueOrDefault(generationOptions.min, Math.pow(10, Math.floor(helpers.log10(dataRange.min))));
+
+			var endExp = Math.floor(helpers.log10(dataRange.max));
+			var endSignificand = Math.ceil(dataRange.max / Math.pow(10, endExp));
+			var exp, significand;
+
+			if (tickVal === 0) {
+				exp = Math.floor(helpers.log10(dataRange.minNotZero));
+				significand = Math.floor(dataRange.minNotZero / Math.pow(10, exp));
+
+				ticks.push(tickVal);
+				tickVal = significand * Math.pow(10, exp);
+			} else {
+				exp = Math.floor(helpers.log10(tickVal));
+				significand = Math.floor(tickVal / Math.pow(10, exp));
+			}
+
+			do {
+				ticks.push(tickVal);
+
+				++significand;
+				if (significand === 10) {
+					significand = 1;
+					++exp;
+				}
+
+				tickVal = significand * Math.pow(10, exp);
+			} while (exp < endExp || (exp === endExp && significand < endSignificand));
+
+			var lastTick = valueOrDefault(generationOptions.max, tickVal);
+			ticks.push(lastTick);
+
+			return ticks;
+		}
+	},
+
 	/**
 	 * Namespace to hold formatters for different types of ticks
 	 * @namespace Chart.Ticks.formatters
@@ -8665,10 +8630,10 @@ module.exports = function(Chart) {
 		}
 
 		olf = function(x) {
-			return x + size.width + model.caretSize + model.caretPadding > chart.width;
+			return x + size.width > chart.width;
 		};
 		orf = function(x) {
-			return x - size.width - model.caretSize - model.caretPadding < 0;
+			return x - size.width < 0;
 		};
 		yf = function(y) {
 			return y <= midY ? 'top' : 'bottom';
@@ -8702,7 +8667,7 @@ module.exports = function(Chart) {
 	/**
 	 * @Helper to get the location a tooltip needs to be placed at given the initial position (via the vm) and the size and alignment
 	 */
-	function getBackgroundPoint(vm, size, alignment, chart) {
+	function getBackgroundPoint(vm, size, alignment) {
 		// Background Position
 		var x = vm.x;
 		var y = vm.y;
@@ -8719,12 +8684,6 @@ module.exports = function(Chart) {
 			x -= size.width;
 		} else if (xAlign === 'center') {
 			x -= (size.width / 2);
-			if (x + size.width > chart.width) {
-				x = chart.width - size.width;
-			}
-			if (x < 0) {
-				x = 0;
-			}
 		}
 
 		if (yAlign === 'top') {
@@ -8917,7 +8876,7 @@ module.exports = function(Chart) {
 				tooltipSize = getTooltipSize(this, model);
 				alignment = determineAlignment(this, tooltipSize);
 				// Final Size and Position
-				backgroundPoint = getBackgroundPoint(model, tooltipSize, alignment, me._chart);
+				backgroundPoint = getBackgroundPoint(model, tooltipSize, alignment);
 			} else {
 				model.opacity = 0;
 			}
@@ -8989,7 +8948,7 @@ module.exports = function(Chart) {
 					x1 = x2 - caretSize;
 					x3 = x2 + caretSize;
 				} else {
-					x2 = vm.caretX;
+					x2 = ptX + (width / 2);
 					x1 = x2 - caretSize;
 					x3 = x2 + caretSize;
 				}
@@ -9218,19 +9177,25 @@ module.exports = function(Chart) {
 			// Remember Last Actives
 			changed = !helpers.arrayEquals(me._active, me._lastActive);
 
-			// Only handle target event on tooltip change
-			if (changed) {
-				me._lastActive = me._active;
+			// If tooltip didn't change, do not handle the target event
+			if (!changed) {
+				return false;
+			}
 
-				if (options.enabled || options.custom) {
-					me._eventPosition = {
-						x: e.x,
-						y: e.y
-					};
+			me._lastActive = me._active;
 
-					me.update(true);
-					me.pivot();
-				}
+			if (options.enabled || options.custom) {
+				me._eventPosition = {
+					x: e.x,
+					y: e.y
+				};
+
+				var model = me._model;
+				me.update(true);
+				me.pivot();
+
+				// See if our tooltip position changed
+				changed |= (model.x !== me._model.x) || (model.y !== me._model.y);
 			}
 
 			return changed;
@@ -9542,12 +9507,12 @@ defaults._set('global', {
 
 function xRange(mouseX) {
 	var vm = this._view;
-	return vm ? (Math.abs(mouseX - vm.x) < vm.radius + vm.hitRadius) : false;
+	return vm ? (Math.pow(mouseX - vm.x, 2) < Math.pow(vm.radius + vm.hitRadius, 2)) : false;
 }
 
 function yRange(mouseY) {
 	var vm = this._view;
-	return vm ? (Math.abs(mouseY - vm.y) < vm.radius + vm.hitRadius) : false;
+	return vm ? (Math.pow(mouseY - vm.y, 2) < Math.pow(vm.radius + vm.hitRadius, 2)) : false;
 }
 
 module.exports = Element.extend({
@@ -11319,14 +11284,6 @@ module.exports = helpers.extend({
  */
 
 },{"45":45,"46":46,"47":47}],49:[function(require,module,exports){
-'use strict';
-
-module.exports = {};
-module.exports.filler = require(50);
-module.exports.legend = require(51);
-module.exports.title = require(52);
-
-},{"50":50,"51":51,"52":52}],50:[function(require,module,exports){
 /**
  * Plugin based on discussion from the following Chart.js issues:
  * @see https://github.com/chartjs/Chart.js/issues/2380#issuecomment-279961569
@@ -11347,314 +11304,314 @@ defaults._set('global', {
 	}
 });
 
-var mappers = {
-	dataset: function(source) {
-		var index = source.fill;
-		var chart = source.chart;
-		var meta = chart.getDatasetMeta(index);
-		var visible = meta && chart.isDatasetVisible(index);
-		var points = (visible && meta.dataset._children) || [];
-		var length = points.length || 0;
+module.exports = function() {
 
-		return !length ? null : function(point, i) {
-			return (i < length && points[i]._view) || null;
-		};
-	},
+	var mappers = {
+		dataset: function(source) {
+			var index = source.fill;
+			var chart = source.chart;
+			var meta = chart.getDatasetMeta(index);
+			var visible = meta && chart.isDatasetVisible(index);
+			var points = (visible && meta.dataset._children) || [];
+			var length = points.length || 0;
 
-	boundary: function(source) {
-		var boundary = source.boundary;
-		var x = boundary ? boundary.x : null;
-		var y = boundary ? boundary.y : null;
-
-		return function(point) {
-			return {
-				x: x === null ? point.x : x,
-				y: y === null ? point.y : y,
+			return !length ? null : function(point, i) {
+				return (i < length && points[i]._view) || null;
 			};
-		};
-	}
-};
+		},
 
-// @todo if (fill[0] === '#')
-function decodeFill(el, index, count) {
-	var model = el._model || {};
-	var fill = model.fill;
-	var target;
+		boundary: function(source) {
+			var boundary = source.boundary;
+			var x = boundary ? boundary.x : null;
+			var y = boundary ? boundary.y : null;
 
-	if (fill === undefined) {
-		fill = !!model.backgroundColor;
-	}
+			return function(point) {
+				return {
+					x: x === null ? point.x : x,
+					y: y === null ? point.y : y,
+				};
+			};
+		}
+	};
 
-	if (fill === false || fill === null) {
-		return false;
-	}
+	// @todo if (fill[0] === '#')
+	function decodeFill(el, index, count) {
+		var model = el._model || {};
+		var fill = model.fill;
+		var target;
 
-	if (fill === true) {
-		return 'origin';
-	}
-
-	target = parseFloat(fill, 10);
-	if (isFinite(target) && Math.floor(target) === target) {
-		if (fill[0] === '-' || fill[0] === '+') {
-			target = index + target;
+		if (fill === undefined) {
+			fill = !!model.backgroundColor;
 		}
 
-		if (target === index || target < 0 || target >= count) {
+		if (fill === false || fill === null) {
 			return false;
 		}
 
-		return target;
-	}
+		if (fill === true) {
+			return 'origin';
+		}
 
-	switch (fill) {
-	// compatibility
-	case 'bottom':
-		return 'start';
-	case 'top':
-		return 'end';
-	case 'zero':
-		return 'origin';
-	// supported boundaries
-	case 'origin':
-	case 'start':
-	case 'end':
-		return fill;
-	// invalid fill values
-	default:
-		return false;
-	}
-}
+		target = parseFloat(fill, 10);
+		if (isFinite(target) && Math.floor(target) === target) {
+			if (fill[0] === '-' || fill[0] === '+') {
+				target = index + target;
+			}
 
-function computeBoundary(source) {
-	var model = source.el._model || {};
-	var scale = source.el._scale || {};
-	var fill = source.fill;
-	var target = null;
-	var horizontal;
+			if (target === index || target < 0 || target >= count) {
+				return false;
+			}
 
-	if (isFinite(fill)) {
-		return null;
-	}
-
-	// Backward compatibility: until v3, we still need to support boundary values set on
-	// the model (scaleTop, scaleBottom and scaleZero) because some external plugins and
-	// controllers might still use it (e.g. the Smith chart).
-
-	if (fill === 'start') {
-		target = model.scaleBottom === undefined ? scale.bottom : model.scaleBottom;
-	} else if (fill === 'end') {
-		target = model.scaleTop === undefined ? scale.top : model.scaleTop;
-	} else if (model.scaleZero !== undefined) {
-		target = model.scaleZero;
-	} else if (scale.getBasePosition) {
-		target = scale.getBasePosition();
-	} else if (scale.getBasePixel) {
-		target = scale.getBasePixel();
-	}
-
-	if (target !== undefined && target !== null) {
-		if (target.x !== undefined && target.y !== undefined) {
 			return target;
 		}
 
-		if (typeof target === 'number' && isFinite(target)) {
-			horizontal = scale.isHorizontal();
-			return {
-				x: horizontal ? target : null,
-				y: horizontal ? null : target
-			};
-		}
-	}
-
-	return null;
-}
-
-function resolveTarget(sources, index, propagate) {
-	var source = sources[index];
-	var fill = source.fill;
-	var visited = [index];
-	var target;
-
-	if (!propagate) {
-		return fill;
-	}
-
-	while (fill !== false && visited.indexOf(fill) === -1) {
-		if (!isFinite(fill)) {
+		switch (fill) {
+		// compatibility
+		case 'bottom':
+			return 'start';
+		case 'top':
+			return 'end';
+		case 'zero':
+			return 'origin';
+		// supported boundaries
+		case 'origin':
+		case 'start':
+		case 'end':
 			return fill;
-		}
-
-		target = sources[fill];
-		if (!target) {
+		// invalid fill values
+		default:
 			return false;
 		}
-
-		if (target.visible) {
-			return fill;
-		}
-
-		visited.push(fill);
-		fill = target.fill;
 	}
 
-	return false;
-}
+	function computeBoundary(source) {
+		var model = source.el._model || {};
+		var scale = source.el._scale || {};
+		var fill = source.fill;
+		var target = null;
+		var horizontal;
 
-function createMapper(source) {
-	var fill = source.fill;
-	var type = 'dataset';
+		if (isFinite(fill)) {
+			return null;
+		}
 
-	if (fill === false) {
+		// Backward compatibility: until v3, we still need to support boundary values set on
+		// the model (scaleTop, scaleBottom and scaleZero) because some external plugins and
+		// controllers might still use it (e.g. the Smith chart).
+
+		if (fill === 'start') {
+			target = model.scaleBottom === undefined ? scale.bottom : model.scaleBottom;
+		} else if (fill === 'end') {
+			target = model.scaleTop === undefined ? scale.top : model.scaleTop;
+		} else if (model.scaleZero !== undefined) {
+			target = model.scaleZero;
+		} else if (scale.getBasePosition) {
+			target = scale.getBasePosition();
+		} else if (scale.getBasePixel) {
+			target = scale.getBasePixel();
+		}
+
+		if (target !== undefined && target !== null) {
+			if (target.x !== undefined && target.y !== undefined) {
+				return target;
+			}
+
+			if (typeof target === 'number' && isFinite(target)) {
+				horizontal = scale.isHorizontal();
+				return {
+					x: horizontal ? target : null,
+					y: horizontal ? null : target
+				};
+			}
+		}
+
 		return null;
 	}
 
-	if (!isFinite(fill)) {
-		type = 'boundary';
-	}
+	function resolveTarget(sources, index, propagate) {
+		var source = sources[index];
+		var fill = source.fill;
+		var visited = [index];
+		var target;
 
-	return mappers[type](source);
-}
-
-function isDrawable(point) {
-	return point && !point.skip;
-}
-
-function drawArea(ctx, curve0, curve1, len0, len1) {
-	var i;
-
-	if (!len0 || !len1) {
-		return;
-	}
-
-	// building first area curve (normal)
-	ctx.moveTo(curve0[0].x, curve0[0].y);
-	for (i = 1; i < len0; ++i) {
-		helpers.canvas.lineTo(ctx, curve0[i - 1], curve0[i]);
-	}
-
-	// joining the two area curves
-	ctx.lineTo(curve1[len1 - 1].x, curve1[len1 - 1].y);
-
-	// building opposite area curve (reverse)
-	for (i = len1 - 1; i > 0; --i) {
-		helpers.canvas.lineTo(ctx, curve1[i], curve1[i - 1], true);
-	}
-}
-
-function doFill(ctx, points, mapper, view, color, loop) {
-	var count = points.length;
-	var span = view.spanGaps;
-	var curve0 = [];
-	var curve1 = [];
-	var len0 = 0;
-	var len1 = 0;
-	var i, ilen, index, p0, p1, d0, d1;
-
-	ctx.beginPath();
-
-	for (i = 0, ilen = (count + !!loop); i < ilen; ++i) {
-		index = i % count;
-		p0 = points[index]._view;
-		p1 = mapper(p0, index, view);
-		d0 = isDrawable(p0);
-		d1 = isDrawable(p1);
-
-		if (d0 && d1) {
-			len0 = curve0.push(p0);
-			len1 = curve1.push(p1);
-		} else if (len0 && len1) {
-			if (!span) {
-				drawArea(ctx, curve0, curve1, len0, len1);
-				len0 = len1 = 0;
-				curve0 = [];
-				curve1 = [];
-			} else {
-				if (d0) {
-					curve0.push(p0);
-				}
-				if (d1) {
-					curve1.push(p1);
-				}
-			}
-		}
-	}
-
-	drawArea(ctx, curve0, curve1, len0, len1);
-
-	ctx.closePath();
-	ctx.fillStyle = color;
-	ctx.fill();
-}
-
-module.exports = {
-	id: 'filler',
-
-	afterDatasetsUpdate: function(chart, options) {
-		var count = (chart.data.datasets || []).length;
-		var propagate = options.propagate;
-		var sources = [];
-		var meta, i, el, source;
-
-		for (i = 0; i < count; ++i) {
-			meta = chart.getDatasetMeta(i);
-			el = meta.dataset;
-			source = null;
-
-			if (el && el._model && el instanceof elements.Line) {
-				source = {
-					visible: chart.isDatasetVisible(i),
-					fill: decodeFill(el, i, count),
-					chart: chart,
-					el: el
-				};
-			}
-
-			meta.$filler = source;
-			sources.push(source);
+		if (!propagate) {
+			return fill;
 		}
 
-		for (i = 0; i < count; ++i) {
-			source = sources[i];
-			if (!source) {
-				continue;
+		while (fill !== false && visited.indexOf(fill) === -1) {
+			if (!isFinite(fill)) {
+				return fill;
 			}
 
-			source.fill = resolveTarget(sources, i, propagate);
-			source.boundary = computeBoundary(source);
-			source.mapper = createMapper(source);
-		}
-	},
+			target = sources[fill];
+			if (!target) {
+				return false;
+			}
 
-	beforeDatasetDraw: function(chart, args) {
-		var meta = args.meta.$filler;
-		if (!meta) {
+			if (target.visible) {
+				return fill;
+			}
+
+			visited.push(fill);
+			fill = target.fill;
+		}
+
+		return false;
+	}
+
+	function createMapper(source) {
+		var fill = source.fill;
+		var type = 'dataset';
+
+		if (fill === false) {
+			return null;
+		}
+
+		if (!isFinite(fill)) {
+			type = 'boundary';
+		}
+
+		return mappers[type](source);
+	}
+
+	function isDrawable(point) {
+		return point && !point.skip;
+	}
+
+	function drawArea(ctx, curve0, curve1, len0, len1) {
+		var i;
+
+		if (!len0 || !len1) {
 			return;
 		}
 
-		var ctx = chart.ctx;
-		var el = meta.el;
-		var view = el._view;
-		var points = el._children || [];
-		var mapper = meta.mapper;
-		var color = view.backgroundColor || defaults.global.defaultColor;
+		// building first area curve (normal)
+		ctx.moveTo(curve0[0].x, curve0[0].y);
+		for (i = 1; i < len0; ++i) {
+			helpers.canvas.lineTo(ctx, curve0[i - 1], curve0[i]);
+		}
 
-		if (mapper && color && points.length) {
-			helpers.canvas.clipArea(ctx, chart.chartArea);
-			doFill(ctx, points, mapper, view, color, el._loop);
-			helpers.canvas.unclipArea(ctx);
+		// joining the two area curves
+		ctx.lineTo(curve1[len1 - 1].x, curve1[len1 - 1].y);
+
+		// building opposite area curve (reverse)
+		for (i = len1 - 1; i > 0; --i) {
+			helpers.canvas.lineTo(ctx, curve1[i], curve1[i - 1], true);
 		}
 	}
+
+	function doFill(ctx, points, mapper, view, color, loop) {
+		var count = points.length;
+		var span = view.spanGaps;
+		var curve0 = [];
+		var curve1 = [];
+		var len0 = 0;
+		var len1 = 0;
+		var i, ilen, index, p0, p1, d0, d1;
+
+		ctx.beginPath();
+
+		for (i = 0, ilen = (count + !!loop); i < ilen; ++i) {
+			index = i % count;
+			p0 = points[index]._view;
+			p1 = mapper(p0, index, view);
+			d0 = isDrawable(p0);
+			d1 = isDrawable(p1);
+
+			if (d0 && d1) {
+				len0 = curve0.push(p0);
+				len1 = curve1.push(p1);
+			} else if (len0 && len1) {
+				if (!span) {
+					drawArea(ctx, curve0, curve1, len0, len1);
+					len0 = len1 = 0;
+					curve0 = [];
+					curve1 = [];
+				} else {
+					if (d0) {
+						curve0.push(p0);
+					}
+					if (d1) {
+						curve1.push(p1);
+					}
+				}
+			}
+		}
+
+		drawArea(ctx, curve0, curve1, len0, len1);
+
+		ctx.closePath();
+		ctx.fillStyle = color;
+		ctx.fill();
+	}
+
+	return {
+		id: 'filler',
+
+		afterDatasetsUpdate: function(chart, options) {
+			var count = (chart.data.datasets || []).length;
+			var propagate = options.propagate;
+			var sources = [];
+			var meta, i, el, source;
+
+			for (i = 0; i < count; ++i) {
+				meta = chart.getDatasetMeta(i);
+				el = meta.dataset;
+				source = null;
+
+				if (el && el._model && el instanceof elements.Line) {
+					source = {
+						visible: chart.isDatasetVisible(i),
+						fill: decodeFill(el, i, count),
+						chart: chart,
+						el: el
+					};
+				}
+
+				meta.$filler = source;
+				sources.push(source);
+			}
+
+			for (i = 0; i < count; ++i) {
+				source = sources[i];
+				if (!source) {
+					continue;
+				}
+
+				source.fill = resolveTarget(sources, i, propagate);
+				source.boundary = computeBoundary(source);
+				source.mapper = createMapper(source);
+			}
+		},
+
+		beforeDatasetDraw: function(chart, args) {
+			var meta = args.meta.$filler;
+			if (!meta) {
+				return;
+			}
+
+			var ctx = chart.ctx;
+			var el = meta.el;
+			var view = el._view;
+			var points = el._children || [];
+			var mapper = meta.mapper;
+			var color = view.backgroundColor || defaults.global.defaultColor;
+
+			if (mapper && color && points.length) {
+				helpers.canvas.clipArea(ctx, chart.chartArea);
+				doFill(ctx, points, mapper, view, color, el._loop);
+				helpers.canvas.unclipArea(ctx);
+			}
+		}
+	};
 };
 
-},{"25":25,"40":40,"45":45}],51:[function(require,module,exports){
+},{"25":25,"40":40,"45":45}],50:[function(require,module,exports){
 'use strict';
 
 var defaults = require(25);
 var Element = require(26);
 var helpers = require(45);
-var layouts = require(30);
-
-var noop = helpers.noop;
 
 defaults._set('global', {
 	legend: {
@@ -11731,508 +11688,499 @@ defaults._set('global', {
 	}
 });
 
-/**
- * Helper function to get the box width based on the usePointStyle option
- * @param labelopts {Object} the label options on the legend
- * @param fontSize {Number} the label font size
- * @return {Number} width of the color box area
- */
-function getBoxWidth(labelOpts, fontSize) {
-	return labelOpts.usePointStyle ?
-		fontSize * Math.SQRT2 :
-		labelOpts.boxWidth;
-}
+module.exports = function(Chart) {
 
-/**
- * IMPORTANT: this class is exposed publicly as Chart.Legend, backward compatibility required!
- */
-var Legend = Element.extend({
+	var layout = Chart.layoutService;
+	var noop = helpers.noop;
 
-	initialize: function(config) {
-		helpers.extend(this, config);
+	/**
+	 * Helper function to get the box width based on the usePointStyle option
+	 * @param labelopts {Object} the label options on the legend
+	 * @param fontSize {Number} the label font size
+	 * @return {Number} width of the color box area
+	 */
+	function getBoxWidth(labelOpts, fontSize) {
+		return labelOpts.usePointStyle ?
+			fontSize * Math.SQRT2 :
+			labelOpts.boxWidth;
+	}
 
-		// Contains hit boxes for each dataset (in dataset order)
-		this.legendHitBoxes = [];
+	Chart.Legend = Element.extend({
 
-		// Are we in doughnut mode which has a different data type
-		this.doughnutMode = false;
-	},
+		initialize: function(config) {
+			helpers.extend(this, config);
 
-	// These methods are ordered by lifecycle. Utilities then follow.
-	// Any function defined here is inherited by all legend types.
-	// Any function can be extended by the legend type
+			// Contains hit boxes for each dataset (in dataset order)
+			this.legendHitBoxes = [];
 
-	beforeUpdate: noop,
-	update: function(maxWidth, maxHeight, margins) {
-		var me = this;
+			// Are we in doughnut mode which has a different data type
+			this.doughnutMode = false;
+		},
 
-		// Update Lifecycle - Probably don't want to ever extend or overwrite this function ;)
-		me.beforeUpdate();
+		// These methods are ordered by lifecycle. Utilities then follow.
+		// Any function defined here is inherited by all legend types.
+		// Any function can be extended by the legend type
 
-		// Absorb the master measurements
-		me.maxWidth = maxWidth;
-		me.maxHeight = maxHeight;
-		me.margins = margins;
+		beforeUpdate: noop,
+		update: function(maxWidth, maxHeight, margins) {
+			var me = this;
 
-		// Dimensions
-		me.beforeSetDimensions();
-		me.setDimensions();
-		me.afterSetDimensions();
-		// Labels
-		me.beforeBuildLabels();
-		me.buildLabels();
-		me.afterBuildLabels();
+			// Update Lifecycle - Probably don't want to ever extend or overwrite this function ;)
+			me.beforeUpdate();
 
-		// Fit
-		me.beforeFit();
-		me.fit();
-		me.afterFit();
+			// Absorb the master measurements
+			me.maxWidth = maxWidth;
+			me.maxHeight = maxHeight;
+			me.margins = margins;
+
+			// Dimensions
+			me.beforeSetDimensions();
+			me.setDimensions();
+			me.afterSetDimensions();
+			// Labels
+			me.beforeBuildLabels();
+			me.buildLabels();
+			me.afterBuildLabels();
+
+			// Fit
+			me.beforeFit();
+			me.fit();
+			me.afterFit();
+			//
+			me.afterUpdate();
+
+			return me.minSize;
+		},
+		afterUpdate: noop,
+
 		//
-		me.afterUpdate();
 
-		return me.minSize;
-	},
-	afterUpdate: noop,
-
-	//
-
-	beforeSetDimensions: noop,
-	setDimensions: function() {
-		var me = this;
-		// Set the unconstrained dimension before label rotation
-		if (me.isHorizontal()) {
-			// Reset position before calculating rotation
-			me.width = me.maxWidth;
-			me.left = 0;
-			me.right = me.width;
-		} else {
-			me.height = me.maxHeight;
-
-			// Reset position before calculating rotation
-			me.top = 0;
-			me.bottom = me.height;
-		}
-
-		// Reset padding
-		me.paddingLeft = 0;
-		me.paddingTop = 0;
-		me.paddingRight = 0;
-		me.paddingBottom = 0;
-
-		// Reset minSize
-		me.minSize = {
-			width: 0,
-			height: 0
-		};
-	},
-	afterSetDimensions: noop,
-
-	//
-
-	beforeBuildLabels: noop,
-	buildLabels: function() {
-		var me = this;
-		var labelOpts = me.options.labels || {};
-		var legendItems = helpers.callback(labelOpts.generateLabels, [me.chart], me) || [];
-
-		if (labelOpts.filter) {
-			legendItems = legendItems.filter(function(item) {
-				return labelOpts.filter(item, me.chart.data);
-			});
-		}
-
-		if (me.options.reverse) {
-			legendItems.reverse();
-		}
-
-		me.legendItems = legendItems;
-	},
-	afterBuildLabels: noop,
-
-	//
-
-	beforeFit: noop,
-	fit: function() {
-		var me = this;
-		var opts = me.options;
-		var labelOpts = opts.labels;
-		var display = opts.display;
-
-		var ctx = me.ctx;
-
-		var globalDefault = defaults.global;
-		var valueOrDefault = helpers.valueOrDefault;
-		var fontSize = valueOrDefault(labelOpts.fontSize, globalDefault.defaultFontSize);
-		var fontStyle = valueOrDefault(labelOpts.fontStyle, globalDefault.defaultFontStyle);
-		var fontFamily = valueOrDefault(labelOpts.fontFamily, globalDefault.defaultFontFamily);
-		var labelFont = helpers.fontString(fontSize, fontStyle, fontFamily);
-
-		// Reset hit boxes
-		var hitboxes = me.legendHitBoxes = [];
-
-		var minSize = me.minSize;
-		var isHorizontal = me.isHorizontal();
-
-		if (isHorizontal) {
-			minSize.width = me.maxWidth; // fill all the width
-			minSize.height = display ? 10 : 0;
-		} else {
-			minSize.width = display ? 10 : 0;
-			minSize.height = me.maxHeight; // fill all the height
-		}
-
-		// Increase sizes here
-		if (display) {
-			ctx.font = labelFont;
-
-			if (isHorizontal) {
-				// Labels
-
-				// Width of each line of legend boxes. Labels wrap onto multiple lines when there are too many to fit on one
-				var lineWidths = me.lineWidths = [0];
-				var totalHeight = me.legendItems.length ? fontSize + (labelOpts.padding) : 0;
-
-				ctx.textAlign = 'left';
-				ctx.textBaseline = 'top';
-
-				helpers.each(me.legendItems, function(legendItem, i) {
-					var boxWidth = getBoxWidth(labelOpts, fontSize);
-					var width = boxWidth + (fontSize / 2) + ctx.measureText(legendItem.text).width;
-
-					if (lineWidths[lineWidths.length - 1] + width + labelOpts.padding >= me.width) {
-						totalHeight += fontSize + (labelOpts.padding);
-						lineWidths[lineWidths.length] = me.left;
-					}
-
-					// Store the hitbox width and height here. Final position will be updated in `draw`
-					hitboxes[i] = {
-						left: 0,
-						top: 0,
-						width: width,
-						height: fontSize
-					};
-
-					lineWidths[lineWidths.length - 1] += width + labelOpts.padding;
-				});
-
-				minSize.height += totalHeight;
-
+		beforeSetDimensions: noop,
+		setDimensions: function() {
+			var me = this;
+			// Set the unconstrained dimension before label rotation
+			if (me.isHorizontal()) {
+				// Reset position before calculating rotation
+				me.width = me.maxWidth;
+				me.left = 0;
+				me.right = me.width;
 			} else {
-				var vPadding = labelOpts.padding;
-				var columnWidths = me.columnWidths = [];
-				var totalWidth = labelOpts.padding;
-				var currentColWidth = 0;
-				var currentColHeight = 0;
-				var itemHeight = fontSize + vPadding;
+				me.height = me.maxHeight;
 
-				helpers.each(me.legendItems, function(legendItem, i) {
-					var boxWidth = getBoxWidth(labelOpts, fontSize);
-					var itemWidth = boxWidth + (fontSize / 2) + ctx.measureText(legendItem.text).width;
-
-					// If too tall, go to new column
-					if (currentColHeight + itemHeight > minSize.height) {
-						totalWidth += currentColWidth + labelOpts.padding;
-						columnWidths.push(currentColWidth); // previous column width
-
-						currentColWidth = 0;
-						currentColHeight = 0;
-					}
-
-					// Get max width
-					currentColWidth = Math.max(currentColWidth, itemWidth);
-					currentColHeight += itemHeight;
-
-					// Store the hitbox width and height here. Final position will be updated in `draw`
-					hitboxes[i] = {
-						left: 0,
-						top: 0,
-						width: itemWidth,
-						height: fontSize
-					};
-				});
-
-				totalWidth += currentColWidth;
-				columnWidths.push(currentColWidth);
-				minSize.width += totalWidth;
+				// Reset position before calculating rotation
+				me.top = 0;
+				me.bottom = me.height;
 			}
-		}
 
-		me.width = minSize.width;
-		me.height = minSize.height;
-	},
-	afterFit: noop,
+			// Reset padding
+			me.paddingLeft = 0;
+			me.paddingTop = 0;
+			me.paddingRight = 0;
+			me.paddingBottom = 0;
 
-	// Shared Methods
-	isHorizontal: function() {
-		return this.options.position === 'top' || this.options.position === 'bottom';
-	},
+			// Reset minSize
+			me.minSize = {
+				width: 0,
+				height: 0
+			};
+		},
+		afterSetDimensions: noop,
 
-	// Actually draw the legend on the canvas
-	draw: function() {
-		var me = this;
-		var opts = me.options;
-		var labelOpts = opts.labels;
-		var globalDefault = defaults.global;
-		var lineDefault = globalDefault.elements.line;
-		var legendWidth = me.width;
-		var lineWidths = me.lineWidths;
+		//
 
-		if (opts.display) {
+		beforeBuildLabels: noop,
+		buildLabels: function() {
+			var me = this;
+			var labelOpts = me.options.labels || {};
+			var legendItems = helpers.callback(labelOpts.generateLabels, [me.chart], me) || [];
+
+			if (labelOpts.filter) {
+				legendItems = legendItems.filter(function(item) {
+					return labelOpts.filter(item, me.chart.data);
+				});
+			}
+
+			if (me.options.reverse) {
+				legendItems.reverse();
+			}
+
+			me.legendItems = legendItems;
+		},
+		afterBuildLabels: noop,
+
+		//
+
+		beforeFit: noop,
+		fit: function() {
+			var me = this;
+			var opts = me.options;
+			var labelOpts = opts.labels;
+			var display = opts.display;
+
 			var ctx = me.ctx;
+
+			var globalDefault = defaults.global;
 			var valueOrDefault = helpers.valueOrDefault;
-			var fontColor = valueOrDefault(labelOpts.fontColor, globalDefault.defaultFontColor);
 			var fontSize = valueOrDefault(labelOpts.fontSize, globalDefault.defaultFontSize);
 			var fontStyle = valueOrDefault(labelOpts.fontStyle, globalDefault.defaultFontStyle);
 			var fontFamily = valueOrDefault(labelOpts.fontFamily, globalDefault.defaultFontFamily);
 			var labelFont = helpers.fontString(fontSize, fontStyle, fontFamily);
-			var cursor;
 
-			// Canvas setup
-			ctx.textAlign = 'left';
-			ctx.textBaseline = 'middle';
-			ctx.lineWidth = 0.5;
-			ctx.strokeStyle = fontColor; // for strikethrough effect
-			ctx.fillStyle = fontColor; // render in correct colour
-			ctx.font = labelFont;
+			// Reset hit boxes
+			var hitboxes = me.legendHitBoxes = [];
 
-			var boxWidth = getBoxWidth(labelOpts, fontSize);
-			var hitboxes = me.legendHitBoxes;
+			var minSize = me.minSize;
+			var isHorizontal = me.isHorizontal();
 
-			// current position
-			var drawLegendBox = function(x, y, legendItem) {
-				if (isNaN(boxWidth) || boxWidth <= 0) {
+			if (isHorizontal) {
+				minSize.width = me.maxWidth; // fill all the width
+				minSize.height = display ? 10 : 0;
+			} else {
+				minSize.width = display ? 10 : 0;
+				minSize.height = me.maxHeight; // fill all the height
+			}
+
+			// Increase sizes here
+			if (display) {
+				ctx.font = labelFont;
+
+				if (isHorizontal) {
+					// Labels
+
+					// Width of each line of legend boxes. Labels wrap onto multiple lines when there are too many to fit on one
+					var lineWidths = me.lineWidths = [0];
+					var totalHeight = me.legendItems.length ? fontSize + (labelOpts.padding) : 0;
+
+					ctx.textAlign = 'left';
+					ctx.textBaseline = 'top';
+
+					helpers.each(me.legendItems, function(legendItem, i) {
+						var boxWidth = getBoxWidth(labelOpts, fontSize);
+						var width = boxWidth + (fontSize / 2) + ctx.measureText(legendItem.text).width;
+
+						if (lineWidths[lineWidths.length - 1] + width + labelOpts.padding >= me.width) {
+							totalHeight += fontSize + (labelOpts.padding);
+							lineWidths[lineWidths.length] = me.left;
+						}
+
+						// Store the hitbox width and height here. Final position will be updated in `draw`
+						hitboxes[i] = {
+							left: 0,
+							top: 0,
+							width: width,
+							height: fontSize
+						};
+
+						lineWidths[lineWidths.length - 1] += width + labelOpts.padding;
+					});
+
+					minSize.height += totalHeight;
+
+				} else {
+					var vPadding = labelOpts.padding;
+					var columnWidths = me.columnWidths = [];
+					var totalWidth = labelOpts.padding;
+					var currentColWidth = 0;
+					var currentColHeight = 0;
+					var itemHeight = fontSize + vPadding;
+
+					helpers.each(me.legendItems, function(legendItem, i) {
+						var boxWidth = getBoxWidth(labelOpts, fontSize);
+						var itemWidth = boxWidth + (fontSize / 2) + ctx.measureText(legendItem.text).width;
+
+						// If too tall, go to new column
+						if (currentColHeight + itemHeight > minSize.height) {
+							totalWidth += currentColWidth + labelOpts.padding;
+							columnWidths.push(currentColWidth); // previous column width
+
+							currentColWidth = 0;
+							currentColHeight = 0;
+						}
+
+						// Get max width
+						currentColWidth = Math.max(currentColWidth, itemWidth);
+						currentColHeight += itemHeight;
+
+						// Store the hitbox width and height here. Final position will be updated in `draw`
+						hitboxes[i] = {
+							left: 0,
+							top: 0,
+							width: itemWidth,
+							height: fontSize
+						};
+					});
+
+					totalWidth += currentColWidth;
+					columnWidths.push(currentColWidth);
+					minSize.width += totalWidth;
+				}
+			}
+
+			me.width = minSize.width;
+			me.height = minSize.height;
+		},
+		afterFit: noop,
+
+		// Shared Methods
+		isHorizontal: function() {
+			return this.options.position === 'top' || this.options.position === 'bottom';
+		},
+
+		// Actually draw the legend on the canvas
+		draw: function() {
+			var me = this;
+			var opts = me.options;
+			var labelOpts = opts.labels;
+			var globalDefault = defaults.global;
+			var lineDefault = globalDefault.elements.line;
+			var legendWidth = me.width;
+			var lineWidths = me.lineWidths;
+
+			if (opts.display) {
+				var ctx = me.ctx;
+				var valueOrDefault = helpers.valueOrDefault;
+				var fontColor = valueOrDefault(labelOpts.fontColor, globalDefault.defaultFontColor);
+				var fontSize = valueOrDefault(labelOpts.fontSize, globalDefault.defaultFontSize);
+				var fontStyle = valueOrDefault(labelOpts.fontStyle, globalDefault.defaultFontStyle);
+				var fontFamily = valueOrDefault(labelOpts.fontFamily, globalDefault.defaultFontFamily);
+				var labelFont = helpers.fontString(fontSize, fontStyle, fontFamily);
+				var cursor;
+
+				// Canvas setup
+				ctx.textAlign = 'left';
+				ctx.textBaseline = 'middle';
+				ctx.lineWidth = 0.5;
+				ctx.strokeStyle = fontColor; // for strikethrough effect
+				ctx.fillStyle = fontColor; // render in correct colour
+				ctx.font = labelFont;
+
+				var boxWidth = getBoxWidth(labelOpts, fontSize);
+				var hitboxes = me.legendHitBoxes;
+
+				// current position
+				var drawLegendBox = function(x, y, legendItem) {
+					if (isNaN(boxWidth) || boxWidth <= 0) {
+						return;
+					}
+
+					// Set the ctx for the box
+					ctx.save();
+
+					ctx.fillStyle = valueOrDefault(legendItem.fillStyle, globalDefault.defaultColor);
+					ctx.lineCap = valueOrDefault(legendItem.lineCap, lineDefault.borderCapStyle);
+					ctx.lineDashOffset = valueOrDefault(legendItem.lineDashOffset, lineDefault.borderDashOffset);
+					ctx.lineJoin = valueOrDefault(legendItem.lineJoin, lineDefault.borderJoinStyle);
+					ctx.lineWidth = valueOrDefault(legendItem.lineWidth, lineDefault.borderWidth);
+					ctx.strokeStyle = valueOrDefault(legendItem.strokeStyle, globalDefault.defaultColor);
+					var isLineWidthZero = (valueOrDefault(legendItem.lineWidth, lineDefault.borderWidth) === 0);
+
+					if (ctx.setLineDash) {
+						// IE 9 and 10 do not support line dash
+						ctx.setLineDash(valueOrDefault(legendItem.lineDash, lineDefault.borderDash));
+					}
+
+					if (opts.labels && opts.labels.usePointStyle) {
+						// Recalculate x and y for drawPoint() because its expecting
+						// x and y to be center of figure (instead of top left)
+						var radius = fontSize * Math.SQRT2 / 2;
+						var offSet = radius / Math.SQRT2;
+						var centerX = x + offSet;
+						var centerY = y + offSet;
+
+						// Draw pointStyle as legend symbol
+						helpers.canvas.drawPoint(ctx, legendItem.pointStyle, radius, centerX, centerY);
+					} else {
+						// Draw box as legend symbol
+						if (!isLineWidthZero) {
+							ctx.strokeRect(x, y, boxWidth, fontSize);
+						}
+						ctx.fillRect(x, y, boxWidth, fontSize);
+					}
+
+					ctx.restore();
+				};
+				var fillText = function(x, y, legendItem, textWidth) {
+					var halfFontSize = fontSize / 2;
+					var xLeft = boxWidth + halfFontSize + x;
+					var yMiddle = y + halfFontSize;
+
+					ctx.fillText(legendItem.text, xLeft, yMiddle);
+
+					if (legendItem.hidden) {
+						// Strikethrough the text if hidden
+						ctx.beginPath();
+						ctx.lineWidth = 2;
+						ctx.moveTo(xLeft, yMiddle);
+						ctx.lineTo(xLeft + textWidth, yMiddle);
+						ctx.stroke();
+					}
+				};
+
+				// Horizontal
+				var isHorizontal = me.isHorizontal();
+				if (isHorizontal) {
+					cursor = {
+						x: me.left + ((legendWidth - lineWidths[0]) / 2),
+						y: me.top + labelOpts.padding,
+						line: 0
+					};
+				} else {
+					cursor = {
+						x: me.left + labelOpts.padding,
+						y: me.top + labelOpts.padding,
+						line: 0
+					};
+				}
+
+				var itemHeight = fontSize + labelOpts.padding;
+				helpers.each(me.legendItems, function(legendItem, i) {
+					var textWidth = ctx.measureText(legendItem.text).width;
+					var width = boxWidth + (fontSize / 2) + textWidth;
+					var x = cursor.x;
+					var y = cursor.y;
+
+					if (isHorizontal) {
+						if (x + width >= legendWidth) {
+							y = cursor.y += itemHeight;
+							cursor.line++;
+							x = cursor.x = me.left + ((legendWidth - lineWidths[cursor.line]) / 2);
+						}
+					} else if (y + itemHeight > me.bottom) {
+						x = cursor.x = x + me.columnWidths[cursor.line] + labelOpts.padding;
+						y = cursor.y = me.top + labelOpts.padding;
+						cursor.line++;
+					}
+
+					drawLegendBox(x, y, legendItem);
+
+					hitboxes[i].left = x;
+					hitboxes[i].top = y;
+
+					// Fill the actual label
+					fillText(x, y, legendItem, textWidth);
+
+					if (isHorizontal) {
+						cursor.x += width + (labelOpts.padding);
+					} else {
+						cursor.y += itemHeight;
+					}
+
+				});
+			}
+		},
+
+		/**
+		 * Handle an event
+		 * @private
+		 * @param {IEvent} event - The event to handle
+		 * @return {Boolean} true if a change occured
+		 */
+		handleEvent: function(e) {
+			var me = this;
+			var opts = me.options;
+			var type = e.type === 'mouseup' ? 'click' : e.type;
+			var changed = false;
+
+			if (type === 'mousemove') {
+				if (!opts.onHover) {
 					return;
 				}
-
-				// Set the ctx for the box
-				ctx.save();
-
-				ctx.fillStyle = valueOrDefault(legendItem.fillStyle, globalDefault.defaultColor);
-				ctx.lineCap = valueOrDefault(legendItem.lineCap, lineDefault.borderCapStyle);
-				ctx.lineDashOffset = valueOrDefault(legendItem.lineDashOffset, lineDefault.borderDashOffset);
-				ctx.lineJoin = valueOrDefault(legendItem.lineJoin, lineDefault.borderJoinStyle);
-				ctx.lineWidth = valueOrDefault(legendItem.lineWidth, lineDefault.borderWidth);
-				ctx.strokeStyle = valueOrDefault(legendItem.strokeStyle, globalDefault.defaultColor);
-				var isLineWidthZero = (valueOrDefault(legendItem.lineWidth, lineDefault.borderWidth) === 0);
-
-				if (ctx.setLineDash) {
-					// IE 9 and 10 do not support line dash
-					ctx.setLineDash(valueOrDefault(legendItem.lineDash, lineDefault.borderDash));
+			} else if (type === 'click') {
+				if (!opts.onClick) {
+					return;
 				}
-
-				if (opts.labels && opts.labels.usePointStyle) {
-					// Recalculate x and y for drawPoint() because its expecting
-					// x and y to be center of figure (instead of top left)
-					var radius = fontSize * Math.SQRT2 / 2;
-					var offSet = radius / Math.SQRT2;
-					var centerX = x + offSet;
-					var centerY = y + offSet;
-
-					// Draw pointStyle as legend symbol
-					helpers.canvas.drawPoint(ctx, legendItem.pointStyle, radius, centerX, centerY);
-				} else {
-					// Draw box as legend symbol
-					if (!isLineWidthZero) {
-						ctx.strokeRect(x, y, boxWidth, fontSize);
-					}
-					ctx.fillRect(x, y, boxWidth, fontSize);
-				}
-
-				ctx.restore();
-			};
-			var fillText = function(x, y, legendItem, textWidth) {
-				var halfFontSize = fontSize / 2;
-				var xLeft = boxWidth + halfFontSize + x;
-				var yMiddle = y + halfFontSize;
-
-				ctx.fillText(legendItem.text, xLeft, yMiddle);
-
-				if (legendItem.hidden) {
-					// Strikethrough the text if hidden
-					ctx.beginPath();
-					ctx.lineWidth = 2;
-					ctx.moveTo(xLeft, yMiddle);
-					ctx.lineTo(xLeft + textWidth, yMiddle);
-					ctx.stroke();
-				}
-			};
-
-			// Horizontal
-			var isHorizontal = me.isHorizontal();
-			if (isHorizontal) {
-				cursor = {
-					x: me.left + ((legendWidth - lineWidths[0]) / 2),
-					y: me.top + labelOpts.padding,
-					line: 0
-				};
 			} else {
-				cursor = {
-					x: me.left + labelOpts.padding,
-					y: me.top + labelOpts.padding,
-					line: 0
-				};
-			}
-
-			var itemHeight = fontSize + labelOpts.padding;
-			helpers.each(me.legendItems, function(legendItem, i) {
-				var textWidth = ctx.measureText(legendItem.text).width;
-				var width = boxWidth + (fontSize / 2) + textWidth;
-				var x = cursor.x;
-				var y = cursor.y;
-
-				if (isHorizontal) {
-					if (x + width >= legendWidth) {
-						y = cursor.y += itemHeight;
-						cursor.line++;
-						x = cursor.x = me.left + ((legendWidth - lineWidths[cursor.line]) / 2);
-					}
-				} else if (y + itemHeight > me.bottom) {
-					x = cursor.x = x + me.columnWidths[cursor.line] + labelOpts.padding;
-					y = cursor.y = me.top + labelOpts.padding;
-					cursor.line++;
-				}
-
-				drawLegendBox(x, y, legendItem);
-
-				hitboxes[i].left = x;
-				hitboxes[i].top = y;
-
-				// Fill the actual label
-				fillText(x, y, legendItem, textWidth);
-
-				if (isHorizontal) {
-					cursor.x += width + (labelOpts.padding);
-				} else {
-					cursor.y += itemHeight;
-				}
-
-			});
-		}
-	},
-
-	/**
-	 * Handle an event
-	 * @private
-	 * @param {IEvent} event - The event to handle
-	 * @return {Boolean} true if a change occured
-	 */
-	handleEvent: function(e) {
-		var me = this;
-		var opts = me.options;
-		var type = e.type === 'mouseup' ? 'click' : e.type;
-		var changed = false;
-
-		if (type === 'mousemove') {
-			if (!opts.onHover) {
 				return;
 			}
-		} else if (type === 'click') {
-			if (!opts.onClick) {
-				return;
-			}
-		} else {
-			return;
-		}
 
-		// Chart event already has relative position in it
-		var x = e.x;
-		var y = e.y;
+			// Chart event already has relative position in it
+			var x = e.x;
+			var y = e.y;
 
-		if (x >= me.left && x <= me.right && y >= me.top && y <= me.bottom) {
-			// See if we are touching one of the dataset boxes
-			var lh = me.legendHitBoxes;
-			for (var i = 0; i < lh.length; ++i) {
-				var hitBox = lh[i];
+			if (x >= me.left && x <= me.right && y >= me.top && y <= me.bottom) {
+				// See if we are touching one of the dataset boxes
+				var lh = me.legendHitBoxes;
+				for (var i = 0; i < lh.length; ++i) {
+					var hitBox = lh[i];
 
-				if (x >= hitBox.left && x <= hitBox.left + hitBox.width && y >= hitBox.top && y <= hitBox.top + hitBox.height) {
-					// Touching an element
-					if (type === 'click') {
-						// use e.native for backwards compatibility
-						opts.onClick.call(me, e.native, me.legendItems[i]);
-						changed = true;
-						break;
-					} else if (type === 'mousemove') {
-						// use e.native for backwards compatibility
-						opts.onHover.call(me, e.native, me.legendItems[i]);
-						changed = true;
-						break;
+					if (x >= hitBox.left && x <= hitBox.left + hitBox.width && y >= hitBox.top && y <= hitBox.top + hitBox.height) {
+						// Touching an element
+						if (type === 'click') {
+							// use e.native for backwards compatibility
+							opts.onClick.call(me, e.native, me.legendItems[i]);
+							changed = true;
+							break;
+						} else if (type === 'mousemove') {
+							// use e.native for backwards compatibility
+							opts.onHover.call(me, e.native, me.legendItems[i]);
+							changed = true;
+							break;
+						}
 					}
 				}
 			}
+
+			return changed;
 		}
-
-		return changed;
-	}
-});
-
-function createNewLegendAndAttach(chart, legendOpts) {
-	var legend = new Legend({
-		ctx: chart.ctx,
-		options: legendOpts,
-		chart: chart
 	});
 
-	layouts.configure(chart, legend, legendOpts);
-	layouts.addBox(chart, legend);
-	chart.legend = legend;
-}
+	function createNewLegendAndAttach(chart, legendOpts) {
+		var legend = new Chart.Legend({
+			ctx: chart.ctx,
+			options: legendOpts,
+			chart: chart
+		});
 
-module.exports = {
-	id: 'legend',
+		layout.configure(chart, legend, legendOpts);
+		layout.addBox(chart, legend);
+		chart.legend = legend;
+	}
 
-	/**
-	 * Backward compatibility: since 2.1.5, the legend is registered as a plugin, making
-	 * Chart.Legend obsolete. To avoid a breaking change, we export the Legend as part of
-	 * the plugin, which one will be re-exposed in the chart.js file.
-	 * https://github.com/chartjs/Chart.js/pull/2640
-	 * @private
-	 */
-	_element: Legend,
+	return {
+		id: 'legend',
 
-	beforeInit: function(chart) {
-		var legendOpts = chart.options.legend;
+		beforeInit: function(chart) {
+			var legendOpts = chart.options.legend;
 
-		if (legendOpts) {
-			createNewLegendAndAttach(chart, legendOpts);
-		}
-	},
-
-	beforeUpdate: function(chart) {
-		var legendOpts = chart.options.legend;
-		var legend = chart.legend;
-
-		if (legendOpts) {
-			helpers.mergeIf(legendOpts, defaults.global.legend);
-
-			if (legend) {
-				layouts.configure(chart, legend, legendOpts);
-				legend.options = legendOpts;
-			} else {
+			if (legendOpts) {
 				createNewLegendAndAttach(chart, legendOpts);
 			}
-		} else if (legend) {
-			layouts.removeBox(chart, legend);
-			delete chart.legend;
-		}
-	},
+		},
 
-	afterEvent: function(chart, e) {
-		var legend = chart.legend;
-		if (legend) {
-			legend.handleEvent(e);
+		beforeUpdate: function(chart) {
+			var legendOpts = chart.options.legend;
+			var legend = chart.legend;
+
+			if (legendOpts) {
+				helpers.mergeIf(legendOpts, defaults.global.legend);
+
+				if (legend) {
+					layout.configure(chart, legend, legendOpts);
+					legend.options = legendOpts;
+				} else {
+					createNewLegendAndAttach(chart, legendOpts);
+				}
+			} else if (legend) {
+				layout.removeBox(chart, legend);
+				delete chart.legend;
+			}
+		},
+
+		afterEvent: function(chart, e) {
+			var legend = chart.legend;
+			if (legend) {
+				legend.handleEvent(e);
+			}
 		}
-	}
+	};
 };
 
-},{"25":25,"26":26,"30":30,"45":45}],52:[function(require,module,exports){
+},{"25":25,"26":26,"45":45}],51:[function(require,module,exports){
 'use strict';
 
 var defaults = require(25);
 var Element = require(26);
 var helpers = require(45);
-var layouts = require(30);
-
-var noop = helpers.noop;
 
 defaults._set('global', {
 	title: {
@@ -12247,238 +12195,232 @@ defaults._set('global', {
 	}
 });
 
-/**
- * IMPORTANT: this class is exposed publicly as Chart.Legend, backward compatibility required!
- */
-var Title = Element.extend({
-	initialize: function(config) {
-		var me = this;
-		helpers.extend(me, config);
+module.exports = function(Chart) {
 
-		// Contains hit boxes for each dataset (in dataset order)
-		me.legendHitBoxes = [];
-	},
+	var layout = Chart.layoutService;
+	var noop = helpers.noop;
 
-	// These methods are ordered by lifecycle. Utilities then follow.
+	Chart.Title = Element.extend({
+		initialize: function(config) {
+			var me = this;
+			helpers.extend(me, config);
 
-	beforeUpdate: noop,
-	update: function(maxWidth, maxHeight, margins) {
-		var me = this;
+			// Contains hit boxes for each dataset (in dataset order)
+			me.legendHitBoxes = [];
+		},
 
-		// Update Lifecycle - Probably don't want to ever extend or overwrite this function ;)
-		me.beforeUpdate();
+		// These methods are ordered by lifecycle. Utilities then follow.
 
-		// Absorb the master measurements
-		me.maxWidth = maxWidth;
-		me.maxHeight = maxHeight;
-		me.margins = margins;
+		beforeUpdate: noop,
+		update: function(maxWidth, maxHeight, margins) {
+			var me = this;
 
-		// Dimensions
-		me.beforeSetDimensions();
-		me.setDimensions();
-		me.afterSetDimensions();
-		// Labels
-		me.beforeBuildLabels();
-		me.buildLabels();
-		me.afterBuildLabels();
+			// Update Lifecycle - Probably don't want to ever extend or overwrite this function ;)
+			me.beforeUpdate();
 
-		// Fit
-		me.beforeFit();
-		me.fit();
-		me.afterFit();
+			// Absorb the master measurements
+			me.maxWidth = maxWidth;
+			me.maxHeight = maxHeight;
+			me.margins = margins;
+
+			// Dimensions
+			me.beforeSetDimensions();
+			me.setDimensions();
+			me.afterSetDimensions();
+			// Labels
+			me.beforeBuildLabels();
+			me.buildLabels();
+			me.afterBuildLabels();
+
+			// Fit
+			me.beforeFit();
+			me.fit();
+			me.afterFit();
+			//
+			me.afterUpdate();
+
+			return me.minSize;
+
+		},
+		afterUpdate: noop,
+
 		//
-		me.afterUpdate();
 
-		return me.minSize;
-
-	},
-	afterUpdate: noop,
-
-	//
-
-	beforeSetDimensions: noop,
-	setDimensions: function() {
-		var me = this;
-		// Set the unconstrained dimension before label rotation
-		if (me.isHorizontal()) {
-			// Reset position before calculating rotation
-			me.width = me.maxWidth;
-			me.left = 0;
-			me.right = me.width;
-		} else {
-			me.height = me.maxHeight;
-
-			// Reset position before calculating rotation
-			me.top = 0;
-			me.bottom = me.height;
-		}
-
-		// Reset padding
-		me.paddingLeft = 0;
-		me.paddingTop = 0;
-		me.paddingRight = 0;
-		me.paddingBottom = 0;
-
-		// Reset minSize
-		me.minSize = {
-			width: 0,
-			height: 0
-		};
-	},
-	afterSetDimensions: noop,
-
-	//
-
-	beforeBuildLabels: noop,
-	buildLabels: noop,
-	afterBuildLabels: noop,
-
-	//
-
-	beforeFit: noop,
-	fit: function() {
-		var me = this;
-		var valueOrDefault = helpers.valueOrDefault;
-		var opts = me.options;
-		var display = opts.display;
-		var fontSize = valueOrDefault(opts.fontSize, defaults.global.defaultFontSize);
-		var minSize = me.minSize;
-		var lineCount = helpers.isArray(opts.text) ? opts.text.length : 1;
-		var lineHeight = helpers.options.toLineHeight(opts.lineHeight, fontSize);
-		var textSize = display ? (lineCount * lineHeight) + (opts.padding * 2) : 0;
-
-		if (me.isHorizontal()) {
-			minSize.width = me.maxWidth; // fill all the width
-			minSize.height = textSize;
-		} else {
-			minSize.width = textSize;
-			minSize.height = me.maxHeight; // fill all the height
-		}
-
-		me.width = minSize.width;
-		me.height = minSize.height;
-
-	},
-	afterFit: noop,
-
-	// Shared Methods
-	isHorizontal: function() {
-		var pos = this.options.position;
-		return pos === 'top' || pos === 'bottom';
-	},
-
-	// Actually draw the title block on the canvas
-	draw: function() {
-		var me = this;
-		var ctx = me.ctx;
-		var valueOrDefault = helpers.valueOrDefault;
-		var opts = me.options;
-		var globalDefaults = defaults.global;
-
-		if (opts.display) {
-			var fontSize = valueOrDefault(opts.fontSize, globalDefaults.defaultFontSize);
-			var fontStyle = valueOrDefault(opts.fontStyle, globalDefaults.defaultFontStyle);
-			var fontFamily = valueOrDefault(opts.fontFamily, globalDefaults.defaultFontFamily);
-			var titleFont = helpers.fontString(fontSize, fontStyle, fontFamily);
-			var lineHeight = helpers.options.toLineHeight(opts.lineHeight, fontSize);
-			var offset = lineHeight / 2 + opts.padding;
-			var rotation = 0;
-			var top = me.top;
-			var left = me.left;
-			var bottom = me.bottom;
-			var right = me.right;
-			var maxWidth, titleX, titleY;
-
-			ctx.fillStyle = valueOrDefault(opts.fontColor, globalDefaults.defaultFontColor); // render in correct colour
-			ctx.font = titleFont;
-
-			// Horizontal
+		beforeSetDimensions: noop,
+		setDimensions: function() {
+			var me = this;
+			// Set the unconstrained dimension before label rotation
 			if (me.isHorizontal()) {
-				titleX = left + ((right - left) / 2); // midpoint of the width
-				titleY = top + offset;
-				maxWidth = right - left;
+				// Reset position before calculating rotation
+				me.width = me.maxWidth;
+				me.left = 0;
+				me.right = me.width;
 			} else {
-				titleX = opts.position === 'left' ? left + offset : right - offset;
-				titleY = top + ((bottom - top) / 2);
-				maxWidth = bottom - top;
-				rotation = Math.PI * (opts.position === 'left' ? -0.5 : 0.5);
+				me.height = me.maxHeight;
+
+				// Reset position before calculating rotation
+				me.top = 0;
+				me.bottom = me.height;
 			}
 
-			ctx.save();
-			ctx.translate(titleX, titleY);
-			ctx.rotate(rotation);
-			ctx.textAlign = 'center';
-			ctx.textBaseline = 'middle';
+			// Reset padding
+			me.paddingLeft = 0;
+			me.paddingTop = 0;
+			me.paddingRight = 0;
+			me.paddingBottom = 0;
 
-			var text = opts.text;
-			if (helpers.isArray(text)) {
-				var y = 0;
-				for (var i = 0; i < text.length; ++i) {
-					ctx.fillText(text[i], 0, y, maxWidth);
-					y += lineHeight;
+			// Reset minSize
+			me.minSize = {
+				width: 0,
+				height: 0
+			};
+		},
+		afterSetDimensions: noop,
+
+		//
+
+		beforeBuildLabels: noop,
+		buildLabels: noop,
+		afterBuildLabels: noop,
+
+		//
+
+		beforeFit: noop,
+		fit: function() {
+			var me = this;
+			var valueOrDefault = helpers.valueOrDefault;
+			var opts = me.options;
+			var display = opts.display;
+			var fontSize = valueOrDefault(opts.fontSize, defaults.global.defaultFontSize);
+			var minSize = me.minSize;
+			var lineCount = helpers.isArray(opts.text) ? opts.text.length : 1;
+			var lineHeight = helpers.options.toLineHeight(opts.lineHeight, fontSize);
+			var textSize = display ? (lineCount * lineHeight) + (opts.padding * 2) : 0;
+
+			if (me.isHorizontal()) {
+				minSize.width = me.maxWidth; // fill all the width
+				minSize.height = textSize;
+			} else {
+				minSize.width = textSize;
+				minSize.height = me.maxHeight; // fill all the height
+			}
+
+			me.width = minSize.width;
+			me.height = minSize.height;
+
+		},
+		afterFit: noop,
+
+		// Shared Methods
+		isHorizontal: function() {
+			var pos = this.options.position;
+			return pos === 'top' || pos === 'bottom';
+		},
+
+		// Actually draw the title block on the canvas
+		draw: function() {
+			var me = this;
+			var ctx = me.ctx;
+			var valueOrDefault = helpers.valueOrDefault;
+			var opts = me.options;
+			var globalDefaults = defaults.global;
+
+			if (opts.display) {
+				var fontSize = valueOrDefault(opts.fontSize, globalDefaults.defaultFontSize);
+				var fontStyle = valueOrDefault(opts.fontStyle, globalDefaults.defaultFontStyle);
+				var fontFamily = valueOrDefault(opts.fontFamily, globalDefaults.defaultFontFamily);
+				var titleFont = helpers.fontString(fontSize, fontStyle, fontFamily);
+				var lineHeight = helpers.options.toLineHeight(opts.lineHeight, fontSize);
+				var offset = lineHeight / 2 + opts.padding;
+				var rotation = 0;
+				var top = me.top;
+				var left = me.left;
+				var bottom = me.bottom;
+				var right = me.right;
+				var maxWidth, titleX, titleY;
+
+				ctx.fillStyle = valueOrDefault(opts.fontColor, globalDefaults.defaultFontColor); // render in correct colour
+				ctx.font = titleFont;
+
+				// Horizontal
+				if (me.isHorizontal()) {
+					titleX = left + ((right - left) / 2); // midpoint of the width
+					titleY = top + offset;
+					maxWidth = right - left;
+				} else {
+					titleX = opts.position === 'left' ? left + offset : right - offset;
+					titleY = top + ((bottom - top) / 2);
+					maxWidth = bottom - top;
+					rotation = Math.PI * (opts.position === 'left' ? -0.5 : 0.5);
 				}
-			} else {
-				ctx.fillText(text, 0, 0, maxWidth);
+
+				ctx.save();
+				ctx.translate(titleX, titleY);
+				ctx.rotate(rotation);
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'middle';
+
+				var text = opts.text;
+				if (helpers.isArray(text)) {
+					var y = 0;
+					for (var i = 0; i < text.length; ++i) {
+						ctx.fillText(text[i], 0, y, maxWidth);
+						y += lineHeight;
+					}
+				} else {
+					ctx.fillText(text, 0, 0, maxWidth);
+				}
+
+				ctx.restore();
 			}
-
-			ctx.restore();
 		}
-	}
-});
-
-function createNewTitleBlockAndAttach(chart, titleOpts) {
-	var title = new Title({
-		ctx: chart.ctx,
-		options: titleOpts,
-		chart: chart
 	});
 
-	layouts.configure(chart, title, titleOpts);
-	layouts.addBox(chart, title);
-	chart.titleBlock = title;
-}
+	function createNewTitleBlockAndAttach(chart, titleOpts) {
+		var title = new Chart.Title({
+			ctx: chart.ctx,
+			options: titleOpts,
+			chart: chart
+		});
 
-module.exports = {
-	id: 'title',
+		layout.configure(chart, title, titleOpts);
+		layout.addBox(chart, title);
+		chart.titleBlock = title;
+	}
 
-	/**
-	 * Backward compatibility: since 2.1.5, the title is registered as a plugin, making
-	 * Chart.Title obsolete. To avoid a breaking change, we export the Title as part of
-	 * the plugin, which one will be re-exposed in the chart.js file.
-	 * https://github.com/chartjs/Chart.js/pull/2640
-	 * @private
-	 */
-	_element: Title,
+	return {
+		id: 'title',
 
-	beforeInit: function(chart) {
-		var titleOpts = chart.options.title;
+		beforeInit: function(chart) {
+			var titleOpts = chart.options.title;
 
-		if (titleOpts) {
-			createNewTitleBlockAndAttach(chart, titleOpts);
-		}
-	},
-
-	beforeUpdate: function(chart) {
-		var titleOpts = chart.options.title;
-		var titleBlock = chart.titleBlock;
-
-		if (titleOpts) {
-			helpers.mergeIf(titleOpts, defaults.global.title);
-
-			if (titleBlock) {
-				layouts.configure(chart, titleBlock, titleOpts);
-				titleBlock.options = titleOpts;
-			} else {
+			if (titleOpts) {
 				createNewTitleBlockAndAttach(chart, titleOpts);
 			}
-		} else if (titleBlock) {
-			layouts.removeBox(chart, titleBlock);
-			delete chart.titleBlock;
+		},
+
+		beforeUpdate: function(chart) {
+			var titleOpts = chart.options.title;
+			var titleBlock = chart.titleBlock;
+
+			if (titleOpts) {
+				helpers.mergeIf(titleOpts, defaults.global.title);
+
+				if (titleBlock) {
+					layout.configure(chart, titleBlock, titleOpts);
+					titleBlock.options = titleOpts;
+				} else {
+					createNewTitleBlockAndAttach(chart, titleOpts);
+				}
+			} else if (titleBlock) {
+				Chart.layoutService.removeBox(chart, titleBlock);
+				delete chart.titleBlock;
+			}
 		}
-	}
+	};
 };
 
-},{"25":25,"26":26,"30":30,"45":45}],53:[function(require,module,exports){
+},{"25":25,"26":26,"45":45}],52:[function(require,module,exports){
 'use strict';
 
 module.exports = function(Chart) {
@@ -12613,7 +12555,7 @@ module.exports = function(Chart) {
 
 };
 
-},{}],54:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 'use strict';
 
 var defaults = require(25);
@@ -12786,10 +12728,11 @@ module.exports = function(Chart) {
 
 			if (me.isHorizontal()) {
 				pixel = me.left + (me.width / range * (rightValue - start));
-			} else {
-				pixel = me.bottom - (me.height / range * (rightValue - start));
+				return Math.round(pixel);
 			}
-			return pixel;
+
+			pixel = me.bottom - (me.height / range * (rightValue - start));
+			return Math.round(pixel);
 		},
 		getValueForPixel: function(pixel) {
 			var me = this;
@@ -12806,65 +12749,11 @@ module.exports = function(Chart) {
 
 };
 
-},{"25":25,"34":34,"45":45}],55:[function(require,module,exports){
+},{"25":25,"34":34,"45":45}],54:[function(require,module,exports){
 'use strict';
 
 var helpers = require(45);
-
-/**
- * Generate a set of linear ticks
- * @param generationOptions the options used to generate the ticks
- * @param dataRange the range of the data
- * @returns {Array<Number>} array of tick values
- */
-function generateTicks(generationOptions, dataRange) {
-	var ticks = [];
-	// To get a "nice" value for the tick spacing, we will use the appropriately named
-	// "nice number" algorithm. See http://stackoverflow.com/questions/8506881/nice-label-algorithm-for-charts-with-minimum-ticks
-	// for details.
-
-	var spacing;
-	if (generationOptions.stepSize && generationOptions.stepSize > 0) {
-		spacing = generationOptions.stepSize;
-	} else {
-		var niceRange = helpers.niceNum(dataRange.max - dataRange.min, false);
-		spacing = helpers.niceNum(niceRange / (generationOptions.maxTicks - 1), true);
-	}
-	var niceMin = Math.floor(dataRange.min / spacing) * spacing;
-	var niceMax = Math.ceil(dataRange.max / spacing) * spacing;
-
-	// If min, max and stepSize is set and they make an evenly spaced scale use it.
-	if (generationOptions.min && generationOptions.max && generationOptions.stepSize) {
-		// If very close to our whole number, use it.
-		if (helpers.almostWhole((generationOptions.max - generationOptions.min) / generationOptions.stepSize, spacing / 1000)) {
-			niceMin = generationOptions.min;
-			niceMax = generationOptions.max;
-		}
-	}
-
-	var numSpaces = (niceMax - niceMin) / spacing;
-	// If very close to our rounded value, use it.
-	if (helpers.almostEquals(numSpaces, Math.round(numSpaces), spacing / 1000)) {
-		numSpaces = Math.round(numSpaces);
-	} else {
-		numSpaces = Math.ceil(numSpaces);
-	}
-
-	var precision = 1;
-	if (spacing < 1) {
-		precision = Math.pow(10, spacing.toString().length - 2);
-		niceMin = Math.round(niceMin * precision) / precision;
-		niceMax = Math.round(niceMax * precision) / precision;
-	}
-	ticks.push(generationOptions.min !== undefined ? generationOptions.min : niceMin);
-	for (var j = 1; j < numSpaces; ++j) {
-		ticks.push(Math.round((niceMin + j * spacing) * precision) / precision);
-	}
-	ticks.push(generationOptions.max !== undefined ? generationOptions.max : niceMax);
-
-	return ticks;
-}
-
+var Ticks = require(34);
 
 module.exports = function(Chart) {
 
@@ -12965,7 +12854,7 @@ module.exports = function(Chart) {
 				max: tickOpts.max,
 				stepSize: helpers.valueOrDefault(tickOpts.fixedStepSize, tickOpts.stepSize)
 			};
-			var ticks = me.ticks = generateTicks(numericGeneratorOptions, me);
+			var ticks = me.ticks = Ticks.generators.linear(numericGeneratorOptions, me);
 
 			me.handleDirectionalChanges();
 
@@ -12994,63 +12883,11 @@ module.exports = function(Chart) {
 	});
 };
 
-},{"45":45}],56:[function(require,module,exports){
+},{"34":34,"45":45}],55:[function(require,module,exports){
 'use strict';
 
 var helpers = require(45);
 var Ticks = require(34);
-
-/**
- * Generate a set of logarithmic ticks
- * @param generationOptions the options used to generate the ticks
- * @param dataRange the range of the data
- * @returns {Array<Number>} array of tick values
- */
-function generateTicks(generationOptions, dataRange) {
-	var ticks = [];
-	var valueOrDefault = helpers.valueOrDefault;
-
-	// Figure out what the max number of ticks we can support it is based on the size of
-	// the axis area. For now, we say that the minimum tick spacing in pixels must be 50
-	// We also limit the maximum number of ticks to 11 which gives a nice 10 squares on
-	// the graph
-	var tickVal = valueOrDefault(generationOptions.min, Math.pow(10, Math.floor(helpers.log10(dataRange.min))));
-
-	var endExp = Math.floor(helpers.log10(dataRange.max));
-	var endSignificand = Math.ceil(dataRange.max / Math.pow(10, endExp));
-	var exp, significand;
-
-	if (tickVal === 0) {
-		exp = Math.floor(helpers.log10(dataRange.minNotZero));
-		significand = Math.floor(dataRange.minNotZero / Math.pow(10, exp));
-
-		ticks.push(tickVal);
-		tickVal = significand * Math.pow(10, exp);
-	} else {
-		exp = Math.floor(helpers.log10(tickVal));
-		significand = Math.floor(tickVal / Math.pow(10, exp));
-	}
-	var precision = exp < 0 ? Math.pow(10, Math.abs(exp)) : 1;
-
-	do {
-		ticks.push(tickVal);
-
-		++significand;
-		if (significand === 10) {
-			significand = 1;
-			++exp;
-			precision = exp >= 0 ? 1 : precision;
-		}
-
-		tickVal = Math.round(significand * Math.pow(10, exp) * precision) / precision;
-	} while (exp < endExp || (exp === endExp && significand < endSignificand));
-
-	var lastTick = valueOrDefault(generationOptions.max, tickVal);
-	ticks.push(lastTick);
-
-	return ticks;
-}
-
 
 module.exports = function(Chart) {
 
@@ -13067,9 +12904,11 @@ module.exports = function(Chart) {
 		determineDataLimits: function() {
 			var me = this;
 			var opts = me.options;
+			var tickOpts = opts.ticks;
 			var chart = me.chart;
 			var data = chart.data;
 			var datasets = data.datasets;
+			var valueOrDefault = helpers.valueOrDefault;
 			var isHorizontal = me.isHorizontal();
 			function IDMatches(meta) {
 				return isHorizontal ? meta.xAxisID === me.id : meta.yAxisID === me.id;
@@ -13115,23 +12954,27 @@ module.exports = function(Chart) {
 						helpers.each(dataset.data, function(rawValue, index) {
 							var values = valuesPerStack[key];
 							var value = +me.getRightValue(rawValue);
-							// invalid, hidden and negative values are ignored
-							if (isNaN(value) || meta.data[index].hidden || value < 0) {
+							if (isNaN(value) || meta.data[index].hidden) {
 								return;
 							}
+
 							values[index] = values[index] || 0;
-							values[index] += value;
+
+							if (opts.relativePoints) {
+								values[index] = 100;
+							} else {
+								// Don't need to split positive and negative since the log scale can't handle a 0 crossing
+								values[index] += value;
+							}
 						});
 					}
 				});
 
 				helpers.each(valuesPerStack, function(valuesForType) {
-					if (valuesForType.length > 0) {
-						var minVal = helpers.min(valuesForType);
-						var maxVal = helpers.max(valuesForType);
-						me.min = me.min === null ? minVal : Math.min(me.min, minVal);
-						me.max = me.max === null ? maxVal : Math.max(me.max, maxVal);
-					}
+					var minVal = helpers.min(valuesForType);
+					var maxVal = helpers.max(valuesForType);
+					me.min = me.min === null ? minVal : Math.min(me.min, minVal);
+					me.max = me.max === null ? maxVal : Math.max(me.max, maxVal);
 				});
 
 			} else {
@@ -13140,8 +12983,7 @@ module.exports = function(Chart) {
 					if (chart.isDatasetVisible(datasetIndex) && IDMatches(meta)) {
 						helpers.each(dataset.data, function(rawValue, index) {
 							var value = +me.getRightValue(rawValue);
-							// invalid, hidden and negative values are ignored
-							if (isNaN(value) || meta.data[index].hidden || value < 0) {
+							if (isNaN(value) || meta.data[index].hidden) {
 								return;
 							}
 
@@ -13165,17 +13007,6 @@ module.exports = function(Chart) {
 				});
 			}
 
-			// Common base implementation to handle ticks.min, ticks.max
-			this.handleTickRangeOptions();
-		},
-		handleTickRangeOptions: function() {
-			var me = this;
-			var opts = me.options;
-			var tickOpts = opts.ticks;
-			var valueOrDefault = helpers.valueOrDefault;
-			var DEFAULT_MIN = 1;
-			var DEFAULT_MAX = 10;
-
 			me.min = valueOrDefault(tickOpts.min, me.min);
 			me.max = valueOrDefault(tickOpts.max, me.max);
 
@@ -13184,25 +13015,8 @@ module.exports = function(Chart) {
 					me.min = Math.pow(10, Math.floor(helpers.log10(me.min)) - 1);
 					me.max = Math.pow(10, Math.floor(helpers.log10(me.max)) + 1);
 				} else {
-					me.min = DEFAULT_MIN;
-					me.max = DEFAULT_MAX;
-				}
-			}
-			if (me.min === null) {
-				me.min = Math.pow(10, Math.floor(helpers.log10(me.max)) - 1);
-			}
-			if (me.max === null) {
-				me.max = me.min !== 0
-					? Math.pow(10, Math.floor(helpers.log10(me.min)) + 1)
-					: DEFAULT_MAX;
-			}
-			if (me.minNotZero === null) {
-				if (me.min > 0) {
-					me.minNotZero = me.min;
-				} else if (me.max < 1) {
-					me.minNotZero = Math.pow(10, Math.floor(helpers.log10(me.max)));
-				} else {
-					me.minNotZero = DEFAULT_MIN;
+					me.min = 1;
+					me.max = 10;
 				}
 			}
 		},
@@ -13210,13 +13024,17 @@ module.exports = function(Chart) {
 			var me = this;
 			var opts = me.options;
 			var tickOpts = opts.ticks;
-			var reverse = !me.isHorizontal();
 
 			var generationOptions = {
 				min: tickOpts.min,
 				max: tickOpts.max
 			};
-			var ticks = me.ticks = generateTicks(generationOptions, me);
+			var ticks = me.ticks = Ticks.generators.logarithmic(generationOptions, me);
+
+			if (!me.isHorizontal()) {
+				// We are in a vertical orientation. The top value is the highest. So reverse the array
+				ticks.reverse();
+			}
 
 			// At this point, we need to update our max and min given the tick values since we have expanded the
 			// range of the scale
@@ -13224,15 +13042,13 @@ module.exports = function(Chart) {
 			me.min = helpers.min(ticks);
 
 			if (tickOpts.reverse) {
-				reverse = !reverse;
+				ticks.reverse();
+
 				me.start = me.max;
 				me.end = me.min;
 			} else {
 				me.start = me.min;
 				me.end = me.max;
-			}
-			if (reverse) {
-				ticks.reverse();
 			}
 		},
 		convertTicksToLabels: function() {
@@ -13247,94 +13063,64 @@ module.exports = function(Chart) {
 		getPixelForTick: function(index) {
 			return this.getPixelForValue(this.tickValues[index]);
 		},
-		/**
-		 * Returns the value of the first tick.
-		 * @param {Number} value - The minimum not zero value.
-		 * @return {Number} The first tick value.
-		 * @private
-		 */
-		_getFirstTickValue: function(value) {
-			var exp = Math.floor(helpers.log10(value));
-			var significand = Math.floor(value / Math.pow(10, exp));
-
-			return significand * Math.pow(10, exp);
-		},
 		getPixelForValue: function(value) {
 			var me = this;
-			var reverse = me.options.ticks.reverse;
-			var log10 = helpers.log10;
-			var firstTickValue = me._getFirstTickValue(me.minNotZero);
-			var offset = 0;
-			var innerDimension, pixel, start, end, sign;
+			var start = me.start;
+			var newVal = +me.getRightValue(value);
+			var opts = me.options;
+			var tickOpts = opts.ticks;
+			var innerDimension, pixel, range;
 
-			value = +me.getRightValue(value);
-			if (reverse) {
-				start = me.end;
-				end = me.start;
-				sign = -1;
-			} else {
-				start = me.start;
-				end = me.end;
-				sign = 1;
-			}
 			if (me.isHorizontal()) {
-				innerDimension = me.width;
-				pixel = reverse ? me.right : me.left;
+				range = helpers.log10(me.end) - helpers.log10(start); // todo: if start === 0
+				if (newVal === 0) {
+					pixel = me.left;
+				} else {
+					innerDimension = me.width;
+					pixel = me.left + (innerDimension / range * (helpers.log10(newVal) - helpers.log10(start)));
+				}
 			} else {
+				// Bottom - top since pixels increase downward on a screen
 				innerDimension = me.height;
-				sign *= -1; // invert, since the upper-left corner of the canvas is at pixel (0, 0)
-				pixel = reverse ? me.top : me.bottom;
-			}
-			if (value !== start) {
-				if (start === 0) { // include zero tick
-					offset = helpers.getValueOrDefault(
-						me.options.ticks.fontSize,
-						Chart.defaults.global.defaultFontSize
-					);
-					innerDimension -= offset;
-					start = firstTickValue;
+				if (start === 0 && !tickOpts.reverse) {
+					range = helpers.log10(me.end) - helpers.log10(me.minNotZero);
+					if (newVal === start) {
+						pixel = me.bottom;
+					} else if (newVal === me.minNotZero) {
+						pixel = me.bottom - innerDimension * 0.02;
+					} else {
+						pixel = me.bottom - innerDimension * 0.02 - (innerDimension * 0.98 / range * (helpers.log10(newVal) - helpers.log10(me.minNotZero)));
+					}
+				} else if (me.end === 0 && tickOpts.reverse) {
+					range = helpers.log10(me.start) - helpers.log10(me.minNotZero);
+					if (newVal === me.end) {
+						pixel = me.top;
+					} else if (newVal === me.minNotZero) {
+						pixel = me.top + innerDimension * 0.02;
+					} else {
+						pixel = me.top + innerDimension * 0.02 + (innerDimension * 0.98 / range * (helpers.log10(newVal) - helpers.log10(me.minNotZero)));
+					}
+				} else if (newVal === 0) {
+					pixel = tickOpts.reverse ? me.top : me.bottom;
+				} else {
+					range = helpers.log10(me.end) - helpers.log10(start);
+					innerDimension = me.height;
+					pixel = me.bottom - (innerDimension / range * (helpers.log10(newVal) - helpers.log10(start)));
 				}
-				if (value !== 0) {
-					offset += innerDimension / (log10(end) - log10(start)) * (log10(value) - log10(start));
-				}
-				pixel += sign * offset;
 			}
 			return pixel;
 		},
 		getValueForPixel: function(pixel) {
 			var me = this;
-			var reverse = me.options.ticks.reverse;
-			var log10 = helpers.log10;
-			var firstTickValue = me._getFirstTickValue(me.minNotZero);
-			var innerDimension, start, end, value;
+			var range = helpers.log10(me.end) - helpers.log10(me.start);
+			var value, innerDimension;
 
-			if (reverse) {
-				start = me.end;
-				end = me.start;
-			} else {
-				start = me.start;
-				end = me.end;
-			}
 			if (me.isHorizontal()) {
 				innerDimension = me.width;
-				value = reverse ? me.right - pixel : pixel - me.left;
-			} else {
+				value = me.start * Math.pow(10, (pixel - me.left) * range / innerDimension);
+			} else { // todo: if start === 0
 				innerDimension = me.height;
-				value = reverse ? pixel - me.top : me.bottom - pixel;
-			}
-			if (value !== start) {
-				if (start === 0) { // include zero tick
-					var offset = helpers.getValueOrDefault(
-						me.options.ticks.fontSize,
-						Chart.defaults.global.defaultFontSize
-					);
-					value -= offset;
-					innerDimension -= offset;
-					start = firstTickValue;
-				}
-				value *= log10(end) - log10(start);
-				value /= innerDimension;
-				value = Math.pow(10, log10(start) + value);
+				value = Math.pow(10, (me.bottom - pixel) * range / innerDimension) / me.start;
 			}
 			return value;
 		}
@@ -13343,7 +13129,7 @@ module.exports = function(Chart) {
 
 };
 
-},{"34":34,"45":45}],57:[function(require,module,exports){
+},{"34":34,"45":45}],56:[function(require,module,exports){
 'use strict';
 
 var defaults = require(25);
@@ -13583,6 +13369,7 @@ module.exports = function(Chart) {
 
 	function drawPointLabels(scale) {
 		var ctx = scale.ctx;
+		var valueOrDefault = helpers.valueOrDefault;
 		var opts = scale.options;
 		var angleLineOpts = opts.angleLines;
 		var pointLabelOpts = opts.pointLabels;
@@ -13612,7 +13399,7 @@ module.exports = function(Chart) {
 				var pointLabelPosition = scale.getPointPosition(i, outerDistance + 5);
 
 				// Keep this in loop since we may support array properties here
-				var pointLabelFontColor = helpers.valueAtIndexOrDefault(pointLabelOpts.fontColor, i, globalDefaults.defaultFontColor);
+				var pointLabelFontColor = valueOrDefault(pointLabelOpts.fontColor, globalDefaults.defaultFontColor);
 				ctx.font = plFont.font;
 				ctx.fillStyle = pointLabelFontColor;
 
@@ -13874,7 +13661,7 @@ module.exports = function(Chart) {
 
 };
 
-},{"25":25,"34":34,"45":45}],58:[function(require,module,exports){
+},{"25":25,"34":34,"45":45}],57:[function(require,module,exports){
 /* global window: false */
 'use strict';
 
@@ -14117,7 +13904,7 @@ function determineStepSize(min, max, unit, capacity) {
 	var i, ilen, factor;
 
 	if (!steps) {
-		return Math.ceil(range / (capacity * milliseconds));
+		return Math.ceil(range / ((capacity || 1) * milliseconds));
 	}
 
 	for (i = 0, ilen = steps.length; i < ilen; ++i) {
@@ -14280,27 +14067,6 @@ function ticksFromTimestamps(values, majorUnit) {
 	return ticks;
 }
 
-function determineLabelFormat(data, timeOpts) {
-	var i, momentDate, hasTime;
-	var ilen = data.length;
-
-	// find the label with the most parts (milliseconds, minutes, etc.)
-	// format all labels with the same level of detail as the most specific label
-	for (i = 0; i < ilen; i++) {
-		momentDate = momentify(data[i], timeOpts);
-		if (momentDate.millisecond() !== 0) {
-			return 'MMM D, YYYY h:mm:ss.SSS a';
-		}
-		if (momentDate.second() !== 0 || momentDate.minute() !== 0 || momentDate.hour() !== 0) {
-			hasTime = true;
-		}
-	}
-	if (hasTime) {
-		return 'MMM D, YYYY h:mm:ss a';
-	}
-	return 'MMM D, YYYY';
-}
-
 module.exports = function(Chart) {
 
 	var defaultConfig = {
@@ -14402,7 +14168,6 @@ module.exports = function(Chart) {
 			var me = this;
 			var chart = me.chart;
 			var timeOpts = me.options.time;
-			var unit = timeOpts.unit || 'day';
 			var min = MAX_INTEGER;
 			var max = MIN_INTEGER;
 			var timestamps = [];
@@ -14454,9 +14219,9 @@ module.exports = function(Chart) {
 			min = parse(timeOpts.min, me) || min;
 			max = parse(timeOpts.max, me) || max;
 
-			// In case there is no valid min/max, set limits based on unit time option
-			min = min === MAX_INTEGER ? +moment().startOf(unit) : min;
-			max = max === MIN_INTEGER ? +moment().endOf(unit) + 1 : max;
+			// In case there is no valid min/max, let's use today limits
+			min = min === MAX_INTEGER ? +moment().startOf('day') : min;
+			max = max === MIN_INTEGER ? +moment().endOf('day') + 1 : max;
 
 			// Make sure that max is strictly higher than min (required by the lookup table)
 			me.min = Math.min(min, max);
@@ -14519,7 +14284,6 @@ module.exports = function(Chart) {
 			me._majorUnit = determineMajorUnit(me._unit);
 			me._table = buildLookupTable(me._timestamps.data, min, max, options.distribution);
 			me._offsets = computeOffsets(me._table, ticks, min, max, options);
-			me._labelFormat = determineLabelFormat(me._timestamps.data, timeOpts);
 
 			return ticksFromTimestamps(ticks, me._majorUnit);
 		},
@@ -14535,13 +14299,10 @@ module.exports = function(Chart) {
 				label = me.getRightValue(value);
 			}
 			if (timeOpts.tooltipFormat) {
-				return momentify(label, timeOpts).format(timeOpts.tooltipFormat);
-			}
-			if (typeof label === 'string') {
-				return label;
+				label = momentify(label, timeOpts).format(timeOpts.tooltipFormat);
 			}
 
-			return momentify(label, timeOpts).format(me._labelFormat);
+			return label;
 		},
 
 		/**
@@ -14651,8 +14412,7 @@ module.exports = function(Chart) {
 			var tickLabelWidth = me.getLabelWidth(exampleLabel);
 			var innerWidth = me.isHorizontal() ? me.width : me.height;
 
-			var capacity = Math.floor(innerWidth / tickLabelWidth);
-			return capacity > 0 ? capacity : 1;
+			return Math.floor(innerWidth / tickLabelWidth);
 		}
 	});
 
@@ -14842,43 +14602,38 @@ var WOW;
     };
 })(jQuery);
 
-($ => {
+'use strict';
 
-  const SCROLLING_NAVBAR_OFFSET_TOP = 50;
+/* SCROLLING NAVBAR */
+var OFFSET_TOP = 50;
 
-  $(window).on('scroll', () => {
-
-    const $navbar = $('.navbar');
-    if ($navbar.length) {
-
-      if ($navbar.offset().top > SCROLLING_NAVBAR_OFFSET_TOP) {
-
-        $('.scrolling-navbar').addClass('top-nav-collapse');
-      } else {
-
-        $('.scrolling-navbar').removeClass('top-nav-collapse');
-      }
+$(window).scroll(function () {
+  if ($('.navbar').length) {
+    if ($('.navbar').offset().top > OFFSET_TOP) {
+      $('.scrolling-navbar').addClass("top-nav-collapse");
+    } else {
+      $('.scrolling-navbar').removeClass("top-nav-collapse");
     }
-  });
-})(jQuery);
+  }
+});
 /*!
- * Waves v0.7.6
+ * Waves v0.7.5
  * http://fian.my.id/Waves
  *
- * Copyright 2014-2018 Alfiana E. Sibuea and other contributors
+ * Copyright 2014-2016 Alfiana E. Sibuea and other contributors
  * Released under the MIT license
  * https://github.com/fians/Waves/blob/master/LICENSE
  */
 
-;(function(window, factory) {
+;
+(function (window, factory) {
     'use strict';
 
     // AMD. Register as an anonymous module.  Wrap in function so we have access
     // to root via `this`.
     if (typeof define === 'function' && define.amd) {
-        define([], function() {
-            window.Waves = factory.call(window);
-            return window.Waves;
+        define([], function () {
+            return factory.apply(window);
         });
     }
 
@@ -14892,12 +14647,12 @@ var WOW;
     else {
         window.Waves = factory.call(window);
     }
-})(typeof global === 'object' ? global : this, function() {
+})(typeof global === 'object' ? global : this, function () {
     'use strict';
 
-    var Waves            = Waves || {};
-    var $$               = document.querySelectorAll.bind(document);
-    var toString         = Object.prototype.toString;
+    var Waves = Waves || {};
+    var $$ = document.querySelectorAll.bind(document);
+    var toString = Object.prototype.toString;
     var isTouchAvailable = 'ontouchstart' in window;
 
 
@@ -14935,7 +14690,10 @@ var WOW;
 
     function offset(elem) {
         var docElem, win,
-            box = { top: 0, left: 0 },
+            box = {
+                top: 0,
+                left: 0
+            },
             doc = elem && elem.ownerDocument;
 
         docElem = doc.documentElement;
@@ -14970,7 +14728,7 @@ var WOW;
         // Effect delay (check for scroll before showing effect)
         delay: 200,
 
-        show: function(e, element, velocity) {
+        show: function (e, element, velocity) {
 
             // Disable right click
             if (e.button === 2) {
@@ -14985,24 +14743,24 @@ var WOW;
             element.appendChild(ripple);
 
             // Get click coordinate and element width
-            var pos       = offset(element);
+            var pos = offset(element);
             var relativeY = 0;
             var relativeX = 0;
             // Support for touch devices
-            if('touches' in e && e.touches.length) {
-                relativeY   = (e.touches[0].pageY - pos.top);
-                relativeX   = (e.touches[0].pageX - pos.left);
+            if ('touches' in e && e.touches.length) {
+                relativeY = (e.touches[0].pageY - pos.top);
+                relativeX = (e.touches[0].pageX - pos.left);
             }
             //Normal case
             else {
-                relativeY   = (e.pageY - pos.top);
-                relativeX   = (e.pageX - pos.left);
+                relativeY = (e.pageY - pos.top);
+                relativeX = (e.pageX - pos.left);
             }
             // Support for synthetic events
             relativeX = relativeX >= 0 ? relativeX : 0;
             relativeY = relativeY >= 0 ? relativeY : 0;
 
-            var scale     = 'scale(' + ((element.clientWidth / 100) * 3) + ')';
+            var scale = 'scale(' + ((element.clientWidth / 100) * 3) + ')';
             var translate = 'translate(0,0)';
 
             if (velocity) {
@@ -15036,14 +14794,14 @@ var WOW;
 
             var duration = e.type === 'mousemove' ? 2500 : Effect.duration;
             rippleStyle['-webkit-transition-duration'] = duration + 'ms';
-            rippleStyle['-moz-transition-duration']    = duration + 'ms';
-            rippleStyle['-o-transition-duration']      = duration + 'ms';
-            rippleStyle['transition-duration']         = duration + 'ms';
+            rippleStyle['-moz-transition-duration'] = duration + 'ms';
+            rippleStyle['-o-transition-duration'] = duration + 'ms';
+            rippleStyle['transition-duration'] = duration + 'ms';
 
             ripple.setAttribute('style', convertStyle(rippleStyle));
         },
 
-        hide: function(e, element) {
+        hide: function (e, element) {
             element = element || this;
 
             var ripples = element.getElementsByClassName('waves-rippling');
@@ -15051,14 +14809,6 @@ var WOW;
             for (var i = 0, len = ripples.length; i < len; i++) {
                 removeRipple(e, element, ripples[i]);
             }
-
-            if (isTouchAvailable) {
-                element.removeEventListener('touchend', Effect.hide);
-                element.removeEventListener('touchcancel', Effect.hide);
-            }
-
-            element.removeEventListener('mouseup', Effect.hide);
-            element.removeEventListener('mouseleave', Effect.hide);
         }
     };
 
@@ -15069,36 +14819,36 @@ var WOW;
     var TagWrapper = {
 
         // Wrap <input> tag so it can perform the effect
-        input: function(element) {
+        input: function (element) {
 
             var parent = element.parentNode;
 
             // If input already have parent just pass through
-            if (parent.tagName.toLowerCase() === 'i' && parent.classList.contains('waves-effect')) {
+            if (parent.tagName.toLowerCase() === 'div' && parent.classList.contains('waves-effect')) {
                 return;
             }
 
             // Put element class and style to the specified parent
-            var wrapper       = document.createElement('i');
-            wrapper.className = element.className + ' waves-input-wrapper';
-            element.className = 'waves-button-input';
+            var wrapper = document.createElement('div');
+            wrapper.className = 'waves-input-wrapper';
+            // element.className = element.className + ' waves-button-input';
 
             // Put element as child
             parent.replaceChild(wrapper, element);
             wrapper.appendChild(element);
 
             // Apply element color and background color to wrapper
-            var elementStyle    = window.getComputedStyle(element, null);
-            var color           = elementStyle.color;
+            var elementStyle = window.getComputedStyle(element, null);
+            var color = elementStyle.color;
             var backgroundColor = elementStyle.backgroundColor;
 
-            wrapper.setAttribute('style', 'color:' + color + ';background:' + backgroundColor);
-            element.setAttribute('style', 'background-color:rgba(0,0,0,0);');
+            // wrapper.setAttribute('style', 'color:' + color + ';background:' + backgroundColor);
+            // element.setAttribute('style', 'background-color:rgba(0,0,0,0);');
 
         },
 
         // Wrap <img> tag so it can perform the effect
-        img: function(element) {
+        img: function (element) {
 
             var parent = element.parentNode;
 
@@ -15108,7 +14858,7 @@ var WOW;
             }
 
             // Put element as child
-            var wrapper  = document.createElement('i');
+            var wrapper = document.createElement('i');
             parent.replaceChild(wrapper, element);
             wrapper.appendChild(element);
 
@@ -15130,7 +14880,7 @@ var WOW;
 
         var relativeX = ripple.getAttribute('data-x');
         var relativeY = ripple.getAttribute('data-y');
-        var scale     = ripple.getAttribute('data-scale');
+        var scale = ripple.getAttribute('data-scale');
         var translate = ripple.getAttribute('data-translate');
 
         // Get delay beetween mousedown and mouse leave
@@ -15148,7 +14898,7 @@ var WOW;
         // Fade out ripple after delay
         var duration = e.type === 'mousemove' ? 2500 : Effect.duration;
 
-        setTimeout(function() {
+        setTimeout(function () {
 
             var style = {
                 top: relativeY + 'px',
@@ -15169,7 +14919,7 @@ var WOW;
 
             ripple.setAttribute('style', convertStyle(style));
 
-            setTimeout(function() {
+            setTimeout(function () {
                 try {
                     el.removeChild(ripple);
                 } catch (e) {
@@ -15192,7 +14942,7 @@ var WOW;
          * touchend, nor in the 500ms after touchend. */
         touches: 0,
 
-        allowEvent: function(e) {
+        allowEvent: function (e) {
 
             var allow = true;
 
@@ -15202,7 +14952,7 @@ var WOW;
 
             return allow;
         },
-        registerEvent: function(e) {
+        registerEvent: function (e) {
             var eType = e.type;
 
             if (eType === 'touchstart') {
@@ -15211,7 +14961,7 @@ var WOW;
 
             } else if (/^(touchend|touchcancel)$/.test(eType)) {
 
-                setTimeout(function() {
+                setTimeout(function () {
                     if (TouchHandler.touches) {
                         TouchHandler.touches -= 1; // pop after 500ms
                     }
@@ -15235,8 +14985,8 @@ var WOW;
         var element = null;
         var target = e.target || e.srcElement;
 
-        while (target.parentElement) {
-            if ( (!(target instanceof SVGElement)) && target.classList.contains('waves-effect')) {
+        while (target.parentElement !== null) {
+            if (target.classList.contains('waves-effect') && (!(target instanceof SVGElement))) {
                 element = target;
                 break;
             }
@@ -15277,7 +15027,7 @@ var WOW;
                     Effect.show(e, element);
                 }, Effect.delay);
 
-                var hideEffect = function(hideEvent) {
+                var hideEffect = function (hideEvent) {
 
                     // if touch hasn't moved, and effect not yet started: start effect now
                     if (timer) {
@@ -15289,29 +15039,20 @@ var WOW;
                         hidden = true;
                         Effect.hide(hideEvent, element);
                     }
-
-                    removeListeners();
                 };
 
-                var touchMove = function(moveEvent) {
+                var touchMove = function (moveEvent) {
                     if (timer) {
                         clearTimeout(timer);
                         timer = null;
                     }
                     hideEffect(moveEvent);
-
-                    removeListeners();
                 };
 
                 element.addEventListener('touchmove', touchMove, false);
                 element.addEventListener('touchend', hideEffect, false);
                 element.addEventListener('touchcancel', hideEffect, false);
 
-                var removeListeners = function() {
-                    element.removeEventListener('touchmove', touchMove);
-                    element.removeEventListener('touchend', hideEffect);
-                    element.removeEventListener('touchcancel', hideEffect);
-                };
             } else {
 
                 Effect.show(e, element);
@@ -15327,7 +15068,7 @@ var WOW;
         }
     }
 
-    Waves.init = function(options) {
+    Waves.init = function (options) {
         var body = document.body;
 
         options = options || {};
@@ -15355,7 +15096,7 @@ var WOW;
      * waves classes to a set of elements. Set drag to true if the ripple mouseover
      * or skimming effect should be applied to the elements.
      */
-    Waves.attach = function(elements, classes) {
+    Waves.attach = function (elements, classes) {
 
         elements = getWavesElements(elements);
 
@@ -15387,23 +15128,24 @@ var WOW;
     /**
      * Cause a ripple to appear in an element via code.
      */
-    Waves.ripple = function(elements, options) {
+    Waves.ripple = function (elements, options) {
         elements = getWavesElements(elements);
         var elementsLen = elements.length;
 
-        options          = options || {};
-        options.wait     = options.wait || 0;
+        options = options || {};
+        options.wait = options.wait || 0;
         options.position = options.position || null; // default = centre of element
 
 
         if (elementsLen) {
-            var element, pos, off, centre = {}, i = 0;
+            var element, pos, off, centre = {},
+                i = 0;
             var mousedown = {
                 type: 'mousedown',
                 button: 1
             };
-            var hideRipple = function(mouseup, element) {
-                return function() {
+            var hideRipple = function (mouseup, element) {
+                return function () {
                     Effect.hide(mouseup, element);
                 };
             };
@@ -15415,7 +15157,7 @@ var WOW;
                     y: element.clientHeight / 2
                 };
 
-                off      = offset(element);
+                off = offset(element);
                 centre.x = off.left + pos.x;
                 centre.y = off.top + pos.y;
 
@@ -15439,7 +15181,7 @@ var WOW;
     /**
      * Remove all ripples from an element.
      */
-    Waves.calm = function(elements) {
+    Waves.calm = function (elements) {
         elements = getWavesElements(elements);
         var mouseup = {
             type: 'mouseup',
@@ -15454,7 +15196,7 @@ var WOW;
     /**
      * Deprecated API fallback
      */
-    Waves.displayEffect = function(options) {
+    Waves.displayEffect = function (options) {
         console.error('Waves.displayEffect() has been deprecated and will be removed in future version. Please use Waves.init() to initialize Waves effect');
         Waves.init(options);
     };
@@ -15465,307 +15207,293 @@ var WOW;
 //Initialization
 Waves.attach('.btn:not(.btn-flat), .btn-floating', ['waves-light']);
 Waves.attach('.btn-flat', ['waves-effect']);
-Waves.attach('.chip', ['waves-effect']);
 Waves.attach('.view a .mask', ['waves-light']);
 Waves.attach('.waves-light', ['waves-light']);
-Waves.attach('.navbar-nav a:not(.navbar-brand), .nav-icons li a, .nav-tabs .nav-item:not(.dropdown)', ['waves-light']);
+Waves.attach('.navbar-nav a:not(.navbar-brand), .nav-icons li a, .navbar input, .nav-tabs .nav-item:not(.dropdown)', ['waves-light']);
 Waves.attach('.pager li a', ['waves-light']);
 Waves.attach('.pagination .page-item .page-link', ['waves-effect']);
 Waves.init();
-var _this = this;
 
-($ => {
+'use strict';
 
-  const inputSelector = `${['text', 'password', 'email', 'url', 'tel', 'number', 'search', 'search-md'].map(selector => `input[type=${selector}]`).join(', ')}, textarea`;
+/* FORMS */
+(function ($) {
+  $(document).ready(function () {
 
-  const textAreaSelector = '.materialize-textarea';
+    // Text based inputs
+    var input_selector = ['text', 'password', 'email', 'url', 'tel', 'number', 'search', 'search-md'].map(function (selector) {
+      return 'input[type=' + selector + ']';
+    }).join(', ') + ', textarea';
 
-  const updateTextFields = $input => {
+    var text_area_selector = '.materialize-textarea';
 
-    const $labelAndIcon = $input.siblings('label, i');
-    const hasValue = $input.val().length;
-    const hasPlaceholder = $input.attr('placeholder');
-    const addOrRemove = `${hasValue || hasPlaceholder ? 'add' : 'remove'}Class`;
+    var update_text_fields = function update_text_fields($input) {
 
-    $labelAndIcon[addOrRemove]('active');
-  };
+      var $labelAndIcon = $input.siblings('label, i');
+      var hasValue = $input.val().length;
+      var hasPlaceholder = $input.attr('placeholder');
+      // let isValid     = $input.validity.badInput === true;
+      var addOrRemove = (hasValue || hasPlaceholder ? 'add' : 'remove') + 'Class';
 
-  const validateField = $input => {
+      $labelAndIcon[addOrRemove]('active');
+    };
 
-    if ($input.hasClass('validate')) {
+    var validate_field = function validate_field($input) {
 
-      const value = $input.val();
-      const noValue = !value.length;
-      const isValid = !$input[0].validity.badInput;
+      if ($input.hasClass('validate')) {
+        var value = $input.val();
+        var noValue = !value.length;
+        var isValid = !$input[0].validity.badInput;
 
-      if (noValue && isValid) {
-
-        $input.removeClass('valid').removeClass('invalid');
-      } else {
-
-        const valid = $input.is(':valid');
-        const length = Number($input.attr('length')) || 0;
-
-        if (valid && (!length || length > value.length)) {
-
-          $input.removeClass('invalid').addClass('valid');
+        if (noValue && isValid) {
+          $input.removeClass('valid').removeClass('invalid');
         } else {
+          var valid = $input.is(':valid');
+          var length = Number($input.attr('length')) || 0;
 
-          $input.removeClass('valid').addClass('invalid');
+          if (valid && (!length || length > value.length)) {
+            $input.removeClass('invalid').addClass('valid');
+          } else {
+            $input.removeClass('valid').addClass('invalid');
+          }
         }
       }
-    }
-  };
+    };
 
-  const textAreaAutoResize = () => {
+    var textarea_auto_resize = function textarea_auto_resize() {
 
-    const $textarea = $(_this);
-    if ($textarea.val().length) {
+      var $textarea = $(undefined);
+      if ($textarea.val().length) {
+        var _$hiddenDiv = $('.hiddendiv');
+        var fontFamily = $textarea.css('font-family');
+        var fontSize = $textarea.css('font-size');
 
-      const $hiddenDiv = $('.hiddendiv');
-      const fontFamily = $textarea.css('font-family');
-      const fontSize = $textarea.css('font-size');
-
-      if (fontSize) {
-
-        $hiddenDiv.css('font-size', fontSize);
-      }
-
-      if (fontFamily) {
-
-        $hiddenDiv.css('font-family', fontFamily);
-      }
-
-      if ($textarea.attr('wrap') === 'off') {
-
-        $hiddenDiv.css('overflow-wrap', 'normal').css('white-space', 'pre');
-      }
-
-      $hiddenDiv.text(`${$textarea.val()}\n`);
-      const content = $hiddenDiv.html().replace(/\n/g, '<br>');
-      $hiddenDiv.html(content);
-
-      // When textarea is hidden, width goes crazy.
-      // Approximate with half of window size
-      $hiddenDiv.css('width', $textarea.is(':visible') ? $textarea.width() : $(window).width() / 2);
-      $textarea.css('height', $hiddenDiv.height());
-    }
-  };
-
-  $(inputSelector).each((index, input) => {
-
-    const $this = $(input);
-    const $labelAndIcon = $this.siblings('label, i');
-    updateTextFields($this);
-    const isValid = input.validity.badInput;
-    if (isValid) {
-
-      $labelAndIcon.addClass('active');
-    }
-  });
-
-  $(document).on('focus', inputSelector, e => {
-
-    $(e.target).siblings('label, i').addClass('active');
-  });
-
-  $(document).on('blur', inputSelector, e => {
-
-    const $this = $(e.target);
-    const noValue = !$this.val();
-    const invalid = !e.target.validity.badInput;
-    const noPlaceholder = $this.attr('placeholder') === undefined;
-
-    if (noValue && invalid && noPlaceholder) {
-
-      $this.siblings('label, i').removeClass('active');
-    }
-
-    validateField($this);
-  });
-
-  $(document).on('change', inputSelector, e => {
-
-    const $this = $(e.target);
-    updateTextFields($this);
-    validateField($this);
-  });
-
-  $('input[autofocus]').siblings('label, i').addClass('active');
-
-  $(document).on('reset', e => {
-
-    const $formReset = $(e.target);
-    if ($formReset.is('form')) {
-
-      const $formInputs = $formReset.find(inputSelector);
-      $formInputs.removeClass('valid').removeClass('invalid').each((index, input) => {
-
-        const $this = $(input);
-        const noDefaultValue = !$this.val();
-        const noPlaceholder = !$this.attr('placeholder');
-        if (noDefaultValue && noPlaceholder) {
-          $this.siblings('label, i').removeClass('active');
+        if (fontSize) {
+          _$hiddenDiv.css('font-size', fontSize);
         }
-      });
+        if (fontFamily) {
+          _$hiddenDiv.css('font-family', fontFamily);
+        }
+        if ($textarea.attr('wrap') === 'off') {
+          _$hiddenDiv.css('overflow-wrap', 'normal').css('white-space', 'pre');
+        }
 
-      $formReset.find('select.initialized').each((index, select) => {
+        _$hiddenDiv.text($textarea.val() + '\n');
+        var content = _$hiddenDiv.html().replace(/\n/g, '<br>');
+        _$hiddenDiv.html(content);
 
-        const $select = $(select);
-        const $visibleInput = $select.siblings('input.select-dropdown');
-        const defaultValue = $select.children('[selected]').val();
+        // When textarea is hidden, width goes crazy.
+        // Approximate with half of window size
+        _$hiddenDiv.css('width', $textarea.is(':visible') ? $textarea.width() : $(window).width() / 2);
+        $textarea.css('height', _$hiddenDiv.height());
+      }
+    };
 
-        $select.val(defaultValue);
-        $visibleInput.val(defaultValue);
-      });
-    }
-  });
+    // Set active on labels and icons (DOM ready scope);
+    $(input_selector).each(function (index, input) {
+      var $this = $(input);
+      var $labelAndIcon = $this.siblings('label, i');
+      update_text_fields($this);
+      var isValid = input.validity.badInput; // pure js
+      if (isValid) {
+        $labelAndIcon.addClass('active');
+      }
+    });
 
-  function init() {
+    // Add active when element has focus
+    $(document).on('focus', input_selector, function (e) {
+      $(e.target).siblings('label, i').addClass('active');
+    });
 
-    const $text = $('.md-textarea-auto');
-    if ($text.length) {
+    // Remove active on blur when not needed or invalid
+    $(document).on('blur', input_selector, function (e) {
+      var $this = $(e.target);
+      var noValue = !$this.val();
+      var invalid = !e.target.validity.badInput;
+      var noPlaceholder = $this.attr('placeholder') === undefined;
 
-      let observe;
+      if (noValue && invalid && noPlaceholder) {
+        $this.siblings('label, i').removeClass('active');
+      }
+
+      validate_field($this);
+    });
+
+    // Add active if form auto complete
+    $(document).on('change', input_selector, function (e) {
+      var $this = $(e.target);
+      update_text_fields($this);
+      validate_field($this);
+    });
+
+    // Handle HTML5 autofocus
+    $('input[autofocus]').siblings('label, i').addClass('active');
+
+    // HTML form reset
+    $(document).on('reset', function (e) {
+      var $formReset = $(e.target);
+      if ($formReset.is('form')) {
+
+        var $formInputs = $formReset.find(input_selector);
+        // Reset inputs
+        $formInputs.removeClass('valid').removeClass('invalid').each(function (index, input) {
+          var $this = $(input);
+          var noDefaultValue = !$this.val();
+          var noPlaceholder = !$this.attr('placeholder');
+          if (noDefaultValue && noPlaceholder) {
+            $this.siblings('label, i').removeClass('active');
+          }
+        });
+
+        // Reset select
+        $formReset.find('select.initialized').each(function (index, select) {
+          var $select = $(select);
+          var $visible_input = $select.siblings('input.select-dropdown');
+          var default_value = $select.children('[selected]').val();
+
+          $select.val(default_value);
+          $visible_input.val(default_value);
+        });
+      }
+    });
+
+    // Textarea auto extend
+    if ($('.md-textarea-auto').length) {
+      var init = function init() {
+        var text = $('.md-textarea-auto');
+        text.each(function () {
+          var _this = this;
+          function resize() {
+            _this.style.height = 'auto';
+            _this.style.height = _this.scrollHeight + 'px';
+          }
+          /* 0-timeout to get the already changed text */
+          function delayedResize() {
+            window.setTimeout(resize, 0);
+          }
+          observe(_this, 'change', resize);
+          observe(_this, 'cut', delayedResize);
+          observe(_this, 'paste', delayedResize);
+          observe(_this, 'drop', delayedResize);
+          observe(_this, 'keydown', delayedResize);
+          resize();
+        });
+      };
+
+      var observe;
       if (window.attachEvent) {
-
-        observe = function (element, event, handler) {
-
-          element.attachEvent(`on${event}`, handler);
+        observe = function observe(element, event, handler) {
+          element.attachEvent('on' + event, handler);
         };
       } else {
-
-        observe = function (element, event, handler) {
-
+        observe = function observe(element, event, handler) {
           element.addEventListener(event, handler, false);
         };
       }
 
-      $text.each(function () {
-
-        const self = this;
-
-        function resize() {
-
-          self.style.height = 'auto';
-          self.style.height = `${self.scrollHeight}px`;
-        }
-
-        function delayedResize() {
-
-          window.setTimeout(resize, 0);
-        }
-
-        observe(self, 'change', resize);
-        observe(self, 'cut', delayedResize);
-        observe(self, 'paste', delayedResize);
-        observe(self, 'drop', delayedResize);
-        observe(self, 'keydown', delayedResize);
-
-        resize();
-      });
+      init();
     }
-  }
-  init();
 
-  const $body = $('body');
-  if (!$('.hiddendiv').first().length) {
+    // Textarea Auto Resize
+    if (!$('.hiddendiv').first().length) {
+      $hiddenDiv = $('<div class="hiddendiv common"></div>');
+      $('body').append($hiddenDiv);
+    }
 
-    const $hiddenDiv = $('<div class="hiddendiv common"></div>');
-    $body.append($hiddenDiv);
-  }
-
-  $(textAreaSelector).each(textAreaAutoResize);
-  $body.on('keyup keydown', textAreaSelector, textAreaAutoResize);
+    $(text_area_selector).each(textarea_auto_resize);
+    $('body').on('keyup keydown', text_area_selector, textarea_auto_resize);
+  });
 })(jQuery);
-$(document).ready(() => {
+'use strict';
 
-  $('body').attr('aria-busy', true);
+// Preloading script
 
-  $('#preloader-markup').load('mdb-addons/preloader.html', () => {
-
-    $(window).on('load', () => {
-
+$(document).ready(function () {
+  $('#preloader-markup').load('mdb-addons/preloader.html', function () {
+    $(window).on('load', function () {
       $('#mdb-preloader').fadeOut('slow');
-      $('body').removeAttr('aria-busy');
     });
   });
 });
+'use strict';
+
+/* CARD REVEAL */
 (function ($) {
+  $(document).ready(function () {
 
-  $(document).on('click.card', '.card', function (e) {
+    $(document).on('click.card', '.card', function (e) {
 
-    const $reveal = $(this).find('.card-reveal');
+      var $this = $(this);
+      var isReveal = $this.find('.card-reveal').length;
 
-    if ($reveal.length) {
+      if (isReveal) {
 
-      const $clicked = $(e.target);
-      const isTitle = $clicked.is('.card-reveal .card-title');
-      const isTitleIcon = $clicked.is('.card-reveal .card-title i');
-      const isActivator = $clicked.is('.card .activator');
-      const isActivatorIcon = $clicked.is('.card .activator i');
+        var $clicked = $(e.target);
+        var isTitle = $clicked.is('.card-reveal .card-title');
+        var isTitleIcon = $clicked.is('.card-reveal .card-title i');
+        var isActivator = $clicked.is('.card .activator');
+        var isActivatorIcon = $clicked.is('.card .activator i');
 
-      // if (isTitle || isTitleIcon) {
+        if (isTitle || isTitleIcon) {
+          // down
 
-      //   $reveal.removeClass('show');
-      // } else if (isActivator || isActivatorIcon) {
+          $this.find('.card-reveal').velocity({
+            translateY: 0
+          }, {
+            duration: 225,
+            queue: false,
+            easing: 'easeInOutQuad',
+            complete: function complete() {
+              $(this).css({
+                display: 'none'
+              });
+            }
+          });
+        } else if (isActivator || isActivatorIcon) {
+          // up
 
-      //   $reveal.addClass('show');
-      // }
-      if (isTitle || isTitleIcon) {
-
-        // down
-        $(this).find('.card-reveal').velocity({
-          translateY: 0
-        }, {
-          duration: 225,
-          queue: false,
-          easing: 'easeInOutQuad',
-          complete: function complete() {
-            $(this).css({
-              display: 'none'
-            });
-          }
-        });
-      } else if (isActivator || isActivatorIcon) {
-
-        // up
-        $(this).find('.card-reveal').css({
-          display: 'block'
-        }).velocity('stop', false).velocity({
-          translateY: '-100%'
-        }, {
-          duration: 300,
-          queue: false,
-          easing: 'easeInOutQuad'
-        });
+          $this.find('.card-reveal').css({
+            display: 'block'
+          }).velocity('stop', false).velocity({
+            translateY: '-100%'
+          }, {
+            duration: 300,
+            queue: false,
+            easing: 'easeInOutQuad'
+          });
+        }
       }
-    }
-  });
+    });
 
-  $('.rotate-btn').on('click', function () {
+    $('.rotate-btn').on('click', function () {
 
-    const cardId = $(this).attr('data-card');
-    $(`#${cardId}`).toggleClass('flipped');
-  });
-
-  $('.card-share > a').on('click', function (e) {
-
-    e.preventDefault();
-
-    $(this).toggleClass('share-expanded').parent().find('div').toggleClass('social-reveal-active');
+      var cardId = $(this).attr('data-card');
+      $('#' + cardId).toggleClass('flipped');
+    });
   });
 })(jQuery);
+
+// Social reveal
+$(document).ready(function ($) {
+
+  $('.card-share > a').on('click', function (e) {
+    e.preventDefault(); // prevent default action - hash doesn't appear in url
+    $(this).parent().find('div').toggleClass('social-reveal-active');
+    $(this).toggleClass('share-expanded');
+  });
+});
+'use strict';
+
+/* CHARACTER COUNTER */
+
 (function ($) {
 
   $.fn.characterCounter = function () {
-
     return this.each(function () {
 
-      const itHasLengthAttribute = $(this).attr('length') !== undefined;
+      var itHasLengthAttribute = $(this).attr('length') !== undefined;
 
       if (itHasLengthAttribute) {
-
         $(this).on('input', updateCounter);
         $(this).on('focus', updateCounter);
         $(this).on('blur', removeCounterElement);
@@ -15776,43 +15504,36 @@ $(document).ready(() => {
   };
 
   function updateCounter() {
+    var maxLength = Number($(this).attr('length'));
+    var actualLength = Number($(this).val().length);
+    var isValidLength = actualLength <= maxLength;
 
-    const maxLength = Number($(this).attr('length'));
-    const actualLength = Number($(this).val().length);
-    const isValidLength = actualLength <= maxLength;
-
-    $(this).parent().find('span[class="character-counter"]').html(`${actualLength}/${maxLength}`);
+    $(this).parent().find('span[class="character-counter"]').html(actualLength + '/' + maxLength);
 
     addInputStyle(isValidLength, $(this));
   }
 
   function addCounterElement($input) {
-
-    const $counterElement = $('<span/>').addClass('character-counter').css('float', 'right').css('font-size', '12px').css('height', 1);
+    var $counterElement = $('<span/>').addClass('character-counter').css('float', 'right').css('font-size', '12px').css('height', 1);
 
     $input.parent().append($counterElement);
   }
 
   function removeCounterElement() {
-
     $(this).parent().find('span[class="character-counter"]').html('');
   }
 
   function addInputStyle(isValidLength, $input) {
-
-    const inputHasInvalidClass = $input.hasClass('invalid');
+    var inputHasInvalidClass = $input.hasClass('invalid');
     if (isValidLength && inputHasInvalidClass) {
-
       $input.removeClass('invalid');
     } else if (!isValidLength && !inputHasInvalidClass) {
-
       $input.removeClass('valid');
       $input.addClass('invalid');
     }
   }
 
-  $(document).ready(() => {
-
+  $(document).ready(function () {
     $('input, textarea').characterCounter();
   });
 })(jQuery);
@@ -16232,49 +15953,61 @@ $(document).ready(() => {
     }
 }));
 
-const SMOOTH_SCROLL_DURATION = 700;
+'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+// SMOOTH SCROLL
+var SMOOTH_SCROLL_DURATION = 700;
 
 $('.smooth-scroll').on('click', 'a', function () {
-
-    const elAttr = $(this).attr('href');
-    if (typeof elAttr !== typeof undefined && elAttr.indexOf('#') === 0) {
-
-        const offset = $(this).attr('data-offset') ? $(this).attr('data-offset') : 0;
-        const setHash = $(this).closest('ul').attr('data-allow-hashes');
-
-        $('body,html').animate({
-            scrollTop: $(elAttr).offset().top - offset
-        }, SMOOTH_SCROLL_DURATION);
-
-        if (typeof setHash !== typeof undefined && setHash !== false) {
-
-            history.replaceState(null, null, elAttr);
-        }
-
-        return false;
+  var elAttr = $(this).attr('href');
+  if ((typeof elAttr === 'undefined' ? 'undefined' : _typeof(elAttr)) !== (typeof undefined === 'undefined' ? 'undefined' : _typeof(undefined)) && elAttr.indexOf('#') == 0) {
+    var offset = $(this).attr('data-offset') ? $(this).attr('data-offset') : 0;
+    var setHash = $(this).closest('ul').attr('data-allow-hashes');
+    $('body,html').animate({
+      scrollTop: $(elAttr).offset().top - offset
+    }, SMOOTH_SCROLL_DURATION);
+    if ((typeof setHash === 'undefined' ? 'undefined' : _typeof(setHash)) !== (typeof undefined === 'undefined' ? 'undefined' : _typeof(undefined)) && setHash !== false) {
+      history.replaceState(null, null, elAttr);
     }
+
+    return false;
+  }
 });
+'use strict';
+
+/* DROPDOWN */
+
 (function ($) {
 
+  // Add posibility to scroll to selected option
+  // usefull for select for example
   $.fn.scrollTo = function (elem) {
-
     $(this).scrollTop($(this).scrollTop() - $(this).offset().top + $(elem).offset().top);
     return this;
   };
 
   $.fn.dropdown = function (option) {
+    var defaults = {
+      inDuration: 300,
+      outDuration: 225,
+      constrain_width: true, // Constrains width of dropdown to the activator
+      hover: false,
+      gutter: 0, // Spacing from edge
+      belowOrigin: false,
+      alignment: 'left'
+    };
 
     this.each(function () {
-
-      const origin = $(this);
-      const options = $.extend({}, $.fn.dropdown.defaults, option);
-      let isFocused = false;
+      var origin = $(this);
+      var options = $.extend({}, defaults, option);
+      var isFocused = false;
 
       // Dropdown menu
-      const activates = $(`#${origin.attr('data-activates')}`);
+      var activates = $('#' + origin.attr('data-activates'));
 
       function updateOptions() {
-
         if (origin.data('induration') !== undefined) {
           options.inDuration = origin.data('inDuration');
         }
@@ -16304,11 +16037,10 @@ $('.smooth-scroll').on('click', 'a', function () {
       origin.after(activates);
 
       /*
-        Helper function to position and resize dropdown.
-        Used in hover and click handler.
+      Helper function to position and resize dropdown.
+      Used in hover and click handler.
       */
       function placeDropdown(eventType) {
-
         // Check for simultaneous focus and click events.
         if (eventType === 'focus') {
           isFocused = true;
@@ -16323,55 +16055,47 @@ $('.smooth-scroll').on('click', 'a', function () {
 
         // Constrain width
         if (options.constrain_width === true) {
-
           activates.css('width', origin.outerWidth());
         } else {
-
           activates.css('white-space', 'nowrap');
         }
 
         // Offscreen detection
-        const windowHeight = window.innerHeight;
-        const originHeight = origin.innerHeight();
-        const offsetLeft = origin.offset().left;
-        const offsetTop = origin.offset().top - $(window).scrollTop();
-        let currAlignment = options.alignment;
-        let gutterSpacing = 0;
-        let leftPosition = 0;
+        var windowHeight = window.innerHeight;
+        var originHeight = origin.innerHeight();
+        var offsetLeft = origin.offset().left;
+        var offsetTop = origin.offset().top - $(window).scrollTop();
+        var currAlignment = options.alignment;
+        var gutterSpacing = 0;
+        var leftPosition = 0;
 
         // Below Origin
-        let verticalOffset = 0;
+        var verticalOffset = 0;
         if (options.belowOrigin === true) {
           verticalOffset = originHeight;
         }
 
         // Check for scrolling positioned container.
-        let scrollOffset = 0;
-        const wrapper = origin.parent();
+        var scrollOffset = 0;
+        var wrapper = origin.parent();
         if (!wrapper.is('body') && wrapper[0].scrollHeight > wrapper[0].clientHeight) {
-
           scrollOffset = wrapper[0].scrollTop;
         }
 
         if (offsetLeft + activates.innerWidth() > $(window).width()) {
-
           // Dropdown goes past screen on right, force right alignment
           currAlignment = 'right';
         } else if (offsetLeft - activates.innerWidth() + origin.innerWidth() < 0) {
-
           // Dropdown goes past screen on left, force left alignment
           currAlignment = 'left';
         }
         // Vertical bottom offscreen detection
         if (offsetTop + activates.innerHeight() > windowHeight) {
-
           // If going upwards still goes offscreen, just crop height of dropdown.
           if (offsetTop + originHeight - activates.innerHeight() < 0) {
-
-            const adjustedHeight = windowHeight - offsetTop - verticalOffset;
+            var adjustedHeight = windowHeight - offsetTop - verticalOffset;
             activates.css('max-height', adjustedHeight);
           } else {
-
             // Flow upwards.
             if (!verticalOffset) {
               verticalOffset += originHeight;
@@ -16382,12 +16106,10 @@ $('.smooth-scroll').on('click', 'a', function () {
 
         // Handle edge alignment
         if (currAlignment === 'left') {
-
           gutterSpacing = options.gutter;
           leftPosition = origin.position().left + gutterSpacing;
         } else if (currAlignment === 'right') {
-
-          const offsetRight = origin.position().left + origin.outerWidth() - activates.outerWidth();
+          var offsetRight = origin.position().left + origin.outerWidth() - activates.outerWidth();
           gutterSpacing = -options.gutter;
           leftPosition = offsetRight + gutterSpacing;
         }
@@ -16404,7 +16126,7 @@ $('.smooth-scroll').on('click', 'a', function () {
           queue: false,
           duration: options.inDuration,
           easing: 'easeOutCubic',
-          complete() {
+          complete: function complete() {
             $(this).css('height', '');
           }
         }).animate({
@@ -16418,50 +16140,42 @@ $('.smooth-scroll').on('click', 'a', function () {
       }
 
       function hideDropdown() {
-
         // Check for simultaneous focus and click events.
         isFocused = false;
         activates.fadeOut(options.outDuration);
         activates.removeClass('active');
         origin.removeClass('active');
-        setTimeout(() => {
+        setTimeout(function () {
           activates.css('max-height', '');
         }, options.outDuration);
       }
 
       // Hover
       if (options.hover) {
-
-        let open = false;
-        origin.unbind(`click.${origin.attr('id')}`);
+        var open = false;
+        origin.unbind('click.' + origin.attr('id'));
         // Hover handler to show dropdown
-        origin.on('mouseenter', () => {
+        origin.on('mouseenter', function () {
           // Mouse over
-
           if (open === false) {
-
             placeDropdown();
             open = true;
           }
         });
-        origin.on('mouseleave', e => {
-
+        origin.on('mouseleave', function (e) {
           // If hover on origin then to something other than dropdown content, then close
-          const toEl = e.toElement || e.relatedTarget; // added browser compatibility for target element
+          var toEl = e.toElement || e.relatedTarget; // added browser compatibility for target element
           if (!$(toEl).closest('.dropdown-content').is(activates)) {
-
             activates.stop(true, true);
             hideDropdown();
             open = false;
           }
         });
 
-        activates.on('mouseleave', e => {
+        activates.on('mouseleave', function (e) {
           // Mouse out
-
-          const toEl = e.toElement || e.relatedTarget;
+          var toEl = e.toElement || e.relatedTarget;
           if (!$(toEl).closest('.dropdown-button').is(origin)) {
-
             activates.stop(true, true);
             hideDropdown();
             open = false;
@@ -16470,233 +16184,281 @@ $('.smooth-scroll').on('click', 'a', function () {
 
         // Click
       } else {
-
         // Click handler to show dropdown
-        origin.unbind(`click.${origin.attr('id')}`);
-        origin.bind(`click.${origin.attr('id')}`, e => {
-
+        origin.unbind('click.' + origin.attr('id'));
+        origin.bind('click.' + origin.attr('id'), function (e) {
           if (!isFocused) {
-
             if (origin[0] === e.currentTarget && !origin.hasClass('active') && $(e.target).closest('.dropdown-content').length === 0) {
-
               e.preventDefault(); // Prevents button click from moving window
               placeDropdown('click');
-            } else if (origin.hasClass('active')) {
-              // If origin is clicked and menu is open, close menu
-
-              hideDropdown();
-              $(document).unbind(`click.${activates.attr('id')} touchstart.${activates.attr('id')}`);
             }
+            // If origin is clicked and menu is open, close menu
+            else if (origin.hasClass('active')) {
+                hideDropdown();
+                $(document).unbind('click.' + activates.attr('id') + ' touchstart.' + activates.attr('id'));
+              }
             // If menu open, add click close handler to document
             if (activates.hasClass('active')) {
-
-              $(document).bind(`click.${activates.attr('id')} touchstart.${activates.attr('id')}`, e => {
-
+              $(document).bind('click.' + activates.attr('id') + ' touchstart.' + activates.attr('id'), function (e) {
                 if (!activates.is(e.target) && !origin.is(e.target) && !origin.find(e.target).length) {
-
                   hideDropdown();
-                  $(document).unbind(`click.${activates.attr('id')} touchstart.${activates.attr('id')}`);
+                  $(document).unbind('click.' + activates.attr('id') + ' touchstart.' + activates.attr('id'));
                 }
               });
             }
           }
         });
-      }
+      } // End else
 
-      origin.on('open', (e, eventType) => {
-
+      // Listen to open and close event - useful for select component
+      origin.on('open', function (e, eventType) {
         placeDropdown(eventType);
       });
-
       origin.on('close', hideDropdown);
     });
-  };
+  }; // End dropdown plugin
 
-  $.fn.dropdown.defaults = {
-    inDuration: 300,
-    outDuration: 225,
-    constrain_width: true,
-    hover: false,
-    gutter: 0,
-    belowOrigin: false,
-    alignment: 'left'
-  };
-
-  $('.dropdown-button').dropdown();
+  $(document).ready(function () {
+    $('.dropdown-button').dropdown();
+  });
 })(jQuery);
 
-const dropdownSelectors = $('.dropdown, .dropup');
+var dropdownSelectors = $('.dropdown, .dropup');
 
 // Custom function to read dropdown data
+// =========================
 function dropdownEffectData(target) {
-
-  // TODO - page level global?
-  let effectInDefault = 'fadeIn';
-  let effectOutDefault = 'fadeOut';
-  const dropdown = $(target);
-  const dropdownMenu = $('.dropdown-menu', target);
-  const parentUl = dropdown.parents('ul.nav');
+  // @todo - page level global?
+  var effectInDefault = 'fadeIn';
+  var effectOutDefault = 'fadeOut';
+  var dropdown = $(target);
+  var dropdownMenu = $('.dropdown-menu', target);
+  var parentUl = dropdown.parents('ul.nav');
 
   // If parent is ul.nav allow global effect settings
   if (parentUl.height > 0) {
-
     effectInDefault = parentUl.data('dropdown-in') || null;
     effectOutDefault = parentUl.data('dropdown-out') || null;
   }
 
   return {
-    target,
-    dropdown,
-    dropdownMenu,
+    target: target,
+    dropdown: dropdown,
+    dropdownMenu: dropdownMenu,
     effectIn: dropdownMenu.data('dropdown-in') || effectInDefault,
     effectOut: dropdownMenu.data('dropdown-out') || effectOutDefault
   };
 }
 
 // Custom function to start effect (in or out)
+// =========================
 function dropdownEffectStart(data, effectToStart) {
-
   if (effectToStart) {
-
     data.dropdown.addClass('dropdown-animating');
-    data.dropdownMenu.addClass(['animated', effectToStart].join(' '));
+    data.dropdownMenu.addClass('animated');
+    data.dropdownMenu.addClass(effectToStart);
   }
 }
 
 // Custom function to read when animation is over
+// =========================
 function dropdownEffectEnd(data, callbackFunc) {
-
-  const animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-  data.dropdown.one(animationEnd, () => {
-
+  var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+  data.dropdown.one(animationEnd, function () {
     data.dropdown.removeClass('dropdown-animating');
-    data.dropdownMenu.removeClass(['animated', data.effectIn, data.effectOut].join(' '));
+    data.dropdownMenu.removeClass('animated');
+    data.dropdownMenu.removeClass(data.effectIn);
+    data.dropdownMenu.removeClass(data.effectOut);
 
     // Custom callback option, used to remove open class in out effect
     if (typeof callbackFunc === 'function') {
-
       callbackFunc();
     }
   });
 }
 
 // Bootstrap API hooks
+// =========================
 dropdownSelectors.on({
-  'show.bs.dropdown'() {
+  'show.bs.dropdown': function showBsDropdown() {
     // On show, start in effect
-    const dropdown = dropdownEffectData(this);
+    var dropdown = dropdownEffectData(this);
     dropdownEffectStart(dropdown, dropdown.effectIn);
   },
-  'shown.bs.dropdown'() {
+  'shown.bs.dropdown': function shownBsDropdown() {
     // On shown, remove in effect once complete
-    const dropdown = dropdownEffectData(this);
+    var dropdown = dropdownEffectData(this);
     if (dropdown.effectIn && dropdown.effectOut) {
       dropdownEffectEnd(dropdown);
     }
   },
-  'hide.bs.dropdown'(e) {
+  'hide.bs.dropdown': function hideBsDropdown(e) {
     // On hide, start out effect
-    const dropdown = dropdownEffectData(this);
+    var dropdown = dropdownEffectData(this);
     if (dropdown.effectOut) {
-
       e.preventDefault();
       dropdownEffectStart(dropdown, dropdown.effectOut);
-      dropdownEffectEnd(dropdown, () => {
-
+      dropdownEffectEnd(dropdown, function () {
         dropdown.dropdown.removeClass('show');
         dropdown.dropdownMenu.removeClass('show');
       });
     }
   }
 });
+'use strict';
+
 (function ($) {
+  $(document).ready(function () {
 
-  $(document).ready(() => {
+    // jQuery reverse
+    $.fn.reverse = [].reverse;
 
-    $(document).on('mouseenter', '.fixed-action-btn', function () {
-
-      const $this = $(this);
+    // Hover behaviour: make sure this doesn't work on .click-to-toggle FABs!
+    $(document).on('mouseenter.fixedActionBtn', '.fixed-action-btn:not(.click-to-toggle)', function () {
+      var $this = $(this);
       openFABMenu($this);
     });
-
-    $(document).on('mouseleave', '.fixed-action-btn', function () {
-
-      const $this = $(this);
+    $(document).on('mouseleave.fixedActionBtn', '.fixed-action-btn:not(.click-to-toggle)', function () {
+      var $this = $(this);
       closeFABMenu($this);
     });
 
-    $(document).on('click', '.fixed-action-btn > a', function () {
-
-      const $this = $(this);
-      const $menu = $this.parent();
-
-      $menu.hasClass('active') ? openFABMenu($menu) : closeFABMenu($menu);
-
+    // Toggle-on-click behaviour.
+    $(document).on('click.fixedActionBtn', '.fixed-action-btn.click-to-toggle > a', function () {
+      var $this = $(this);
+      var $menu = $this.parent();
       if ($menu.hasClass('active')) {
-
         closeFABMenu($menu);
       } else {
-
         openFABMenu($menu);
       }
     });
   });
 
   $.fn.extend({
-    openFAB() {
-
+    openFAB: function openFAB() {
       openFABMenu($(this));
     },
-    closeFAB() {
-
+    closeFAB: function closeFAB() {
       closeFABMenu($(this));
     }
   });
 
-  const openFABMenu = btn => {
+  var openFABMenu = function openFABMenu(btn) {
+    var $this = btn;
+    if ($this.hasClass('active') === false) {
 
-    const fab = btn;
-    if (!fab.hasClass('active')) {
+      // Get direction option
+      var horizontal = $this.hasClass('horizontal');
+      var offsetY = void 0,
+          offsetX = void 0;
 
-      fab.addClass('active');
-      const btnList = document.querySelectorAll('ul .btn-floating');
-      btnList.forEach(el => {
+      if (horizontal === true) {
+        offsetX = 40;
+      } else {
+        offsetY = 40;
+      }
 
-        el.classList.add('shown');
+      $this.addClass('active');
+      $this.find('ul .btn-floating').velocity({
+        scaleY: '.4',
+        scaleX: '.4',
+        translateY: offsetY + 'px',
+        translateX: offsetX + 'px'
+      }, {
+        duration: 0
+      });
+
+      var time = 0;
+      $this.find('ul .btn-floating').reverse().each(function () {
+        $(this).velocity({
+          opacity: '1',
+          scaleX: '1',
+          scaleY: '1',
+          translateY: '0',
+          translateX: '0'
+        }, {
+          duration: 80,
+          delay: time
+        });
+        time += 40;
       });
     }
   };
 
-  const closeFABMenu = btn => {
+  var closeFABMenu = function closeFABMenu(btn) {
+    $this = btn;
+    // Get direction option
+    var horizontal = $this.hasClass('horizontal');
+    var offsetY = void 0,
+        offsetX = void 0;
 
-    const fab = btn;
+    if (horizontal === true) {
+      offsetX = 40;
+    } else {
+      offsetY = 40;
+    }
 
-    fab.removeClass('active');
-    const btnList = document.querySelectorAll('ul .btn-floating');
-    btnList.forEach(el => {
-
-      el.classList.remove('shown');
+    $this.removeClass('active');
+    var time = 0;
+    $this.find('ul .btn-floating').velocity('stop', true);
+    $this.find('ul .btn-floating').velocity({
+      opacity: '0',
+      scaleX: '.4',
+      scaleY: '.4',
+      translateY: offsetY + 'px',
+      translateX: offsetX + 'px'
+    }, {
+      duration: 80
     });
   };
 
-  $('.fixed-action-btn > .btn-floating').on('click', e => {
-
-    e.preventDefault();
-    toggleFABMenu($('.fixed-action-btn'));
-
-    return false;
+  $('.fixed-action-btn').on({
+    click: function click(e) {
+      e.preventDefault();
+      toggleFABMenu($('.fixed-action-btn'));
+      return false;
+    }
   });
 
   function toggleFABMenu(btn) {
 
-    const elem = btn;
+    $this = btn;
+    if ($this.hasClass('active') === false) {
+      $this.addClass('active');
+      $this.find('ul .btn-floating').velocity({
+        scaleY: '.4',
+        scaleX: '.4',
+        translateY: '40px'
+      }, {
+        duration: 0
+      });
 
-    if (elem.hasClass('active')) {
-
-      closeFABMenu(elem);
+      var time = 0;
+      $this.find('ul .btn-floating').reverse().each(function () {
+        $(this).velocity({
+          opacity: '1',
+          scaleX: '1',
+          scaleY: '1',
+          translateY: '0'
+        }, {
+          duration: 80,
+          delay: time
+        });
+        time += 40;
+      });
     } else {
-
-      openFABMenu(elem);
+      $this.removeClass('active');
+      var _time = 0;
+      $this.find('ul .btn-floating').velocity('stop', true);
+      $this.find('ul .btn-floating').velocity({
+        opacity: '0',
+        scaleX: '.4',
+        scaleY: '.4',
+        translateY: '40px'
+      }, {
+        duration: 80
+      });
     }
   }
 })(jQuery);
@@ -19377,412 +19139,411 @@ if (typeof define === 'function' && define.amd) {
     })(Hammer.Manager.prototype.emit);
 }));
 
-($ => {
+'use strict';
 
-  const MENU_WIDTH = 240;
-  const SN_BREAKPOINT = 1440;
-  const MENU_WIDTH_HALF = 2;
-  const MENU_LEFT_MIN_BORDER = 0.3;
-  const MENU_LEFT_MAX_BORDER = -0.5;
-  const MENU_RIGHT_MIN_BORDER = -0.3;
-  const MENU_RIGHT_MAX_BORDER = 0.5;
-  const MENU_VELOCITY_OFFSET = 10;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  class SideNav {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    constructor(element, options) {
+/* SideNav */
+(function ($) {
 
-      this.defaults = {
-        MENU_WIDTH,
+  var MENU_WIDTH = 240;
+  var SN_BREAKPOINT = 1440;
+  var MENU_WIDTH_HALF = 2;
+  var MENU_LEFT_MIN_BORDER = 0.3;
+  var MENU_LEFT_MAX_BORDER = -0.5;
+  var MENU_RIGHT_MIN_BORDER = -0.3;
+  var MENU_RIGHT_MAX_BORDER = 0.5;
+  var MENU_VELOCITY_OFFSET = 10;
+
+  var SideNav = function () {
+    function SideNav(element, options) {
+      var _this = this;
+
+      _classCallCheck(this, SideNav);
+
+      var menuOut = false;
+
+      var defaults = {
+        MENU_WIDTH: MENU_WIDTH,
         edge: 'left',
         closeOnClick: false
       };
 
-      this.$element = element;
-      this.options = this.assignOptions(options);
+      options = $.extend(defaults, options);
 
-      this.menuOut = false;
+      this.options = options;
 
-      this.$body = $('body');
-      this.$menu = $(`#${this.$element.attr('data-activates')}`);
-      this.$sidenavOverlay = $('#sidenav-overlay');
-      this.$dragTarget = $('<div class="drag-target"></div>');
-      this.$body.append(this.$dragTarget);
+      var $element = element;
+      this.menu_id = $('#' + $element.attr('data-activates'));
+      var mask_id = $('#' + this.menu_id.attr('id') + '> .sidenav-bg');
 
-      this.init();
-    }
+      // let menuOut = false;
 
-    init() {
-
-      this.setMenuWidth();
-      this.setMenuTranslation();
-      this.closeOnClick();
-      this.openOnClick();
-      this.bindTouchEvents();
-    }
-
-    bindTouchEvents() {
-
-      this.$dragTarget.on('click', () => {
-
-        this.removeMenu();
-      });
-
-      this.$dragTarget.hammer({
-        prevent_default: false
-      }).bind('pan', this.panEventHandler.bind(this)).bind('panend', this.panendEventHandler.bind(this));
-    }
-
-    panEventHandler(e) {
-
-      if (e.gesture.pointerType !== 'touch') {
-
-        return;
+      if (options.MENU_WIDTH !== MENU_WIDTH) {
+        this.menu_id.css('width', options.MENU_WIDTH);
+        mask_id.css('width', options.MENU_WIDTH);
       }
 
-      let touchX = e.gesture.center.x;
-
-      this.disableScrolling();
-
-      const overlayExists = this.$sidenavOverlay.length !== 0;
-      if (!overlayExists) {
-
-        this.buildSidenavOverlay();
-      }
-
-      // Keep within boundaries
-      if (this.options.edge === 'left') {
-
-        if (touchX > this.options.MENU_WIDTH) {
-
-          touchX = this.options.MENU_WIDTH;
-        } else if (touchX < 0) {
-
-          touchX = 0;
-        }
-      }
-
-      this.translateSidenavX(touchX);
-      this.updateOverlayOpacity(touchX);
-    }
-
-    translateSidenavX(touchX) {
-
-      if (this.options.edge === 'left') {
-
-        const isRightDirection = touchX >= this.options.MENU_WIDTH / MENU_WIDTH_HALF;
-        this.menuOut = isRightDirection;
-
-        this.$menu.css('transform', `translateX(${touchX - this.options.MENU_WIDTH}px)`);
-      } else {
-
-        const isLeftDirection = touchX < window.innerWidth - this.options.MENU_WIDTH / MENU_WIDTH_HALF;
-        this.menuOut = isLeftDirection;
-
-        let rightPos = touchX - this.options.MENU_WIDTH / MENU_WIDTH_HALF;
-        if (rightPos < 0) {
-          rightPos = 0;
-        }
-
-        this.$menu.css('transform', `translateX(${rightPos}px)`);
-      }
-    }
-
-    updateOverlayOpacity(touchX) {
-
-      let overlayPercentage;
-      if (this.options.edge === 'left') {
-
-        overlayPercentage = touchX / this.options.MENU_WIDTH;
-      } else {
-
-        overlayPercentage = Math.abs((touchX - window.innerWidth) / this.options.MENU_WIDTH);
-      }
-
-      this.$sidenavOverlay.velocity({
-        opacity: overlayPercentage
-      }, {
-        duration: 10,
-        queue: false,
-        easing: 'easeOutQuad'
-      });
-    }
-
-    buildSidenavOverlay() {
-
-      this.$sidenavOverlay = $('<div id="sidenav-overlay"></div>');
-      this.$sidenavOverlay.css('opacity', 0).on('click', () => {
-
-        this.removeMenu();
-      });
-
-      this.$body.append(this.$sidenavOverlay);
-    }
-
-    disableScrolling() {
-
-      const oldWidth = this.$body.innerWidth();
-      this.$body.css('overflow', 'hidden');
-      this.$body.width(oldWidth);
-    }
-
-    panendEventHandler(e) {
-
-      if (e.gesture.pointerType !== 'touch') {
-
-        return;
-      }
-
-      const velocityX = e.gesture.velocityX;
-      const touchX = e.gesture.center.x;
-      let leftPos = touchX - this.options.MENU_WIDTH;
-      let rightPos = touchX - this.options.MENU_WIDTH / MENU_WIDTH_HALF;
-      if (leftPos > 0) {
-        leftPos = 0;
-      }
-      if (rightPos < 0) {
-        rightPos = 0;
-      }
-
-      if (this.options.edge === 'left') {
-
-        // If velocityX <= 0.3 then the user is flinging the menu closed so ignore this.menuOut
-        if (this.menuOut && velocityX <= MENU_LEFT_MIN_BORDER || velocityX < MENU_LEFT_MAX_BORDER) {
-
-          if (leftPos !== 0) {
-
-            this.translateMenuX([0, leftPos], '300');
-          }
-
-          this.showSidenavOverlay();
-        } else if (!this.menuOut || velocityX > MENU_LEFT_MIN_BORDER) {
-
-          this.enableScrolling();
-          this.translateMenuX([-1 * this.options.MENU_WIDTH - MENU_VELOCITY_OFFSET, leftPos], '200');
-          this.hideSidenavOverlay();
-        }
-
-        this.$dragTarget.css({
-          width: '10px',
-          right: '',
-          left: 0
-        });
-      } else if (this.menuOut && velocityX >= MENU_RIGHT_MIN_BORDER || velocityX > MENU_RIGHT_MAX_BORDER) {
-
-        this.translateMenuX([0, rightPos], '300');
-        this.showSidenavOverlay();
-
-        this.$dragTarget.css({
-          width: '50%',
-          right: '',
-          left: 0
-        });
-      } else if (!this.menuOut || velocityX < MENU_RIGHT_MIN_BORDER) {
-
-        this.enableScrolling();
-        this.translateMenuX([this.options.MENU_WIDTH + MENU_VELOCITY_OFFSET, rightPos], '200');
-        this.hideSidenavOverlay();
-
-        this.$dragTarget.css({
-          width: '10px',
-          right: 0,
-          left: ''
-        });
-      }
-    }
-
-    translateMenuX(fromTo, duration) {
-
-      this.$menu.velocity({
-        translateX: fromTo
-      }, {
-        duration: typeof duration === 'string' ? Number(duration) : duration,
-        queue: false,
-        easing: 'easeOutQuad'
-      });
-    }
-
-    hideSidenavOverlay() {
-
-      this.$sidenavOverlay.velocity({
-        opacity: 0
-      }, {
-        duration: 200,
-        queue: false,
-        easing: 'easeOutQuad',
-        complete() {
-
-          $(this).remove();
-        }
-      });
-
-      this.$sidenavOverlay = $();
-    }
-
-    showSidenavOverlay() {
-
-      this.$sidenavOverlay.velocity({
-        opacity: 1
-      }, {
-        duration: 50,
-        queue: false,
-        easing: 'easeOutQuad'
-      });
-    }
-
-    enableScrolling() {
-
-      this.$body.css({
-        overflow: '',
-        width: ''
-      });
-    }
-
-    openOnClick() {
-
-      this.$element.on('click', e => {
-
-        e.preventDefault();
-
-        if (this.menuOut === true) {
-
-          this.menuOut = false;
-          this.removeMenu();
-        } else {
-
-          this.$sidenavOverlay = $('<div id="sidenav-overlay"></div>');
-          this.$body.append(this.$sidenavOverlay);
-
-          let translateX = [];
-          if (this.options.edge === 'left') {
-
-            translateX = [0, -1 * this.options.MENU_WIDTH];
-          } else {
-
-            translateX = [0, this.options.MENU_WIDTH];
-          }
-
-          this.$menu.velocity({
-            translateX
-          }, {
-            duration: 300,
-            queue: false,
-            easing: 'easeOutQuad'
-          });
-
-          this.$sidenavOverlay.on('click', () => {
-
-            this.removeMenu();
-          });
-        }
-      });
-    }
-
-    closeOnClick() {
-
-      if (this.options.closeOnClick === true) {
-
-        this.$menu.on('click', 'a:not(.collapsible-header)', () => {
-
-          this.removeMenu();
-        });
-      }
-    }
-
-    setMenuTranslation() {
-
-      if (this.options.edge === 'left') {
-
-        this.$menu.css('transform', 'translateX(-100%)');
-        this.$dragTarget.css({
+      var dragTarget = $('<div class="drag-target"></div>');
+      $('body').append(dragTarget);
+
+      if (options.edge === 'left') {
+        this.menu_id.css('transform', 'translateX(-100%)');
+        dragTarget.css({
           left: 0
         });
       } else {
-
-        this.$menu.addClass('right-aligned').css('transform', 'translateX(100%)');
-        this.$dragTarget.css({
+        this.menu_id.addClass('right-aligned').css('transform', 'translateX(100%)');
+        dragTarget.css({
           right: 0
         });
       }
 
-      if (this.$menu.hasClass('fixed')) {
+      if (this.menu_id.hasClass('fixed')) {
 
         if (window.innerWidth > SN_BREAKPOINT) {
-
-          this.$menu.css('transform', 'translateX(0)');
+          this.menu_id.css('transform', 'translateX(0)');
         }
 
-        $(window).resize(() => {
-
+        $(window).resize(function () {
           if (window.innerWidth > SN_BREAKPOINT) {
-
-            if (this.$sidenavOverlay.length) {
-
-              this.removeMenu(true);
+            if ($('#sidenav-overlay').length) {
+              _this.removeMenu(true);
             } else {
-
-              this.$menu.css('transform', 'translateX(0%)');
+              _this.menu_id.css('transform', 'translateX(0%)');
             }
-          } else if (this.menuOut === false) {
-
-            const xValue = this.options.edge === 'left' ? '-100' : '100';
-            this.$menu.css('transform', `translateX(${xValue}%)`);
+          } else if (menuOut === false) {
+            if (options.edge === 'left') {
+              _this.menu_id.css('transform', 'translateX(-100%)');
+            } else {
+              _this.menu_id.css('transform', 'translateX(100%)');
+            }
           }
         });
       }
-    }
 
-    setMenuWidth() {
-
-      const $sidenavBg = $(`#${this.$menu.attr('id')}`).find('> .sidenav-bg');
-
-      if (this.options.MENU_WIDTH !== MENU_WIDTH) {
-
-        this.$menu.css('width', this.options.MENU_WIDTH);
-        $sidenavBg.css('width', this.options.MENU_WIDTH);
+      if (this.options.closeOnClick === true) {
+        this.menu_id.on('click', 'a:not(.collapsible-header)', function () {
+          _this.removeMenu();
+        });
       }
-    }
 
-    assignOptions(newOptions) {
+      $element.click(function (e) {
+        e.preventDefault();
+        if (menuOut === true) {
+          menuOut = false;
+          _this.removeMenu();
+        } else {
+          var $body = $('body');
+          var overlay = $('<div id="sidenav-overlay"></div>');
+          $body.append(overlay);
 
-      return $.extend({}, this.defaults, newOptions);
-    }
-
-    removeMenu(restoreMenu) {
-
-      this.$body.css({
-        overflow: '',
-        width: ''
-      });
-
-      this.$menu.velocity({
-        translateX: this.options.edge === 'left' ? '-100%' : '100%'
-      }, {
-        duration: 200,
-        queue: false,
-        easing: 'easeOutCubic',
-        complete: () => {
-          if (restoreMenu === true) {
-            this.$menu.removeAttr('style');
-            this.$menu.css('width', this.options.MENU_WIDTH);
+          if (_this.options.edge === 'left') {
+            _this.menu_id.velocity({
+              translateX: [0, -1 * options.MENU_WIDTH]
+            }, {
+              duration: 300,
+              queue: false,
+              easing: 'easeOutQuad'
+            });
+          } else {
+            _this.menu_id.velocity({
+              translateX: [0, options.MENU_WIDTH]
+            }, {
+              duration: 300,
+              queue: false,
+              easing: 'easeOutQuad'
+            });
           }
+
+          overlay.click(function () {
+            _this.removeMenu();
+          });
         }
       });
 
-      this.hideSidenavOverlay();
+      // Touch Event
+      dragTarget.click(function () {
+        _this.removeMenu();
+      });
+
+      dragTarget.hammer({
+        prevent_default: false
+      }).bind('pan', function (e) {
+
+        if (e.gesture.pointerType === 'touch') {
+
+          var x = e.gesture.center.x;
+
+          // Disable Scrolling
+          var $body = $('body');
+          var oldWidth = $body.innerWidth();
+          $body.css('overflow', 'hidden');
+          $body.width(oldWidth);
+
+          // If overlay does not exist, create one and if it is clicked, close menu
+          if ($('#sidenav-overlay').length === 0) {
+            var overlay = $('<div id="sidenav-overlay"></div>');
+            overlay.css('opacity', 0).click(function () {
+              _this.removeMenu();
+            });
+            $('body').append(overlay);
+          }
+
+          // Keep within boundaries
+          if (options.edge === 'left') {
+            if (x > options.MENU_WIDTH) {
+              x = options.MENU_WIDTH;
+            } else if (x < 0) {
+              x = 0;
+            }
+          }
+
+          if (options.edge === 'left') {
+            // Left Direction
+            if (x < options.MENU_WIDTH / MENU_WIDTH_HALF) {
+              menuOut = false;
+            }
+            // Right Direction
+            else if (x >= options.MENU_WIDTH / MENU_WIDTH_HALF) {
+                menuOut = true;
+              }
+            _this.menu_id.css('transform', 'translateX(' + (x - options.MENU_WIDTH) + 'px)');
+          } else {
+            // Left Direction
+            if (x < window.innerWidth - options.MENU_WIDTH / MENU_WIDTH_HALF) {
+              menuOut = true;
+            }
+            // Right Direction
+            else if (x >= window.innerWidth - options.MENU_WIDTH / MENU_WIDTH_HALF) {
+                menuOut = false;
+              }
+            var rightPos = x - options.MENU_WIDTH / MENU_WIDTH_HALF;
+            if (rightPos < 0) {
+              rightPos = 0;
+            }
+
+            _this.menu_id.css('transform', 'translateX(' + rightPos + 'px)');
+          }
+
+          // Percentage overlay
+          var overlayPerc = void 0;
+          if (options.edge === 'left') {
+            overlayPerc = x / options.MENU_WIDTH;
+            $('#sidenav-overlay').velocity({
+              opacity: overlayPerc
+            }, {
+              duration: 10,
+              queue: false,
+              easing: 'easeOutQuad'
+            });
+          } else {
+            overlayPerc = Math.abs((x - window.innerWidth) / options.MENU_WIDTH);
+            $('#sidenav-overlay').velocity({
+              opacity: overlayPerc
+            }, {
+              duration: 10,
+              queue: false,
+              easing: 'easeOutQuad'
+            });
+          }
+        }
+      }).bind('panend', function (e) {
+
+        if (e.gesture.pointerType === 'touch') {
+          var velocityX = e.gesture.velocityX;
+          var x = e.gesture.center.x;
+          var leftPos = x - options.MENU_WIDTH;
+          var rightPos = x - options.MENU_WIDTH / MENU_WIDTH_HALF;
+          if (leftPos > 0) {
+            leftPos = 0;
+          }
+          if (rightPos < 0) {
+            rightPos = 0;
+          }
+          // panning = false;
+
+          if (options.edge === 'left') {
+            // If velocityX <= 0.3 then the user is flinging the menu closed so ignore menuOut
+            if (menuOut && velocityX <= MENU_LEFT_MIN_BORDER || velocityX < MENU_LEFT_MAX_BORDER) {
+              if (leftPos !== 0) {
+                _this.menu_id.velocity({
+                  translateX: [0, leftPos]
+                }, {
+                  duration: 300,
+                  queue: false,
+                  easing: 'easeOutQuad'
+                });
+              }
+
+              // menu_id.css({'translateX': 0});
+              $('#sidenav-overlay').velocity({
+                opacity: 1
+              }, {
+                duration: 50,
+                queue: false,
+                easing: 'easeOutQuad'
+              });
+              // dragTarget.css({width: '50%', right: 0, left: ''});
+              dragTarget.css({
+                width: '10px',
+                right: '',
+                left: 0
+              });
+            } else if (!menuOut || velocityX > MENU_LEFT_MIN_BORDER) {
+              // Enable Scrolling
+              $('body').css({
+                overflow: '',
+                width: ''
+              });
+              // Slide menu closed
+              _this.menu_id.velocity({
+                translateX: [-1 * options.MENU_WIDTH - MENU_VELOCITY_OFFSET, leftPos]
+              }, {
+                duration: 200,
+                queue: false,
+                easing: 'easeOutQuad'
+              });
+              $('#sidenav-overlay').velocity({
+                opacity: 0
+              }, {
+                duration: 200,
+                queue: false,
+                easing: 'easeOutQuad',
+                complete: function complete() {
+                  $(this).remove();
+                }
+              });
+              // dragTarget.css({width: '50%', right: 0, left: ''});
+              dragTarget.css({
+                width: '10px',
+                right: '',
+                left: 0
+              });
+            }
+          } else if (menuOut && velocityX >= MENU_RIGHT_MIN_BORDER || velocityX > MENU_RIGHT_MAX_BORDER) {
+
+            _this.menu_id.velocity({
+              translateX: [0, rightPos]
+            }, {
+              duration: 300,
+              queue: false,
+              easing: 'easeOutQuad'
+            });
+            $('#sidenav-overlay').velocity({
+              opacity: 1
+            }, {
+              duration: 50,
+              queue: false,
+              easing: 'easeOutQuad'
+            });
+            dragTarget.css({
+              width: '50%',
+              right: '',
+              left: 0
+            });
+          } else if (!menuOut || velocityX < MENU_RIGHT_MIN_BORDER) {
+            // Enable Scrolling
+            $('body').css({
+              overflow: '',
+              width: ''
+            });
+
+            // Slide menu closed
+            _this.menu_id.velocity({
+              translateX: [options.MENU_WIDTH + MENU_VELOCITY_OFFSET, rightPos]
+            }, {
+              duration: 200,
+              queue: false,
+              easing: 'easeOutQuad'
+            });
+            $('#sidenav-overlay').velocity({
+              opacity: 0
+            }, {
+              duration: 200,
+              queue: false,
+              easing: 'easeOutQuad',
+              complete: function complete() {
+                $(_this).remove();
+              }
+            });
+            dragTarget.css({
+              width: '10px',
+              right: 0,
+              left: ''
+            });
+          }
+        }
+      });
     }
 
-    show() {
+    _createClass(SideNav, [{
+      key: 'removeMenu',
+      value: function removeMenu(restoreMenu) {
+        var _this2 = this;
 
-      this.trigger('click');
-    }
+        $('body').css({
+          overflow: '',
+          width: ''
+        });
 
-    hide() {
+        if (this.options.edge === 'left') {
+          this.menu_id.velocity({
+            translateX: '-100%'
+          }, {
+            duration: 200,
+            queue: false,
+            easing: 'easeOutCubic',
+            complete: function complete() {
+              if (restoreMenu === true) {
+                _this2.menu_id.removeAttr('style');
+                _this2.menu_id.css('width', _this2.options.MENU_WIDTH);
+              }
+            }
+          });
+        } else {
+          this.menu_id.velocity({
+            translateX: '100%'
+          }, {
+            duration: 200,
+            queue: false,
+            easing: 'easeOutCubic',
+            complete: function complete() {
+              if (restoreMenu === true) {
+                _this2.menu_id.removeAttr('style');
+                _this2.menu_id.css('width', _this2.options.MENU_WIDTH);
+              }
+            }
+          });
+        }
 
-      this.$sidenavOverlay.trigger('click');
-    }
+        $('#sidenav-overlay').velocity({
+          opacity: 0
+        }, {
+          duration: 200,
+          queue: false,
+          easing: 'easeOutQuad',
+          complete: function complete() {
+            $('#sidenav-overlay').remove();
+          }
+        });
+      }
+    }, {
+      key: 'show',
+      value: function show() {
+        this.trigger('click');
+      }
+    }, {
+      key: 'hide',
+      value: function hide() {
+        $('#sidenav-overlay').trigger('click');
+      }
+    }]);
 
-  }
+    return SideNav;
+  }();
 
   $.fn.sideNav = function (options) {
     return this.each(function () {
@@ -19790,151 +19551,155 @@ if (typeof define === 'function' && define.amd) {
     });
   };
 })(jQuery);
+'use strict';
+
+/* COLLAPSIBLE */
+
 (function ($) {
-
   $.fn.collapsible = function (options) {
-
-    const defaults = {
+    var defaults = {
       accordion: undefined
     };
 
     options = $.extend(defaults, options);
 
-    function accordionOpen($collapsible, object) {
-
-      $panelHeaders = $collapsible.find('> li > .collapsible-header');
-      if (object.hasClass('active')) {
-
-        object.parent().addClass('active');
-      } else {
-
-        object.parent().removeClass('active');
-      }
-
-      if (object.parent().hasClass('active')) {
-
-        object.siblings('.collapsible-body').stop(true, false).slideDown({
-          duration: 350,
-          easing: 'easeOutQuart',
-          queue: false,
-          complete() {
-
-            $(this).css('height', '');
-          }
-        });
-      } else {
-
-        object.siblings('.collapsible-body').stop(true, false).slideUp({
-          duration: 350,
-          easing: 'easeOutQuart',
-          queue: false,
-          complete() {
-            $(this).css('height', '');
-          }
-        });
-      }
-
-      $panelHeaders.not(object).removeClass('active').parent().removeClass('active');
-      $panelHeaders.not(object).parent().children('.collapsible-body').stop(true, false).slideUp({
-        duration: 350,
-        easing: 'easeOutQuart',
-        queue: false,
-        complete() {
-          $(this).css('height', '');
-        }
-      });
-    }
-
-    function expandableOpen(object) {
-
-      if (object.hasClass('active')) {
-
-        object.parent().addClass('active');
-      } else {
-
-        object.parent().removeClass('active');
-      }
-
-      if (object.parent().hasClass('active')) {
-
-        object.siblings('.collapsible-body').stop(true, false).slideDown({
-          duration: 350,
-          easing: 'easeOutQuart',
-          queue: false,
-          complete() {
-            $(this).css('height', '');
-          }
-        });
-      } else {
-
-        object.siblings('.collapsible-body').stop(true, false).slideUp({
-          duration: 350,
-          easing: 'easeOutQuart',
-          queue: false,
-          complete() {
-            $(this).css('height', '');
-          }
-        });
-      }
-    }
-
-    function isChildrenOfPanelHeader(object) {
-
-      const panelHeader = getPanelHeader(object);
-      return panelHeader.length > 0;
-    }
-
-    function getPanelHeader(object) {
-
-      return object.closest('li > .collapsible-header');
-    }
-
     return this.each(function () {
 
-      const $this = $(this);
+      var $this = $(this);
 
-      let $panelHeaders = $(this).find('> li > .collapsible-header');
+      var $panel_headers = $(this).find('> li > .collapsible-header');
 
-      const collapsibleType = $this.data('collapsible');
+      var collapsible_type = $this.data('collapsible');
 
       // Turn off any existing event handlers
       $this.off('click.collapse', '.collapsible-header');
-      $panelHeaders.off('click.collapse');
+      $panel_headers.off('click.collapse');
 
-      if (options.accordion || collapsibleType === 'accordion' || collapsibleType === undefined) {
+      /** **************
+            Helper Functions
+            ****************/
 
-        $panelHeaders = $this.find('> li > .collapsible-header');
-        $panelHeaders.on('click.collapse', e => {
+      // Accordion Open
+      function accordionOpen(object) {
+        $panel_headers = $this.find('> li > .collapsible-header');
+        if (object.hasClass('active')) {
+          object.parent().addClass('active');
+        } else {
+          object.parent().removeClass('active');
+        }
+        if (object.parent().hasClass('active')) {
+          object.siblings('.collapsible-body').stop(true, false).slideDown({
+            duration: 350,
+            easing: 'easeOutQuart',
+            queue: false,
+            complete: function complete() {
+              $(this).css('height', '');
+            }
+          });
+        } else {
+          object.siblings('.collapsible-body').stop(true, false).slideUp({
+            duration: 350,
+            easing: 'easeOutQuart',
+            queue: false,
+            complete: function complete() {
+              $(this).css('height', '');
+            }
+          });
+        }
 
-          let element = $(e.target);
+        $panel_headers.not(object).removeClass('active').parent().removeClass('active');
+        $panel_headers.not(object).parent().children('.collapsible-body').stop(true, false).slideUp({
+          duration: 350,
+          easing: 'easeOutQuart',
+          queue: false,
+          complete: function complete() {
+            $(this).css('height', '');
+          }
+        });
+      }
+
+      // Expandable Open
+      function expandableOpen(object) {
+        if (object.hasClass('active')) {
+          object.parent().addClass('active');
+        } else {
+          object.parent().removeClass('active');
+        }
+        if (object.parent().hasClass('active')) {
+          object.siblings('.collapsible-body').stop(true, false).slideDown({
+            duration: 350,
+            easing: 'easeOutQuart',
+            queue: false,
+            complete: function complete() {
+              $(this).css('height', '');
+            }
+          });
+        } else {
+          object.siblings('.collapsible-body').stop(true, false).slideUp({
+            duration: 350,
+            easing: 'easeOutQuart',
+            queue: false,
+            complete: function complete() {
+              $(this).css('height', '');
+            }
+          });
+        }
+      }
+
+      /**
+             * Check if object is children of panel header
+             * @param  {Object}  object Jquery object
+             * @return {Boolean} true if it is children
+             */
+      function isChildrenOfPanelHeader(object) {
+
+        var panelHeader = getPanelHeader(object);
+
+        return panelHeader.length > 0;
+      }
+
+      /**
+             * Get panel header from a children element
+             * @param  {Object} object Jquery object
+             * @return {Object} panel header object
+             */
+      function getPanelHeader(object) {
+
+        return object.closest('li > .collapsible-header');
+      }
+
+      /** ***  End Helper Functions  *****/
+
+      if (options.accordion || collapsible_type === 'accordion' || collapsible_type === undefined) {
+        // Handle Accordion
+        // Add click handler to only direct collapsible header children
+        $panel_headers = $this.find('> li > .collapsible-header');
+        $panel_headers.on('click.collapse', function (e) {
+          var element = $(e.target);
 
           if (isChildrenOfPanelHeader(element)) {
-
             element = getPanelHeader(element);
           }
 
           element.toggleClass('active');
-          accordionOpen($this, element);
+          accordionOpen(element);
         });
-
-        accordionOpen($this, $panelHeaders.filter('.active').first());
+        // Open first active
+        accordionOpen($panel_headers.filter('.active').first());
       } else {
-
-        $panelHeaders.each(function () {
-
-          $(this).on('click.collapse', e => {
-
-            let element = $(e.target);
+        // Handle Expandables
+        $panel_headers.each(function () {
+          // Add click handler to only direct collapsible header children
+          $(this).on('click.collapse', function (e) {
+            var element = $(e.target);
             if (isChildrenOfPanelHeader(element)) {
-
               element = getPanelHeader(element);
             }
             element.toggleClass('active');
             expandableOpen(element);
           });
-
+          // Open any bodies that have the active class
           if ($(this).hasClass('active')) {
-
             expandableOpen($(this));
           }
         });
@@ -19942,7 +19707,9 @@ if (typeof define === 'function' && define.amd) {
     });
   };
 
-  $('.collapsible').collapsible();
+  $(document).ready(function () {
+    $('.collapsible').collapsible();
+  });
 })(jQuery);
 /**!
  * easy-pie-chart
@@ -20309,47 +20076,50 @@ $.fn.easyPieChart = function(options) {
 
 }));
 
+'use strict';
+
+/** **************
+*  Range Input  *
+****************/
 (function ($) {
 
-  const rangeWrapper = '.range-field';
-  const rangeType = 'input[type=range]:not(.custom-range)';
-  const thumbHtml = '<span class="thumb"><span class="value"></span></span>';
-  let rangeMousedown = false;
-  let left;
+  var range_wrapper = '.range-field';
+  var range_type = 'input[type=range]';
+  var thumb_html = '<span class="thumb"><span class="value"></span></span>';
+  var range_mousedown = false;
+  var left = void 0;
 
-  const addThumb = function () {
-
-    const $thumb = $(thumbHtml);
-    $(rangeType).after($thumb);
+  var add_thumb = function add_thumb() {
+    var $thumb = $(thumb_html);
+    $(range_type).after($thumb);
   };
 
-  $(document).on('change', rangeType, function () {
+  // Add thumbs;
+  // $(range_type).each(add_thumb)
 
-    const $thumb = $(this);
-    const $thumbValue = $thumb.siblings('.thumb').find('.value');
-    $thumbValue.html($thumb.val());
+  $(document).on('change', range_type, function () {
+    var $thumb = $(this);
+    var $thumb_value = $thumb.siblings('.thumb').find('.value');
+    $thumb_value.html($thumb.val());
   });
 
-  $(document).on('input mousedown touchstart', rangeType, function (e) {
-
-    const $this = $(this);
-    const $thumb = $this.siblings('.thumb');
-    const width = $this.outerWidth();
-    const noThumb = !$thumb.length;
-
+  $(document).on('input mousedown touchstart', range_type, function (e) {
+    var $this = $(this);
+    var $thumb = $this.siblings('.thumb');
+    var width = $this.outerWidth();
+    var noThumb = !$thumb.length;
+    // If thumb indicator does not exist yet, create it
     if (noThumb) {
-
-      addThumb();
+      add_thumb();
     }
 
     // Set indicator value
     $thumb.find('.value').html($this.val());
 
-    rangeMousedown = true;
+    range_mousedown = true;
     $this.addClass('active');
 
     if (!$thumb.hasClass('active')) {
-
       $thumb.velocity({
         height: '30px',
         width: '30px',
@@ -20362,45 +20132,35 @@ $.fn.easyPieChart = function(options) {
     }
 
     if (e.type !== 'input') {
-
-      const isMobile = e.pageX === undefined || e.pageX === null;
+      var isMobile = e.pageX === undefined || e.pageX === null;
       if (isMobile) {
-
         left = e.originalEvent.touches[0].pageX - $(this).offset().left;
       } else {
-
         left = e.pageX - $(this).offset().left;
       }
 
       if (left < 0) {
-
         left = 0;
       } else if (left > width) {
-
         left = width;
       }
-
       $thumb.addClass('active').css('left', left);
     }
 
     $thumb.find('.value').html($this.val());
   });
 
-  $(document).on('mouseup touchend', rangeWrapper, function () {
-
-    rangeMousedown = false;
+  $(document).on('mouseup touchend', range_wrapper, function () {
+    range_mousedown = false;
     $(this).removeClass('active');
   });
 
-  $(document).on('mousemove touchmove', rangeWrapper, function (e) {
+  $(document).on('mousemove touchmove', range_wrapper, function (e) {
+    var $thumb = $(this).children('.thumb');
+    var left = void 0;
 
-    const $thumb = $(this).children('.thumb');
-    let left;
-
-    if (rangeMousedown) {
-
+    if (range_mousedown) {
       if (!$thumb.hasClass('active')) {
-
         $thumb.velocity({
           height: '30px',
           width: '30px',
@@ -20411,38 +20171,30 @@ $.fn.easyPieChart = function(options) {
           easing: 'easeOutExpo'
         });
       }
-
-      const isMobile = e.pageX === undefined || e.pageX === null;
+      var isMobile = e.pageX === undefined || e.pageX === null;
       if (isMobile) {
-
         left = e.originalEvent.touches[0].pageX - $(this).offset().left;
       } else {
-
         left = e.pageX - $(this).offset().left;
       }
 
-      const width = $(this).outerWidth();
+      var width = $(this).outerWidth();
       if (left < 0) {
-
         left = 0;
       } else if (left > width) {
-
         left = width;
       }
 
       $thumb.addClass('active').css('left', left);
-      $thumb.find('.value').html($thumb.siblings(rangeType).val());
+      $thumb.find('.value').html($thumb.siblings(range_type).val());
     }
   });
 
-  $(document).on('mouseout touchleave', rangeWrapper, function () {
-
-    if (!rangeMousedown) {
-
-      const $thumb = $(this).children('.thumb');
+  $(document).on('mouseout touchleave', range_wrapper, function () {
+    if (!range_mousedown) {
+      var $thumb = $(this).children('.thumb');
 
       if ($thumb.hasClass('active')) {
-
         $thumb.velocity({
           height: '0',
           width: '0',
@@ -20452,812 +20204,471 @@ $.fn.easyPieChart = function(options) {
           duration: 100
         });
       }
-
       $thumb.removeClass('active');
     }
   });
 })(jQuery);
+'use strict';
+
+/** *****************
+*  File input     *
+******************/
 (function ($) {
 
-  $(document).on('change', '.file-field input[type="file"]', e => {
+  $(document).on('change', '.file-field input[type="file"]', function (e) {
 
-    const $this = $(e.target);
-    const $fileField = $this.closest('.file-field');
-    const $pathInput = $fileField.find('input.file-path');
-    const files = $this[0].files;
-    const fileNames = [];
-    // files.forEach((file) => fileNames.push(file.name));
-    if (Array.isArray(files)) {
-      files.forEach(function (file) {
-        return fileNames.push(file.name);
-      });
-    } else {
-      Object.keys(files).forEach(key => {
-        fileNames.push(files[key].name);
-      });
+    var $this = $(e.target);
+    var $file_field = $this.closest('.file-field');
+    var $path_input = $file_field.find('input.file-path');
+    var files = $this[0].files;
+    var file_names = [];
+    for (var i = 0; i < files.length; i++) {
+      var file_name = files[i].name;
+      file_names.push(file_name);
     }
-    $pathInput.val(fileNames.join(', '));
-    $pathInput.trigger('change');
+    $path_input.val(file_names.join(', '));
+    $path_input.trigger('change');
   });
 })(jQuery);
+'use strict';
+
 (function ($) {
 
-      class MaterialSelect {
-
-            constructor($nativeSelect, options) {
-
-                  this.options = options;
-                  this.$nativeSelect = $nativeSelect;
-
-                  this.isMultiple = Boolean(this.$nativeSelect.attr('multiple'));
-                  this.isSearchable = Boolean(this.$nativeSelect.attr('searchable'));
-                  this.isRequired = Boolean(this.$nativeSelect.attr('required'));
-
-                  this.uuid = this._randomUUID();
-
-                  this.$selectWrapper = $('<div class="select-wrapper"></div>');
-                  this.$materialOptionsList = $(`<ul id="select-options-${this.uuid}" class="dropdown-content select-dropdown w-100 ${this.isMultiple ? 'multiple-select-dropdown' : ''}"></ul>`);
-                  this.$materialSelectInitialOption = $nativeSelect.find('option:selected').html() || $nativeSelect.find('option:first').html() || '';
-                  this.$nativeSelectChildren = this.$nativeSelect.children('option, optgroup');
-                  this.$materialSelect = $(`<input type="text" class="select-dropdown" readonly="true" ${this.$nativeSelect.is(':disabled') ? 'disabled' : ''} data-activates="select-options-${this.uuid}" value=""/>`);
-                  this.$dropdownIcon = $('<span class="caret">&#9660;</span>');
-                  this.$searchInput = null;
-                  this.$toggleAll = $('<li class="select-toggle-all"><span><input type="checkbox" class="form-check-input"><label>Select all</label></span></li>');
-
-                  this.valuesSelected = [];
-                  this.keyCodes = {
-                        tab: 9,
-                        esc: 27,
-                        enter: 13,
-                        arrowUp: 38,
-                        arrowDown: 40
-                  };
-
-                  MaterialSelect.mutationObservers = [];
-            }
-
-            static clearMutationObservers() {
-
-                  MaterialSelect.mutationObservers.forEach(observer => {
-
-                        observer.disconnect();
-                        observer.customStatus = 'stopped';
-                  });
-            }
-
-            init() {
-
-                  const alreadyInitialized = Boolean(this.$nativeSelect.data('select-id'));
-                  if (alreadyInitialized) {
-
-                        this._removeMaterialWrapper();
-                  }
-
-                  if (this.options === 'destroy') {
-
-                        this.$nativeSelect.data('select-id', null).removeClass('initialized');
-
-                        return;
-                  }
-
-                  this.$nativeSelect.data('select-id', this.uuid);
-                  this.$selectWrapper.addClass(this.$nativeSelect.attr('class'));
-
-                  const sanitizedLabelHtml = this.$materialSelectInitialOption.replace(/"/g, '&quot;');
-                  this.$materialSelect.val(sanitizedLabelHtml);
-
-                  this.renderMaterialSelect();
-                  this.bindEvents();
-
-                  if (this.isRequired) {
-
-                        this.enableValidation();
-                  }
-            }
-
-            _removeMaterialWrapper() {
-
-                  const currentUuid = this.$nativeSelect.data('select-id');
-
-                  this.$nativeSelect.parent().find('span.caret').remove();
-                  this.$nativeSelect.parent().find('input').remove();
-                  this.$nativeSelect.unwrap();
-
-                  $(`ul#select-options-${currentUuid}`).remove();
-            }
-
-            renderMaterialSelect() {
-
-                  this.$nativeSelect.before(this.$selectWrapper);
-
-                  this.appendDropdownIcon();
-                  this.appendMaterialSelect();
-                  this.appendMaterialOptionsList();
-                  this.appendNativeSelect();
-                  this.appendSaveSelectButton();
-
-                  if (!this.$nativeSelect.is(':disabled')) {
-
-                        this.$materialSelect.dropdown({
-                              hover: false,
-                              closeOnClick: false
-                        });
-                  }
-
-                  if (this.$nativeSelect.data('inherit-tabindex') !== false) {
-
-                        this.$materialSelect.attr('tabindex', this.$nativeSelect.attr('tabindex'));
-                  }
-
-                  if (this.isMultiple) {
-
-                        this.$nativeSelect.find('option:selected:not(:disabled)').each((i, element) => {
-
-                              const index = $(element).index();
-
-                              this._toggleSelectedValue(index);
-
-                              this.$materialOptionsList.find('li:not(.optgroup):not(.select-toggle-all)').eq(index).find(':checkbox').prop('checked', true);
-                        });
-                  } else {
-
-                        const index = this.$nativeSelect.find('option:selected').index();
-                        this.$materialOptionsList.find('li').eq(index).addClass('active');
-                  }
-
-                  this.$nativeSelect.addClass('initialized');
-            }
-
-            appendDropdownIcon() {
-
-                  if (this.$nativeSelect.is(':disabled')) {
-
-                        this.$dropdownIcon.addClass('disabled');
-                  }
-
-                  this.$selectWrapper.append(this.$dropdownIcon);
-            }
-
-            appendMaterialSelect() {
-
-                  this.$selectWrapper.append(this.$materialSelect);
-            }
-
-            appendMaterialOptionsList() {
-
-                  if (this.isSearchable) {
-
-                        this.appendSearchInputOption();
-                  }
-
-                  this.buildMaterialOptions();
-
-                  if (this.isMultiple) {
-
-                        this.appendToggleAllCheckbox();
-                  }
-
-                  this.$selectWrapper.append(this.$materialOptionsList);
-            }
-
-            appendNativeSelect() {
-
-                  this.$nativeSelect.appendTo(this.$selectWrapper);
-            }
-
-            appendSearchInputOption() {
-
-                  const placeholder = this.$nativeSelect.attr('searchable');
-                  this.$searchInput = $(`<span class="search-wrap ml-2"><div class="md-form mt-0"><input type="text" class="search form-control w-100 d-block" placeholder="${placeholder}"></div></span>`);
-
-                  this.$materialOptionsList.append(this.$searchInput);
-            }
-
-            appendToggleAllCheckbox() {
-
-                  this.$materialOptionsList.find('li.disabled').first().after(this.$toggleAll);
-            }
-
-            appendSaveSelectButton() {
-
-                  this.$selectWrapper.parent().find('button.btn-save').appendTo(this.$materialOptionsList);
-            }
-            buildMaterialOptions() {
-
-                  this.$nativeSelectChildren.each((index, option) => {
-
-                        const $this = $(option);
-
-                        if ($this.is('option')) {
-
-                              this.buildSingleOption($this, this.isMultiple ? 'multiple' : '');
-                        } else if ($this.is('optgroup')) {
-
-                              const $materialOptgroup = $(`<li class="optgroup"><span>${$this.attr('label')}</span></li>`);
-                              this.$materialOptionsList.append($materialOptgroup);
-
-                              const $optgroupOptions = $this.children('option');
-                              $optgroupOptions.each((index, optgroupOption) => {
-
-                                    this.buildSingleOption($(optgroupOption), 'optgroup-option');
-                              });
-                        }
-                  });
-            }
-
-            buildSingleOption($nativeSelectChild, type) {
-
-                  const disabled = $nativeSelectChild.is(':disabled') ? 'disabled' : '';
-                  const optgroupClass = type === 'optgroup-option' ? 'optgroup-option' : '';
-
-                  const iconUrl = $nativeSelectChild.data('icon');
-                  const fa = $nativeSelectChild.data('fa') ? `<i class="fa fa-${$nativeSelectChild.data('fa')}"></i>` : '';
-                  const classes = $nativeSelectChild.attr('class');
-
-                  const iconHtml = iconUrl ? `<img alt="" src="${iconUrl}" class="${classes}">` : '';
-                  const checkboxHtml = this.isMultiple ? `<input type="checkbox" class="form-check-input" ${disabled}/><label></label>` : '';
-
-                  this.$materialOptionsList.append($(`<li class="${disabled} ${optgroupClass}">${iconHtml}<span class="filtrable">${checkboxHtml} ${fa} ${$nativeSelectChild.html()}</span></li>`));
-            }
-
-            enableValidation() {
-
-                  this.$nativeSelect.css({
-                        position: 'absolute',
-                        top: '1rem',
-                        left: '0',
-                        height: '0',
-                        width: '0',
-                        opacity: '0',
-                        padding: '0',
-                        'pointer-events': 'none'
-                  });
-
-                  if (this.$nativeSelect.attr('style').indexOf('inline!important') === -1) {
-
-                        this.$nativeSelect.attr('style', `${this.$nativeSelect.attr('style')} display: inline!important;`);
-                  }
-
-                  this.$nativeSelect.attr('tabindex', -1);
-                  this.$nativeSelect.data('inherit-tabindex', false);
-            }
-
-            bindEvents() {
-
-                  const config = {
-                        attributes: true,
-                        childList: true,
-                        characterData: true,
-                        subtree: true
-                  };
-                  const observer = new MutationObserver(this._onMutationObserverChange.bind(this));
-                  observer.observe(this.$nativeSelect.get(0), config);
-                  observer.customId = this.uuid;
-                  observer.customStatus = 'observing';
-
-                  MaterialSelect.clearMutationObservers();
-                  MaterialSelect.mutationObservers.push(observer);
-
-                  const $saveSelectBtn = this.$nativeSelect.parent().find('button.btn-save');
-                  $saveSelectBtn.on('click', this._onSaveSelectBtnClick);
-
-                  this.$materialSelect.on('focus', this._onMaterialSelectFocus.bind(this));
-                  this.$materialSelect.on('click', this._onMaterialSelectClick.bind(this));
-                  this.$materialSelect.on('blur', this._onMaterialSelectBlur.bind(this));
-                  this.$materialSelect.on('keydown', this._onMaterialSelectKeydown.bind(this));
-
-                  this.$toggleAll.on('click', this._onToggleAllClick.bind(this));
-
-                  this.$materialOptionsList.on('mousedown', this._onEachMaterialOptionMousedown.bind(this));
-                  this.$materialOptionsList.find('li:not(.optgroup)').not(this.$toggleAll).each((materialOptionIndex, materialOption) => {
-
-                        $(materialOption).on('click', this._onEachMaterialOptionClick.bind(this, materialOptionIndex, materialOption));
-                  });
-
-                  if (!this.isMultiple && this.isSearchable) {
-
-                        this.$materialOptionsList.find('li').on('click', this._onSingleMaterialOptionClick.bind(this));
-                  }
-
-                  if (this.isSearchable) {
-
-                        this.$searchInput.find('.search').on('keyup', this._onSearchInputKeyup);
-                  }
-
-                  $('html').on('click', this._onHTMLClick.bind(this));
-            }
-
-            _onMutationObserverChange(mutationsList) {
-
-                  mutationsList.forEach(mutation => {
-
-                        const $select = $(mutation.target).closest('select');
-                        if ($select.data('stop-refresh') !== true && (mutation.type === 'childList' || mutation.type === 'attributes' && $(mutation.target).is('option'))) {
-
-                              MaterialSelect.clearMutationObservers();
-
-                              $select.materialSelect('destroy');
-                              $select.materialSelect();
-                        }
-                  });
-            }
-
-            _onSaveSelectBtnClick() {
-
-                  $('input.select-dropdown').trigger('close');
-            }
-
-            _onEachMaterialOptionClick(materialOptionIndex, materialOption, e) {
-
-                  e.stopPropagation();
-
-                  const $this = $(materialOption);
-
-                  if ($this.hasClass('disabled') || $this.hasClass('optgroup')) {
-
-                        return;
-                  }
-
-                  let selected = true;
-
-                  if (this.isMultiple) {
-
-                        $this.find('input[type="checkbox"]').prop('checked', (index, oldPropertyValue) => {
-
-                              return !oldPropertyValue;
-                        });
-
-                        const hasOptgroup = Boolean(this.$nativeSelect.find('optgroup').length);
-                        const thisIndex = this._isToggleAllPresent() ? $this.index() - 1 : $this.index();
-
-                        if (this.isSearchable && hasOptgroup) {
-
-                              selected = this._toggleSelectedValue(thisIndex - $this.prevAll('.optgroup').length - 1);
-                        } else if (this.isSearchable) {
-
-                              selected = this._toggleSelectedValue(thisIndex - 1);
-                        } else if (hasOptgroup) {
-
-                              selected = this._toggleSelectedValue(thisIndex - $this.prevAll('.optgroup').length);
-                        } else {
-
-                              selected = this._toggleSelectedValue(thisIndex);
-                        }
-
-                        if (this._isToggleAllPresent()) {
-
-                              this._updateToggleAllOption();
-                        }
-
-                        this.$materialSelect.trigger('focus');
-                  } else {
-
-                        this.$materialOptionsList.find('li').removeClass('active');
-                        $this.toggleClass('active');
-                        this.$materialSelect.val($this.text());
-                        this.$materialSelect.trigger('close');
-                  }
-
-                  this._selectSingleOption($this);
-                  this.$nativeSelect.data('stop-refresh', true);
-                  this.$nativeSelect.find('option').eq(materialOptionIndex).prop('selected', selected);
-                  this.$nativeSelect.removeData('stop-refresh');
-                  this._triggerChangeOnNativeSelect();
-
-                  if (typeof this.options === 'function') {
-
-                        this.options();
-                  }
-            }
-
-            _triggerChangeOnNativeSelect() {
-
-                  const keyboardEvt = new KeyboardEvent('change', {
-                        bubbles: true,
-                        cancelable: true
-                  });
-                  this.$nativeSelect.get(0).dispatchEvent(keyboardEvt);
-            }
-
-            _onMaterialSelectFocus(e) {
-
-                  const $this = $(e.target);
-
-                  if ($('ul.select-dropdown').not(this.$materialOptionsList.get(0)).is(':visible')) {
-
-                        $('input.select-dropdown').trigger('close');
-                  }
-
-                  if (!this.$materialOptionsList.is(':visible')) {
-
-                        $this.trigger('open', ['focus']);
-
-                        const label = $this.val();
-                        const $selectedOption = this.$materialOptionsList.find('li').filter(function () {
-
-                              return $(this).text().toLowerCase() === label.toLowerCase();
-                        })[0];
-
-                        this._selectSingleOption($selectedOption);
-                  }
-            }
-
-            _onMaterialSelectClick(e) {
-
-                  e.stopPropagation();
-            }
-
-            _onMaterialSelectBlur(e) {
-
-                  const $this = $(e);
-
-                  if (!this.isMultiple && !this.isSearchable) {
-
-                        $this.trigger('close');
-                  }
-
-                  this.$materialOptionsList.find('li.selected').removeClass('selected');
-            }
-
-            _onSingleMaterialOptionClick() {
-
-                  this.$materialSelect.trigger('close');
-            }
-
-            _onEachMaterialOptionMousedown(e) {
-
-                  const option = e.target;
-
-                  if ($('.modal-content').find(this.$materialOptionsList).length) {
-
-                        if (option.scrollHeight > option.offsetHeight) {
-
-                              e.preventDefault();
-                        }
-                  }
-            }
-
-            _onHTMLClick(e) {
-
-                  if (!$(e.target).closest(`#select-options-${this.uuid}`).length) {
-
-                        this.$materialSelect.trigger('close');
-                  }
-            }
-
-            _onToggleAllClick() {
-
-                  const checkbox = $(this.$toggleAll).find('input[type="checkbox"]').first();
-                  const state = !$(checkbox).prop('checked');
-                  $(checkbox).prop('checked', state);
-
-                  this.$materialOptionsList.find('li:not(.optgroup):not(.disabled):not(.select-toggle-all)').each((materialOptionIndex, materialOption) => {
-
-                        const $optionCheckbox = $(materialOption).find('input[type="checkbox"]');
-
-                        if (state && $optionCheckbox.is(':checked') || !state && !$optionCheckbox.is(':checked')) {
-
-                              return;
-                        }
-
-                        if (this._isToggleAllPresent()) {
-
-                              materialOptionIndex++;
-                        }
-
-                        $optionCheckbox.prop('checked', state);
-
-                        this.$nativeSelect.find('option').eq(materialOptionIndex).prop('selected', state);
-
-                        if (state) {
-
-                              $(materialOption).removeClass('active');
-                        } else {
-
-                              $(materialOption).addClass('active');
-                        }
-
-                        this._toggleSelectedValue(materialOptionIndex);
-                        this._selectOption(materialOption);
-
-                        this._setValueToMaterialSelect();
-                  });
-
-                  this.$nativeSelect.data('stop-refresh', true);
-                  this._triggerChangeOnNativeSelect();
-                  this.$nativeSelect.removeData('stop-refresh');
-            }
-
-            _onMaterialSelectKeydown(e) {
-
-                  const $this = $(e.target);
-
-                  const isTab = e.which === this.keyCodes.tab;
-                  const isEsc = e.which === this.keyCodes.esc;
-                  const isEnter = e.which === this.keyCodes.enter;
-                  const isArrowUp = e.which === this.keyCodes.arrowUp;
-                  const isArrowDown = e.which === this.keyCodes.arrowDown;
-
-                  const isMaterialSelectVisible = this.$materialOptionsList.is(':visible');
-
-                  if (isTab) {
-
-                        this._handleTabKey($this);
-                        return;
-                  } else if (isArrowDown && !isMaterialSelectVisible) {
-
-                        $this.trigger('open');
-                        return;
-                  } else if (isEnter && !isMaterialSelectVisible) {
-
-                        return;
-                  }
-
-                  e.preventDefault();
-
-                  if (isEnter) {
-
-                        this._handleEnterKey($this);
-                  } else if (isArrowDown) {
-
-                        this._handleArrowDownKey();
-                  } else if (isArrowUp) {
-
-                        this._handleArrowUpKey();
-                  } else if (isEsc) {
-
-                        this._handleEscKey($this);
-                  } else {
-
-                        this._handleLetterKey(e);
-                  }
-            }
-
-            _handleTabKey(materialSelect) {
-
-                  this._handleEscKey(materialSelect);
-            }
-
-            _handleEnterKey(materialSelect) {
-
-                  const $materialSelect = $(materialSelect);
-                  const $activeOption = this.$materialOptionsList.find('li.selected:not(.disabled)');
-
-                  $activeOption.trigger('click');
-
-                  if (!this.isMultiple) {
-
-                        $materialSelect.trigger('close');
-                  }
-            }
-
-            _handleArrowDownKey() {
-
-                  const $firstOption = this.$materialOptionsList.find('li').not('.disabled').not('.select-toggle-all').first();
-                  const $lastOption = this.$materialOptionsList.find('li').not('.disabled').not('.select-toggle-all').last();
-                  const anySelected = this.$materialOptionsList.find('li.selected').length > 0;
-
-                  const $currentOption = anySelected ? this.$materialOptionsList.find('li.selected') : $firstOption;
-                  const $matchedMaterialOption = $currentOption.is($lastOption) || !anySelected ? $currentOption : $currentOption.next('li:not(.disabled)');
-
-                  this._selectSingleOption($matchedMaterialOption);
-
-                  this.$materialOptionsList.find('li').removeClass('active');
-                  $matchedMaterialOption.toggleClass('active');
-            }
-
-            _handleArrowUpKey() {
-
-                  const $firstOption = this.$materialOptionsList.find('li').not('.disabled').not('.select-toggle-all').first();
-                  const $lastOption = this.$materialOptionsList.find('li').not('.disabled').not('.select-toggle-all').last();
-                  const anySelected = this.$materialOptionsList.find('li.selected').length > 0;
-
-                  const $currentOption = anySelected ? this.$materialOptionsList.find('li.selected') : $lastOption;
-                  const $matchedMaterialOption = $currentOption.is($firstOption) || !anySelected ? $currentOption : $currentOption.prev('li:not(.disabled)');
-
-                  this._selectSingleOption($matchedMaterialOption);
-
-                  this.$materialOptionsList.find('li').removeClass('active');
-                  $matchedMaterialOption.toggleClass('active');
-            }
-
-            _handleEscKey(materialSelect) {
-
-                  const $materialSelect = $(materialSelect);
-                  $materialSelect.trigger('close');
-            }
-
-            _handleLetterKey(e) {
-
-                  let filterQueryString = '';
-                  const letter = String.fromCharCode(e.which).toLowerCase();
-                  const nonLetters = Object.keys(this.keyCodes).map(key => this.keyCodes[key]);
-
-                  const isLetterSearchable = letter && nonLetters.indexOf(e.which) === -1;
-
-                  if (isLetterSearchable) {
-
-                        filterQueryString += letter;
-
-                        const $matchedMaterialOption = this.$materialOptionsList.find('li').filter(function () {
-
-                              return $(this).text().toLowerCase().indexOf(filterQueryString) !== -1;
-                        }).first();
-
-                        if (!this.isMultiple) {
-
-                              this.$materialOptionsList.find('li').removeClass('active');
-                        }
-
-                        $matchedMaterialOption.addClass('active');
-                        this._selectSingleOption($matchedMaterialOption);
-                  }
-            }
-
-            _onSearchInputKeyup(e) {
-
-                  const $this = $(e.target);
-
-                  const $ul = $this.closest('ul');
-                  const searchValue = $this.val();
-                  const $options = $ul.find('li span.filtrable');
-
-                  $options.each(function () {
-
-                        const $option = $(this);
-                        if (typeof this.outerHTML === 'string') {
-
-                              const liValue = this.textContent.toLowerCase();
-
-                              if (liValue.includes(searchValue.toLowerCase())) {
-
-                                    $option.show().parent().show();
-                              } else {
-
-                                    $option.hide().parent().hide();
-                              }
-                        }
-                  });
-            }
-
-            _isToggleAllPresent() {
-
-                  return this.$materialOptionsList.find(this.$toggleAll).length;
-            }
-
-            _updateToggleAllOption() {
-
-                  const $allOptionsButToggleAll = this.$materialOptionsList.find('li').not('.select-toggle-all, .disabled').find('[type=checkbox]');
-                  const $checkedOptionsButToggleAll = $allOptionsButToggleAll.filter(':checked');
-                  const isToggleAllChecked = this.$toggleAll.find('[type=checkbox]').is(':checked');
-
-                  if ($checkedOptionsButToggleAll.length === $allOptionsButToggleAll.length && !isToggleAllChecked) {
-
-                        this.$toggleAll.find('[type=checkbox]').prop('checked', true);
-                  } else if ($checkedOptionsButToggleAll.length < $allOptionsButToggleAll.length && isToggleAllChecked) {
-
-                        this.$toggleAll.find('[type=checkbox]').prop('checked', false);
-                  }
-            }
-
-            _toggleSelectedValue(optionIndex) {
-
-                  const selectedValueIndex = this.valuesSelected.indexOf(optionIndex);
-                  const isSelected = selectedValueIndex !== -1;
-
-                  if (!isSelected) {
-
-                        this.valuesSelected.push(optionIndex);
-                  } else {
-
-                        this.valuesSelected.splice(selectedValueIndex, 1);
-                  }
-
-                  this.$materialOptionsList.find('li:not(.optgroup):not(.select-toggle-all)').eq(optionIndex).toggleClass('active');
-                  this.$nativeSelect.find('option').eq(optionIndex).prop('selected', !isSelected);
-
-                  this._setValueToMaterialSelect();
-
-                  return !isSelected;
-            }
-
-            _selectSingleOption(newOption) {
-
-                  this.$materialOptionsList.find('li.selected').removeClass('selected');
-
-                  this._selectOption(newOption);
-            }
-
-            _selectOption(newOption) {
-
-                  const option = $(newOption);
-                  option.addClass('selected');
-            }
-
-            _setValueToMaterialSelect() {
-
-                  let value = '';
-                  const itemsCount = this.valuesSelected.length;
-
-                  for (let i = 0; i < itemsCount; i++) {
-
-                        const text = this.$nativeSelect.find('option').eq(this.valuesSelected[i]).text();
-
-                        value += `, ${text}`;
-                  }
-
-                  if (itemsCount >= 5) {
-
-                        value = `${itemsCount} options selected`;
-                  } else {
-
-                        value = value.substring(2);
-                  }
-
-                  if (value.length === 0) {
-
-                        value = this.$nativeSelect.find('option:disabled').eq(0).text();
-                  }
-
-                  this.$nativeSelect.siblings('input.select-dropdown').val(value);
-            }
-
-            _randomUUID() {
-
-                  let d = new Date().getTime();
-
-                  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-
-                        const r = (d + Math.random() * 16) % 16 | 0;
-                        d = Math.floor(d / 16);
-
-                        return (c === 'x' ? r : r & 0x3 | 0x8).toString(16);
-                  });
-            }
+  $.fn.material_select = function (callback) {
+    $(this).each(function () {
+      var $select = $(this);
+
+      if ($select.hasClass('browser-default')) {
+        return; // Continue to next (return false breaks out of entire loop)
       }
 
-      $.fn.materialSelect = function (callback) {
+      var multiple = Boolean($select.attr('multiple')),
+          lastID = $select.data('select-id'); // Tear down structure if Select needs to be rebuilt
 
-            $(this).not('.browser-default').not('.custom-select').each(function () {
+      if (lastID) {
+        $select.parent().find('span.caret').remove();
+        $select.parent().find('input').remove();
 
-                  const materialSelect = new MaterialSelect($(this), callback);
-                  materialSelect.init();
-            });
+        $select.unwrap();
+        $('ul#select-options-' + lastID).remove();
+      }
+
+      // If destroying the select, remove the selelct-id and reset it to it's uninitialized state.
+      if (callback === 'destroy') {
+        $select.data('select-id', null).removeClass('initialized');
+        return;
+      }
+
+      var uniqueID = guid(); // Materialize.guid();
+      $select.data('select-id', uniqueID);
+      var wrapper = $('<div class="select-wrapper"></div>');
+      wrapper.addClass($select.attr('class'));
+      var options = $('<ul id="select-options-' + uniqueID + '" class="dropdown-content select-dropdown ' + (multiple ? 'multiple-select-dropdown' : '') + '"></ul>'),
+          selectChildren = $select.children('option, optgroup'),
+          valuesSelected = [],
+          optionsHover = false;
+
+      var label = $select.find('option:selected').html() || $select.find('option:first').html() || '';
+
+      // Added to search
+      var applySeachInList = function applySeachInList() {
+
+        var ul = $(this).closest('ul');
+        var searchValue = $(this).val();
+        var options = ul.find('li').find('span.filtrable');
+
+        options.each(function () {
+          if (typeof this.outerHTML === 'string') {
+            var liValue = this.textContent.toLowerCase();
+
+            if (liValue.indexOf(searchValue.toLowerCase()) === -1) {
+              $(this).hide();
+              $(this).parent().hide();
+            } else {
+              $(this).show();
+              $(this).parent().show();
+            }
+          }
+        });
       };
 
-      $.fn.material_select = $.fn.materialSelect;
+      // Added to search
+      var setSearchableOption = function setSearchableOption() {
+        var placeholder = $select.attr('searchable');
+        var element = $('<span class="search-wrap"><div class="md-form"><input type="text" class="search form-control" placeholder="' + placeholder + '"></div></span>');
+        options.append(element);
+        element.find('.search').keyup(applySeachInList);
+      };
 
-      (function (originalVal) {
+      // Added to search
+      var searchable = Boolean($select.attr('searchable'));
 
-            $.fn.val = function (value) {
+      // Added to search
+      if (searchable) {
+        setSearchableOption();
+      }
 
-                  if (!arguments.length) {
+      // Function that renders and appends the option taking into
+      // account type and possible image icon.
+      var appendOptionWithIcon = function appendOptionWithIcon(select, option, type) {
+        // Add disabled attr if disabled
+        var disabledClass = option.is(':disabled') ? 'disabled ' : '';
+        var optgroupClass = type === 'optgroup-option' ? 'optgroup-option ' : '';
 
-                        return originalVal.call(this);
-                  }
+        // add icons
+        var icon_url = option.data('icon');
+        var classes = option.attr('class');
+        if (icon_url) {
+          var classString = '';
+          if (classes) {
+            classString = ' class="' + classes + '"';
+          }
 
-                  if (this.data('stop-refresh') !== true && this.hasClass('mdb-select') && this.hasClass('initialized') && !this.hasClass('browser-default') && !this.hasClass('custom-select')) {
+          // Check for multiple type.
+          if (type === 'multiple') {
+            options.append($('<li class="' + disabledClass + '"><img alt="" src="' + icon_url + '"' + classString + '><span class="filtrable"><input type="checkbox"' + disabledClass + '/><label></label>' + option.html() + '</span></li>'));
+          } else {
+            options.append($('<li class="' + disabledClass + optgroupClass + '"><img alt="" src="' + icon_url + '"' + classString + '><span class="filtrable">' + option.html() + '</span></li>'));
+          }
+          return true;
+        }
 
-                        MaterialSelect.clearMutationObservers();
+        // Check for multiple type.
+        if (type === 'multiple') {
+          options.append($('<li class="' + disabledClass + '"><span class="filtrable"><input type="checkbox"' + disabledClass + '/><label></label>' + option.html() + '</span></li>'));
+        } else {
+          options.append($('<li class="' + disabledClass + optgroupClass + '"><span class="filtrable">' + option.html() + '</span></li>'));
+        }
+      };
 
-                        this.materialSelect('destroy');
-                        const ret = originalVal.call(this, value);
-                        this.materialSelect();
+      /* Create dropdown structure. */
+      if (selectChildren.length) {
+        selectChildren.each(function () {
+          if ($(this).is('option')) {
+            // Direct descendant option.
+            if (multiple) {
+              appendOptionWithIcon($select, $(this), 'multiple');
+            } else {
+              appendOptionWithIcon($select, $(this));
+            }
+          } else if ($(this).is('optgroup')) {
+            // Optgroup.
+            var selectOptions = $(this).children('option');
+            options.append($('<li class="optgroup"><span>' + $(this).attr('label') + '</span></li>'));
 
-                        return ret;
-                  }
+            selectOptions.each(function () {
+              appendOptionWithIcon($select, $(this), 'optgroup-option');
+            });
+          }
+        });
+      }
 
-                  return originalVal.call(this, value);
-            };
-      })($.fn.val);
+      // Check for optgroups
+      var optgroup = false;
+      if ($select.find('optgroup').length) {
+        optgroup = true;
+      }
+
+      // Added to save
+      var saveSelect = $select.parent().find('button.btn-save');
+      var setSaveOption = function setSaveOption() {
+        options.append(saveSelect);
+      };
+
+      // Save click trigger
+      if (saveSelect.length) {
+        setSaveOption();
+        saveSelect.on('click', function () {
+          $('input.select-dropdown').trigger('close');
+        });
+      }
+
+      options.find('li:not(.optgroup)').each(function (i) {
+        $(this).click(function (e) {
+          // Check if option element is disabled
+          if (!$(this).hasClass('disabled') && !$(this).hasClass('optgroup')) {
+            var selected = true;
+
+            if (multiple) {
+              $('input[type="checkbox"]', this).prop('checked', function (i, v) {
+                return !v;
+              });
+              if (searchable) {
+                if (optgroup) {
+                  selected = toggleEntryFromArray(valuesSelected, $(this).index() - $(this).prevAll('.optgroup').length - 1, $select);
+                } else {
+                  selected = toggleEntryFromArray(valuesSelected, $(this).index() - 1, $select);
+                }
+              } else if (optgroup) {
+                selected = toggleEntryFromArray(valuesSelected, $(this).index() - $(this).prevAll('.optgroup').length, $select);
+              } else {
+                selected = toggleEntryFromArray(valuesSelected, $(this).index(), $select);
+              }
+              $newSelect.trigger('focus');
+            } else {
+              options.find('li').removeClass('active');
+              $(this).toggleClass('active');
+              $newSelect.val($(this).text());
+            }
+
+            activateOption(options, $(this));
+            $select.find('option').eq(i).prop('selected', selected);
+            // Trigger onchange() event
+            $select.trigger('change');
+            if (typeof callback !== 'undefined') {
+              callback();
+            }
+          }
+
+          e.stopPropagation();
+        });
+      });
+
+      // Wrap Elements
+      $select.wrap(wrapper);
+      // Add Select Display Element
+      var dropdownIcon = $('<span class="caret">&#9660;</span>');
+      if ($select.is(':disabled')) {
+        dropdownIcon.addClass('disabled');
+      }
+
+      // escape double quotes
+      var sanitizedLabelHtml = label.replace(/"/g, '&quot;');
+
+      var $newSelect = $('<input type="text" class="select-dropdown" readonly="true" ' + ($select.is(':disabled') ? 'disabled' : '') + ' data-activates="select-options-' + uniqueID + '" value="' + sanitizedLabelHtml + '"/>');
+      $select.before($newSelect);
+      $newSelect.before(dropdownIcon);
+
+      $newSelect.after(options);
+      // Check if section element is disabled
+      if (!$select.is(':disabled')) {
+        $newSelect.dropdown({
+          hover: false,
+          closeOnClick: false
+        });
+      }
+
+      // Copy tabindex
+      if ($select.attr('tabindex')) {
+        $($newSelect[0]).attr('tabindex', $select.attr('tabindex'));
+      }
+
+      $select.addClass('initialized');
+
+      $newSelect.on({
+        focus: function focus() {
+          if ($('ul.select-dropdown').not(options[0]).is(':visible')) {
+            $('input.select-dropdown').trigger('close');
+          }
+          if (!options.is(':visible')) {
+            $(this).trigger('open', ['focus']);
+            var _label = $(this).val();
+            var selectedOption = options.find('li').filter(function () {
+              return $(this).text().toLowerCase() === _label.toLowerCase();
+            })[0];
+            activateOption(options, selectedOption);
+          }
+        },
+        click: function click(e) {
+          e.stopPropagation();
+        }
+      });
+
+      // Changed to search to treat search
+      $newSelect.on('blur', function () {
+
+        if (!multiple && !searchable) {
+          $(this).trigger('close');
+        }
+        options.find('li.selected').removeClass('selected');
+      });
+
+      // Added to search
+      if (!multiple && searchable) {
+        options.find('li').on('click', function () {
+          $newSelect.trigger('close');
+        });
+      }
+
+      options.hover(function () {
+        optionsHover = true;
+      }, function () {
+        optionsHover = false;
+      });
+
+      // if select is wrapped in modal prevent hiding
+      options.on('mousedown', function (e) {
+        if ($('.modal-content').find(options).length) {
+          if (this.scrollHeight > this.offsetHeight) {
+            e.preventDefault();
+          }
+        }
+      });
+
+      // Changed to search to treat search
+      $(window).on({
+        click: function click() {
+          (multiple || searchable) && (optionsHover || $newSelect.trigger('close'));
+        }
+      });
+
+      // Add initial multiple selections.
+      if (multiple) {
+        $select.find('option:selected:not(:disabled)').each(function () {
+          var index = $(this).index();
+
+          toggleEntryFromArray(valuesSelected, index, $select);
+          options.find('li').eq(index).find(':checkbox').prop('checked', true);
+        });
+      }
+
+      // Make option as selected and scroll to selected position
+      var activateOption = function activateOption(collection, newOption) {
+        if (newOption) {
+          collection.find('li.selected').removeClass('selected');
+          var option = $(newOption);
+          option.addClass('selected');
+          // commented because it causes problems in multiselect with many options
+          // options.scrollTo(option)
+        }
+      };
+
+      // Allow user to search by typing
+      // this array is cleared after 1 second
+      var filterQuery = [],
+          onKeyDown = function onKeyDown(e) {
+        // TAB - switch to another input
+        if (e.which == 9) {
+          $newSelect.trigger('close');
+          return;
+        }
+
+        // ARROW DOWN WHEN SELECT IS CLOSED - open select options
+        if (e.which == 40 && !options.is(':visible')) {
+          $newSelect.trigger('open');
+          return;
+        }
+
+        // ENTER WHEN SELECT IS CLOSED - submit form
+        if (e.which == 13 && !options.is(':visible')) {
+          return;
+        }
+
+        e.preventDefault();
+
+        // CASE WHEN USER TYPE LETTERS
+        var letter = String.fromCharCode(e.which).toLowerCase(),
+            nonLetters = [9, 13, 27, 38, 40];
+        if (letter && nonLetters.indexOf(e.which) === -1) {
+          filterQuery.push(letter);
+
+          var string = filterQuery.join(''),
+              newOption = options.find('li').filter(function () {
+            return $(this).text().toLowerCase().indexOf(string) === 0;
+          })[0];
+
+          if (newOption) {
+            activateOption(options, newOption);
+          }
+        }
+
+        // ENTER - select option and close when select options are opened
+        if (e.which == 13) {
+          var activeOption = options.find('li.selected:not(.disabled)')[0];
+          if (activeOption) {
+            $(activeOption).trigger('click');
+            if (!multiple) {
+              $newSelect.trigger('close');
+            }
+          }
+        }
+
+        // ARROW DOWN - move to next not disabled option
+        if (e.which == 40) {
+          if (options.find('li.selected').length) {
+            newOption = options.find('li.selected').next('li:not(.disabled)')[0];
+          } else {
+            newOption = options.find('li:not(.disabled)')[0];
+          }
+          activateOption(options, newOption);
+        }
+
+        // ESC - close options
+        if (e.which == 27) {
+          $newSelect.trigger('close');
+        }
+
+        // ARROW UP - move to previous not disabled option
+        if (e.which == 38) {
+          newOption = options.find('li.selected').prev('li:not(.disabled)')[0];
+          if (newOption) {
+            activateOption(options, newOption);
+          }
+        }
+
+        // Automaticaly clean filter query so user can search again by starting letters
+        setTimeout(function () {
+          filterQuery = [];
+        }, 1000);
+      };
+
+      $newSelect.on('keydown', onKeyDown);
+    });
+
+    function toggleEntryFromArray(entriesArray, entryIndex, select) {
+      var index = entriesArray.indexOf(entryIndex),
+          notAdded = index === -1;
+
+      if (notAdded) {
+        entriesArray.push(entryIndex);
+      } else {
+        entriesArray.splice(index, 1);
+      }
+
+      select.siblings('ul.dropdown-content').find('li:not(.optgroup)').eq(entryIndex).toggleClass('active');
+
+      // use notAdded instead of true (to detect if the option is selected or not)
+      select.find('option').eq(entryIndex).prop('selected', notAdded);
+      setValueToInput(entriesArray, select);
+
+      return notAdded;
+    }
+
+    function setValueToInput(entriesArray, select) {
+      var value = '';
+
+      for (var i = 0, count = entriesArray.length; i < count; i++) {
+        var text = select.find('option').eq(entriesArray[i]).text();
+
+        i === 0 ? value += text : value += ', ' + text;
+      }
+
+      if (value === '') {
+        value = select.find('option:disabled').eq(0).text();
+      }
+
+      select.siblings('input.select-dropdown').val(value);
+    }
+    // };
+
+    function guid() {
+      var d = new Date().getTime();
+      var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c == 'x' ? r : r & 0x3 | 0x8).toString(16);
+      });
+      return uuid;
+    }
+  };
 })(jQuery);
 
-jQuery('select').siblings('input.select-dropdown').on('mousedown', e => {
-      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-            if (e.clientX >= e.target.clientWidth || e.clientY >= e.target.clientHeight) {
-                  e.preventDefault();
-            }
-      }
+jQuery('select').siblings('input.select-dropdown').on('mousedown', function (e) {
+  if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    if (e.clientX >= e.target.clientWidth || e.clientY >= e.target.clientHeight) {
+      e.preventDefault();
+    }
+  }
 });
 /*!
  * pickadate.js v3.5.6, 2015/04/20
@@ -23794,7 +23205,7 @@ $.extend($.fn.pickadate.defaults, {
 
       onRender: function () {
       var $pickerInstance = this.$root;
-
+ 
           var year = this.get('highlight', 'yyyy');
           var day = this.get('highlight', 'dd');
           var month = this.get('highlight', 'mmm');
@@ -24148,7 +23559,7 @@ $.extend($.fn.pickadate.defaults, {
 			bearing.setAttribute('r', 2);
 			var hand = createSvgElement('line');
 			hand.setAttribute('x1', 0);
-      hand.setAttribute('y1', 0);
+			hand.setAttribute('y1', 0);
 			var bg = createSvgElement('circle');
 			bg.setAttribute('class', 'clockpicker-canvas-bg');
 			bg.setAttribute('r', tickRadius);
@@ -26301,2459 +25712,1353 @@ initPhotoSwipeFromDOM('.mdb-lightbox');
 })(jQuery);
 /* perfect-scrollbar v0.7.1 */
 !function t(e,n,r){function o(i,s){if(!n[i]){if(!e[i]){var a="function"==typeof require&&require;if(!s&&a)return a(i,!0);if(l)return l(i,!0);var c=new Error("Cannot find module '"+i+"'");throw c.code="MODULE_NOT_FOUND",c}var u=n[i]={exports:{}};e[i][0].call(u.exports,function(t){var n=e[i][1][t];return o(n?n:t)},u,u.exports,t,e,n,r)}return n[i].exports}for(var l="function"==typeof require&&require,i=0;i<r.length;i++)o(r[i]);return o}({1:[function(t,e,n){"use strict";var r=t("../main");"function"==typeof define&&define.amd?define(r):(window.PerfectScrollbar=r,"undefined"==typeof window.Ps&&(window.Ps=r))},{"../main":7}],2:[function(t,e,n){"use strict";function r(t,e){var n=t.className.split(" ");n.indexOf(e)<0&&n.push(e),t.className=n.join(" ")}function o(t,e){var n=t.className.split(" "),r=n.indexOf(e);r>=0&&n.splice(r,1),t.className=n.join(" ")}n.add=function(t,e){t.classList?t.classList.add(e):r(t,e)},n.remove=function(t,e){t.classList?t.classList.remove(e):o(t,e)},n.list=function(t){return t.classList?Array.prototype.slice.apply(t.classList):t.className.split(" ")}},{}],3:[function(t,e,n){"use strict";function r(t,e){return window.getComputedStyle(t)[e]}function o(t,e,n){return"number"==typeof n&&(n=n.toString()+"px"),t.style[e]=n,t}function l(t,e){for(var n in e){var r=e[n];"number"==typeof r&&(r=r.toString()+"px"),t.style[n]=r}return t}var i={};i.e=function(t,e){var n=document.createElement(t);return n.className=e,n},i.appendTo=function(t,e){return e.appendChild(t),t},i.css=function(t,e,n){return"object"==typeof e?l(t,e):"undefined"==typeof n?r(t,e):o(t,e,n)},i.matches=function(t,e){return"undefined"!=typeof t.matches?t.matches(e):"undefined"!=typeof t.matchesSelector?t.matchesSelector(e):"undefined"!=typeof t.webkitMatchesSelector?t.webkitMatchesSelector(e):"undefined"!=typeof t.mozMatchesSelector?t.mozMatchesSelector(e):"undefined"!=typeof t.msMatchesSelector?t.msMatchesSelector(e):void 0},i.remove=function(t){"undefined"!=typeof t.remove?t.remove():t.parentNode&&t.parentNode.removeChild(t)},i.queryChildren=function(t,e){return Array.prototype.filter.call(t.childNodes,function(t){return i.matches(t,e)})},e.exports=i},{}],4:[function(t,e,n){"use strict";var r=function(t){this.element=t,this.events={}};r.prototype.bind=function(t,e){"undefined"==typeof this.events[t]&&(this.events[t]=[]),this.events[t].push(e),this.element.addEventListener(t,e,!1)},r.prototype.unbind=function(t,e){var n="undefined"!=typeof e;this.events[t]=this.events[t].filter(function(r){return!(!n||r===e)||(this.element.removeEventListener(t,r,!1),!1)},this)},r.prototype.unbindAll=function(){for(var t in this.events)this.unbind(t)};var o=function(){this.eventElements=[]};o.prototype.eventElement=function(t){var e=this.eventElements.filter(function(e){return e.element===t})[0];return"undefined"==typeof e&&(e=new r(t),this.eventElements.push(e)),e},o.prototype.bind=function(t,e,n){this.eventElement(t).bind(e,n)},o.prototype.unbind=function(t,e,n){this.eventElement(t).unbind(e,n)},o.prototype.unbindAll=function(){for(var t=0;t<this.eventElements.length;t++)this.eventElements[t].unbindAll()},o.prototype.once=function(t,e,n){var r=this.eventElement(t),o=function(t){r.unbind(e,o),n(t)};r.bind(e,o)},e.exports=o},{}],5:[function(t,e,n){"use strict";e.exports=function(){function t(){return Math.floor(65536*(1+Math.random())).toString(16).substring(1)}return function(){return t()+t()+"-"+t()+"-"+t()+"-"+t()+"-"+t()+t()+t()}}()},{}],6:[function(t,e,n){"use strict";function r(t){return function(e,n){t(e,"ps--in-scrolling"),"undefined"!=typeof n?t(e,"ps--"+n):(t(e,"ps--x"),t(e,"ps--y"))}}var o=t("./class"),l=t("./dom"),i=n.toInt=function(t){return parseInt(t,10)||0},s=n.clone=function(t){if(t){if(Array.isArray(t))return t.map(s);if("object"==typeof t){var e={};for(var n in t)e[n]=s(t[n]);return e}return t}return null};n.extend=function(t,e){var n=s(t);for(var r in e)n[r]=s(e[r]);return n},n.isEditable=function(t){return l.matches(t,"input,[contenteditable]")||l.matches(t,"select,[contenteditable]")||l.matches(t,"textarea,[contenteditable]")||l.matches(t,"button,[contenteditable]")},n.removePsClasses=function(t){for(var e=o.list(t),n=0;n<e.length;n++){var r=e[n];0===r.indexOf("ps-")&&o.remove(t,r)}},n.outerWidth=function(t){return i(l.css(t,"width"))+i(l.css(t,"paddingLeft"))+i(l.css(t,"paddingRight"))+i(l.css(t,"borderLeftWidth"))+i(l.css(t,"borderRightWidth"))},n.startScrolling=r(o.add),n.stopScrolling=r(o.remove),n.env={isWebKit:"undefined"!=typeof document&&"WebkitAppearance"in document.documentElement.style,supportsTouch:"undefined"!=typeof window&&("ontouchstart"in window||window.DocumentTouch&&document instanceof window.DocumentTouch),supportsIePointer:"undefined"!=typeof window&&null!==window.navigator.msMaxTouchPoints}},{"./class":2,"./dom":3}],7:[function(t,e,n){"use strict";var r=t("./plugin/destroy"),o=t("./plugin/initialize"),l=t("./plugin/update");e.exports={initialize:o,update:l,destroy:r}},{"./plugin/destroy":9,"./plugin/initialize":17,"./plugin/update":21}],8:[function(t,e,n){"use strict";e.exports={handlers:["click-rail","drag-scrollbar","keyboard","wheel","touch"],maxScrollbarLength:null,minScrollbarLength:null,scrollXMarginOffset:0,scrollYMarginOffset:0,suppressScrollX:!1,suppressScrollY:!1,swipePropagation:!0,swipeEasing:!0,useBothWheelAxes:!1,wheelPropagation:!1,wheelSpeed:1,theme:"default"}},{}],9:[function(t,e,n){"use strict";var r=t("../lib/helper"),o=t("../lib/dom"),l=t("./instances");e.exports=function(t){var e=l.get(t);e&&(e.event.unbindAll(),o.remove(e.scrollbarX),o.remove(e.scrollbarY),o.remove(e.scrollbarXRail),o.remove(e.scrollbarYRail),r.removePsClasses(t),l.remove(t))}},{"../lib/dom":3,"../lib/helper":6,"./instances":18}],10:[function(t,e,n){"use strict";function r(t,e){function n(t){return t.getBoundingClientRect()}var r=function(t){t.stopPropagation()};e.event.bind(e.scrollbarY,"click",r),e.event.bind(e.scrollbarYRail,"click",function(r){var o=r.pageY-window.pageYOffset-n(e.scrollbarYRail).top,s=o>e.scrollbarYTop?1:-1;i(t,"top",t.scrollTop+s*e.containerHeight),l(t),r.stopPropagation()}),e.event.bind(e.scrollbarX,"click",r),e.event.bind(e.scrollbarXRail,"click",function(r){var o=r.pageX-window.pageXOffset-n(e.scrollbarXRail).left,s=o>e.scrollbarXLeft?1:-1;i(t,"left",t.scrollLeft+s*e.containerWidth),l(t),r.stopPropagation()})}var o=t("../instances"),l=t("../update-geometry"),i=t("../update-scroll");e.exports=function(t){var e=o.get(t);r(t,e)}},{"../instances":18,"../update-geometry":19,"../update-scroll":20}],11:[function(t,e,n){"use strict";function r(t,e){function n(n){var o=r+n*e.railXRatio,i=Math.max(0,e.scrollbarXRail.getBoundingClientRect().left)+e.railXRatio*(e.railXWidth-e.scrollbarXWidth);o<0?e.scrollbarXLeft=0:o>i?e.scrollbarXLeft=i:e.scrollbarXLeft=o;var s=l.toInt(e.scrollbarXLeft*(e.contentWidth-e.containerWidth)/(e.containerWidth-e.railXRatio*e.scrollbarXWidth))-e.negativeScrollAdjustment;c(t,"left",s)}var r=null,o=null,s=function(e){n(e.pageX-o),a(t),e.stopPropagation(),e.preventDefault()},u=function(){l.stopScrolling(t,"x"),e.event.unbind(e.ownerDocument,"mousemove",s)};e.event.bind(e.scrollbarX,"mousedown",function(n){o=n.pageX,r=l.toInt(i.css(e.scrollbarX,"left"))*e.railXRatio,l.startScrolling(t,"x"),e.event.bind(e.ownerDocument,"mousemove",s),e.event.once(e.ownerDocument,"mouseup",u),n.stopPropagation(),n.preventDefault()})}function o(t,e){function n(n){var o=r+n*e.railYRatio,i=Math.max(0,e.scrollbarYRail.getBoundingClientRect().top)+e.railYRatio*(e.railYHeight-e.scrollbarYHeight);o<0?e.scrollbarYTop=0:o>i?e.scrollbarYTop=i:e.scrollbarYTop=o;var s=l.toInt(e.scrollbarYTop*(e.contentHeight-e.containerHeight)/(e.containerHeight-e.railYRatio*e.scrollbarYHeight));c(t,"top",s)}var r=null,o=null,s=function(e){n(e.pageY-o),a(t),e.stopPropagation(),e.preventDefault()},u=function(){l.stopScrolling(t,"y"),e.event.unbind(e.ownerDocument,"mousemove",s)};e.event.bind(e.scrollbarY,"mousedown",function(n){o=n.pageY,r=l.toInt(i.css(e.scrollbarY,"top"))*e.railYRatio,l.startScrolling(t,"y"),e.event.bind(e.ownerDocument,"mousemove",s),e.event.once(e.ownerDocument,"mouseup",u),n.stopPropagation(),n.preventDefault()})}var l=t("../../lib/helper"),i=t("../../lib/dom"),s=t("../instances"),a=t("../update-geometry"),c=t("../update-scroll");e.exports=function(t){var e=s.get(t);r(t,e),o(t,e)}},{"../../lib/dom":3,"../../lib/helper":6,"../instances":18,"../update-geometry":19,"../update-scroll":20}],12:[function(t,e,n){"use strict";function r(t,e){function n(n,r){var o=t.scrollTop;if(0===n){if(!e.scrollbarYActive)return!1;if(0===o&&r>0||o>=e.contentHeight-e.containerHeight&&r<0)return!e.settings.wheelPropagation}var l=t.scrollLeft;if(0===r){if(!e.scrollbarXActive)return!1;if(0===l&&n<0||l>=e.contentWidth-e.containerWidth&&n>0)return!e.settings.wheelPropagation}return!0}var r=!1;e.event.bind(t,"mouseenter",function(){r=!0}),e.event.bind(t,"mouseleave",function(){r=!1});var i=!1;e.event.bind(e.ownerDocument,"keydown",function(c){if(!(c.isDefaultPrevented&&c.isDefaultPrevented()||c.defaultPrevented)){var u=l.matches(e.scrollbarX,":focus")||l.matches(e.scrollbarY,":focus");if(r||u){var d=document.activeElement?document.activeElement:e.ownerDocument.activeElement;if(d){if("IFRAME"===d.tagName)d=d.contentDocument.activeElement;else for(;d.shadowRoot;)d=d.shadowRoot.activeElement;if(o.isEditable(d))return}var p=0,f=0;switch(c.which){case 37:p=c.metaKey?-e.contentWidth:c.altKey?-e.containerWidth:-30;break;case 38:f=c.metaKey?e.contentHeight:c.altKey?e.containerHeight:30;break;case 39:p=c.metaKey?e.contentWidth:c.altKey?e.containerWidth:30;break;case 40:f=c.metaKey?-e.contentHeight:c.altKey?-e.containerHeight:-30;break;case 33:f=90;break;case 32:f=c.shiftKey?90:-90;break;case 34:f=-90;break;case 35:f=c.ctrlKey?-e.contentHeight:-e.containerHeight;break;case 36:f=c.ctrlKey?t.scrollTop:e.containerHeight;break;default:return}a(t,"top",t.scrollTop-f),a(t,"left",t.scrollLeft+p),s(t),i=n(p,f),i&&c.preventDefault()}}})}var o=t("../../lib/helper"),l=t("../../lib/dom"),i=t("../instances"),s=t("../update-geometry"),a=t("../update-scroll");e.exports=function(t){var e=i.get(t);r(t,e)}},{"../../lib/dom":3,"../../lib/helper":6,"../instances":18,"../update-geometry":19,"../update-scroll":20}],13:[function(t,e,n){"use strict";function r(t,e){function n(n,r){var o=t.scrollTop;if(0===n){if(!e.scrollbarYActive)return!1;if(0===o&&r>0||o>=e.contentHeight-e.containerHeight&&r<0)return!e.settings.wheelPropagation}var l=t.scrollLeft;if(0===r){if(!e.scrollbarXActive)return!1;if(0===l&&n<0||l>=e.contentWidth-e.containerWidth&&n>0)return!e.settings.wheelPropagation}return!0}function r(t){var e=t.deltaX,n=-1*t.deltaY;return"undefined"!=typeof e&&"undefined"!=typeof n||(e=-1*t.wheelDeltaX/6,n=t.wheelDeltaY/6),t.deltaMode&&1===t.deltaMode&&(e*=10,n*=10),e!==e&&n!==n&&(e=0,n=t.wheelDelta),t.shiftKey?[-n,-e]:[e,n]}function o(e,n){var r=t.querySelector("textarea:hover, select[multiple]:hover, .ps-child:hover");if(r){var o=window.getComputedStyle(r),l=[o.overflow,o.overflowX,o.overflowY].join("");if(!l.match(/(scroll|auto)/))return!1;var i=r.scrollHeight-r.clientHeight;if(i>0&&!(0===r.scrollTop&&n>0||r.scrollTop===i&&n<0))return!0;var s=r.scrollLeft-r.clientWidth;if(s>0&&!(0===r.scrollLeft&&e<0||r.scrollLeft===s&&e>0))return!0}return!1}function s(s){var c=r(s),u=c[0],d=c[1];o(u,d)||(a=!1,e.settings.useBothWheelAxes?e.scrollbarYActive&&!e.scrollbarXActive?(d?i(t,"top",t.scrollTop-d*e.settings.wheelSpeed):i(t,"top",t.scrollTop+u*e.settings.wheelSpeed),a=!0):e.scrollbarXActive&&!e.scrollbarYActive&&(u?i(t,"left",t.scrollLeft+u*e.settings.wheelSpeed):i(t,"left",t.scrollLeft-d*e.settings.wheelSpeed),a=!0):(i(t,"top",t.scrollTop-d*e.settings.wheelSpeed),i(t,"left",t.scrollLeft+u*e.settings.wheelSpeed)),l(t),a=a||n(u,d),a&&(s.stopPropagation(),s.preventDefault()))}var a=!1;"undefined"!=typeof window.onwheel?e.event.bind(t,"wheel",s):"undefined"!=typeof window.onmousewheel&&e.event.bind(t,"mousewheel",s)}var o=t("../instances"),l=t("../update-geometry"),i=t("../update-scroll");e.exports=function(t){var e=o.get(t);r(t,e)}},{"../instances":18,"../update-geometry":19,"../update-scroll":20}],14:[function(t,e,n){"use strict";function r(t,e){e.event.bind(t,"scroll",function(){l(t)})}var o=t("../instances"),l=t("../update-geometry");e.exports=function(t){var e=o.get(t);r(t,e)}},{"../instances":18,"../update-geometry":19}],15:[function(t,e,n){"use strict";function r(t,e){function n(){var t=window.getSelection?window.getSelection():document.getSelection?document.getSelection():"";return 0===t.toString().length?null:t.getRangeAt(0).commonAncestorContainer}function r(){c||(c=setInterval(function(){return l.get(t)?(s(t,"top",t.scrollTop+u.top),s(t,"left",t.scrollLeft+u.left),void i(t)):void clearInterval(c)},50))}function a(){c&&(clearInterval(c),c=null),o.stopScrolling(t)}var c=null,u={top:0,left:0},d=!1;e.event.bind(e.ownerDocument,"selectionchange",function(){t.contains(n())?d=!0:(d=!1,a())}),e.event.bind(window,"mouseup",function(){d&&(d=!1,a())}),e.event.bind(window,"keyup",function(){d&&(d=!1,a())}),e.event.bind(window,"mousemove",function(e){if(d){var n={x:e.pageX,y:e.pageY},l={left:t.offsetLeft,right:t.offsetLeft+t.offsetWidth,top:t.offsetTop,bottom:t.offsetTop+t.offsetHeight};n.x<l.left+3?(u.left=-5,o.startScrolling(t,"x")):n.x>l.right-3?(u.left=5,o.startScrolling(t,"x")):u.left=0,n.y<l.top+3?(l.top+3-n.y<5?u.top=-5:u.top=-20,o.startScrolling(t,"y")):n.y>l.bottom-3?(n.y-l.bottom+3<5?u.top=5:u.top=20,o.startScrolling(t,"y")):u.top=0,0===u.top&&0===u.left?a():r()}})}var o=t("../../lib/helper"),l=t("../instances"),i=t("../update-geometry"),s=t("../update-scroll");e.exports=function(t){var e=l.get(t);r(t,e)}},{"../../lib/helper":6,"../instances":18,"../update-geometry":19,"../update-scroll":20}],16:[function(t,e,n){"use strict";function r(t,e,n,r){function o(n,r){var o=t.scrollTop,l=t.scrollLeft,i=Math.abs(n),s=Math.abs(r);if(s>i){if(r<0&&o===e.contentHeight-e.containerHeight||r>0&&0===o)return!e.settings.swipePropagation}else if(i>s&&(n<0&&l===e.contentWidth-e.containerWidth||n>0&&0===l))return!e.settings.swipePropagation;return!0}function a(e,n){s(t,"top",t.scrollTop-n),s(t,"left",t.scrollLeft-e),i(t)}function c(){w=!0}function u(){w=!1}function d(t){return t.targetTouches?t.targetTouches[0]:t}function p(t){return!(!t.targetTouches||1!==t.targetTouches.length)||!(!t.pointerType||"mouse"===t.pointerType||t.pointerType===t.MSPOINTER_TYPE_MOUSE)}function f(t){if(p(t)){Y=!0;var e=d(t);g.pageX=e.pageX,g.pageY=e.pageY,v=(new Date).getTime(),null!==y&&clearInterval(y),t.stopPropagation()}}function h(t){if(!Y&&e.settings.swipePropagation&&f(t),!w&&Y&&p(t)){var n=d(t),r={pageX:n.pageX,pageY:n.pageY},l=r.pageX-g.pageX,i=r.pageY-g.pageY;a(l,i),g=r;var s=(new Date).getTime(),c=s-v;c>0&&(m.x=l/c,m.y=i/c,v=s),o(l,i)&&(t.stopPropagation(),t.preventDefault())}}function b(){!w&&Y&&(Y=!1,e.settings.swipeEasing&&(clearInterval(y),y=setInterval(function(){return l.get(t)&&(m.x||m.y)?Math.abs(m.x)<.01&&Math.abs(m.y)<.01?void clearInterval(y):(a(30*m.x,30*m.y),m.x*=.8,void(m.y*=.8)):void clearInterval(y)},10)))}var g={},v=0,m={},y=null,w=!1,Y=!1;n?(e.event.bind(window,"touchstart",c),e.event.bind(window,"touchend",u),e.event.bind(t,"touchstart",f),e.event.bind(t,"touchmove",h),e.event.bind(t,"touchend",b)):r&&(window.PointerEvent?(e.event.bind(window,"pointerdown",c),e.event.bind(window,"pointerup",u),e.event.bind(t,"pointerdown",f),e.event.bind(t,"pointermove",h),e.event.bind(t,"pointerup",b)):window.MSPointerEvent&&(e.event.bind(window,"MSPointerDown",c),e.event.bind(window,"MSPointerUp",u),e.event.bind(t,"MSPointerDown",f),e.event.bind(t,"MSPointerMove",h),e.event.bind(t,"MSPointerUp",b)))}var o=t("../../lib/helper"),l=t("../instances"),i=t("../update-geometry"),s=t("../update-scroll");e.exports=function(t){if(o.env.supportsTouch||o.env.supportsIePointer){var e=l.get(t);r(t,e,o.env.supportsTouch,o.env.supportsIePointer)}}},{"../../lib/helper":6,"../instances":18,"../update-geometry":19,"../update-scroll":20}],17:[function(t,e,n){"use strict";var r=t("../lib/helper"),o=t("../lib/class"),l=t("./instances"),i=t("./update-geometry"),s={"click-rail":t("./handler/click-rail"),"drag-scrollbar":t("./handler/drag-scrollbar"),keyboard:t("./handler/keyboard"),wheel:t("./handler/mouse-wheel"),touch:t("./handler/touch"),selection:t("./handler/selection")},a=t("./handler/native-scroll");e.exports=function(t,e){e="object"==typeof e?e:{},o.add(t,"ps");var n=l.add(t);n.settings=r.extend(n.settings,e),o.add(t,"ps--theme_"+n.settings.theme),n.settings.handlers.forEach(function(e){s[e](t)}),a(t),i(t)}},{"../lib/class":2,"../lib/helper":6,"./handler/click-rail":10,"./handler/drag-scrollbar":11,"./handler/keyboard":12,"./handler/mouse-wheel":13,"./handler/native-scroll":14,"./handler/selection":15,"./handler/touch":16,"./instances":18,"./update-geometry":19}],18:[function(t,e,n){"use strict";function r(t){function e(){a.add(t,"ps--focus")}function n(){a.remove(t,"ps--focus")}var r=this;r.settings=s.clone(c),r.containerWidth=null,r.containerHeight=null,r.contentWidth=null,r.contentHeight=null,r.isRtl="rtl"===u.css(t,"direction"),r.isNegativeScroll=function(){var e=t.scrollLeft,n=null;return t.scrollLeft=-1,n=t.scrollLeft<0,t.scrollLeft=e,n}(),r.negativeScrollAdjustment=r.isNegativeScroll?t.scrollWidth-t.clientWidth:0,r.event=new d,r.ownerDocument=t.ownerDocument||document,r.scrollbarXRail=u.appendTo(u.e("div","ps__scrollbar-x-rail"),t),r.scrollbarX=u.appendTo(u.e("div","ps__scrollbar-x"),r.scrollbarXRail),r.scrollbarX.setAttribute("tabindex",0),r.event.bind(r.scrollbarX,"focus",e),r.event.bind(r.scrollbarX,"blur",n),r.scrollbarXActive=null,r.scrollbarXWidth=null,r.scrollbarXLeft=null,r.scrollbarXBottom=s.toInt(u.css(r.scrollbarXRail,"bottom")),r.isScrollbarXUsingBottom=r.scrollbarXBottom===r.scrollbarXBottom,r.scrollbarXTop=r.isScrollbarXUsingBottom?null:s.toInt(u.css(r.scrollbarXRail,"top")),r.railBorderXWidth=s.toInt(u.css(r.scrollbarXRail,"borderLeftWidth"))+s.toInt(u.css(r.scrollbarXRail,"borderRightWidth")),u.css(r.scrollbarXRail,"display","block"),r.railXMarginWidth=s.toInt(u.css(r.scrollbarXRail,"marginLeft"))+s.toInt(u.css(r.scrollbarXRail,"marginRight")),u.css(r.scrollbarXRail,"display",""),r.railXWidth=null,r.railXRatio=null,r.scrollbarYRail=u.appendTo(u.e("div","ps__scrollbar-y-rail"),t),r.scrollbarY=u.appendTo(u.e("div","ps__scrollbar-y"),r.scrollbarYRail),r.scrollbarY.setAttribute("tabindex",0),r.event.bind(r.scrollbarY,"focus",e),r.event.bind(r.scrollbarY,"blur",n),r.scrollbarYActive=null,r.scrollbarYHeight=null,r.scrollbarYTop=null,r.scrollbarYRight=s.toInt(u.css(r.scrollbarYRail,"right")),r.isScrollbarYUsingRight=r.scrollbarYRight===r.scrollbarYRight,r.scrollbarYLeft=r.isScrollbarYUsingRight?null:s.toInt(u.css(r.scrollbarYRail,"left")),r.scrollbarYOuterWidth=r.isRtl?s.outerWidth(r.scrollbarY):null,r.railBorderYWidth=s.toInt(u.css(r.scrollbarYRail,"borderTopWidth"))+s.toInt(u.css(r.scrollbarYRail,"borderBottomWidth")),u.css(r.scrollbarYRail,"display","block"),r.railYMarginHeight=s.toInt(u.css(r.scrollbarYRail,"marginTop"))+s.toInt(u.css(r.scrollbarYRail,"marginBottom")),u.css(r.scrollbarYRail,"display",""),r.railYHeight=null,r.railYRatio=null}function o(t){return t.getAttribute("data-ps-id")}function l(t,e){t.setAttribute("data-ps-id",e)}function i(t){t.removeAttribute("data-ps-id")}var s=t("../lib/helper"),a=t("../lib/class"),c=t("./default-setting"),u=t("../lib/dom"),d=t("../lib/event-manager"),p=t("../lib/guid"),f={};n.add=function(t){var e=p();return l(t,e),f[e]=new r(t),f[e]},n.remove=function(t){delete f[o(t)],i(t)},n.get=function(t){return f[o(t)]}},{"../lib/class":2,"../lib/dom":3,"../lib/event-manager":4,"../lib/guid":5,"../lib/helper":6,"./default-setting":8}],19:[function(t,e,n){"use strict";function r(t,e){return t.settings.minScrollbarLength&&(e=Math.max(e,t.settings.minScrollbarLength)),t.settings.maxScrollbarLength&&(e=Math.min(e,t.settings.maxScrollbarLength)),e}function o(t,e){var n={width:e.railXWidth};e.isRtl?n.left=e.negativeScrollAdjustment+t.scrollLeft+e.containerWidth-e.contentWidth:n.left=t.scrollLeft,e.isScrollbarXUsingBottom?n.bottom=e.scrollbarXBottom-t.scrollTop:n.top=e.scrollbarXTop+t.scrollTop,s.css(e.scrollbarXRail,n);var r={top:t.scrollTop,height:e.railYHeight};e.isScrollbarYUsingRight?e.isRtl?r.right=e.contentWidth-(e.negativeScrollAdjustment+t.scrollLeft)-e.scrollbarYRight-e.scrollbarYOuterWidth:r.right=e.scrollbarYRight-t.scrollLeft:e.isRtl?r.left=e.negativeScrollAdjustment+t.scrollLeft+2*e.containerWidth-e.contentWidth-e.scrollbarYLeft-e.scrollbarYOuterWidth:r.left=e.scrollbarYLeft+t.scrollLeft,s.css(e.scrollbarYRail,r),s.css(e.scrollbarX,{left:e.scrollbarXLeft,width:e.scrollbarXWidth-e.railBorderXWidth}),s.css(e.scrollbarY,{top:e.scrollbarYTop,height:e.scrollbarYHeight-e.railBorderYWidth})}var l=t("../lib/helper"),i=t("../lib/class"),s=t("../lib/dom"),a=t("./instances"),c=t("./update-scroll");e.exports=function(t){var e=a.get(t);e.containerWidth=t.clientWidth,e.containerHeight=t.clientHeight,e.contentWidth=t.scrollWidth,e.contentHeight=t.scrollHeight;var n;t.contains(e.scrollbarXRail)||(n=s.queryChildren(t,".ps__scrollbar-x-rail"),n.length>0&&n.forEach(function(t){s.remove(t)}),s.appendTo(e.scrollbarXRail,t)),t.contains(e.scrollbarYRail)||(n=s.queryChildren(t,".ps__scrollbar-y-rail"),n.length>0&&n.forEach(function(t){s.remove(t)}),s.appendTo(e.scrollbarYRail,t)),!e.settings.suppressScrollX&&e.containerWidth+e.settings.scrollXMarginOffset<e.contentWidth?(e.scrollbarXActive=!0,e.railXWidth=e.containerWidth-e.railXMarginWidth,e.railXRatio=e.containerWidth/e.railXWidth,e.scrollbarXWidth=r(e,l.toInt(e.railXWidth*e.containerWidth/e.contentWidth)),e.scrollbarXLeft=l.toInt((e.negativeScrollAdjustment+t.scrollLeft)*(e.railXWidth-e.scrollbarXWidth)/(e.contentWidth-e.containerWidth))):e.scrollbarXActive=!1,!e.settings.suppressScrollY&&e.containerHeight+e.settings.scrollYMarginOffset<e.contentHeight?(e.scrollbarYActive=!0,e.railYHeight=e.containerHeight-e.railYMarginHeight,e.railYRatio=e.containerHeight/e.railYHeight,e.scrollbarYHeight=r(e,l.toInt(e.railYHeight*e.containerHeight/e.contentHeight)),e.scrollbarYTop=l.toInt(t.scrollTop*(e.railYHeight-e.scrollbarYHeight)/(e.contentHeight-e.containerHeight))):e.scrollbarYActive=!1,e.scrollbarXLeft>=e.railXWidth-e.scrollbarXWidth&&(e.scrollbarXLeft=e.railXWidth-e.scrollbarXWidth),e.scrollbarYTop>=e.railYHeight-e.scrollbarYHeight&&(e.scrollbarYTop=e.railYHeight-e.scrollbarYHeight),o(t,e),e.scrollbarXActive?i.add(t,"ps--active-x"):(i.remove(t,"ps--active-x"),e.scrollbarXWidth=0,e.scrollbarXLeft=0,c(t,"left",0)),e.scrollbarYActive?i.add(t,"ps--active-y"):(i.remove(t,"ps--active-y"),e.scrollbarYHeight=0,e.scrollbarYTop=0,c(t,"top",0))}},{"../lib/class":2,"../lib/dom":3,"../lib/helper":6,"./instances":18,"./update-scroll":20}],20:[function(t,e,n){"use strict";var r=t("./instances"),o=function(t){var e=document.createEvent("Event");return e.initEvent(t,!0,!0),e};e.exports=function(t,e,n){if("undefined"==typeof t)throw"You must provide an element to the update-scroll function";if("undefined"==typeof e)throw"You must provide an axis to the update-scroll function";if("undefined"==typeof n)throw"You must provide a value to the update-scroll function";"top"===e&&n<=0&&(t.scrollTop=n=0,t.dispatchEvent(o("ps-y-reach-start"))),"left"===e&&n<=0&&(t.scrollLeft=n=0,t.dispatchEvent(o("ps-x-reach-start")));var l=r.get(t);"top"===e&&n>=l.contentHeight-l.containerHeight&&(n=l.contentHeight-l.containerHeight,n-t.scrollTop<=1?n=t.scrollTop:t.scrollTop=n,t.dispatchEvent(o("ps-y-reach-end"))),"left"===e&&n>=l.contentWidth-l.containerWidth&&(n=l.contentWidth-l.containerWidth,n-t.scrollLeft<=1?n=t.scrollLeft:t.scrollLeft=n,t.dispatchEvent(o("ps-x-reach-end"))),void 0===l.lastTop&&(l.lastTop=t.scrollTop),void 0===l.lastLeft&&(l.lastLeft=t.scrollLeft),"top"===e&&n<l.lastTop&&t.dispatchEvent(o("ps-scroll-up")),"top"===e&&n>l.lastTop&&t.dispatchEvent(o("ps-scroll-down")),"left"===e&&n<l.lastLeft&&t.dispatchEvent(o("ps-scroll-left")),"left"===e&&n>l.lastLeft&&t.dispatchEvent(o("ps-scroll-right")),"top"===e&&n!==l.lastTop&&(t.scrollTop=l.lastTop=n,t.dispatchEvent(o("ps-scroll-y"))),"left"===e&&n!==l.lastLeft&&(t.scrollLeft=l.lastLeft=n,t.dispatchEvent(o("ps-scroll-x")))}},{"./instances":18}],21:[function(t,e,n){"use strict";var r=t("../lib/helper"),o=t("../lib/dom"),l=t("./instances"),i=t("./update-geometry"),s=t("./update-scroll");e.exports=function(t){var e=l.get(t);e&&(e.negativeScrollAdjustment=e.isNegativeScroll?t.scrollWidth-t.clientWidth:0,o.css(e.scrollbarXRail,"display","block"),o.css(e.scrollbarYRail,"display","block"),e.railXMarginWidth=r.toInt(o.css(e.scrollbarXRail,"marginLeft"))+r.toInt(o.css(e.scrollbarXRail,"marginRight")),e.railYMarginHeight=r.toInt(o.css(e.scrollbarYRail,"marginTop"))+r.toInt(o.css(e.scrollbarYRail,"marginBottom")),o.css(e.scrollbarXRail,"display","none"),o.css(e.scrollbarYRail,"display","none"),i(t),s(t,"top",t.scrollTop),s(t,"left",t.scrollLeft),o.css(e.scrollbarXRail,"display",""),o.css(e.scrollbarYRail,"display",""))}},{"../lib/dom":3,"../lib/helper":6,"./instances":18,"./update-geometry":19,"./update-scroll":20}]},{},[1]);
-(function ($) {
-
-      $(document).ready(() => {
-
-            $(document).on('click', '.chip .close', function () {
-
-                  const $this = $(this);
-
-                  if ($this.closest('.chips').data('initialized')) {
-                        return;
-                  }
-
-                  $this.closest('.chip').remove();
-            });
-      });
-
-      $.fn.materialChip = function (options) {
-
-            this.$el = $(this);
-            this.$document = $(document);
-
-            this.eventsHandled = false;
-
-            this.defaultOptions = {
-                  data: [],
-                  placeholder: '',
-                  secondaryPlaceholder: ''
-            };
-
-            this.selectors = {
-                  chips: '.chips',
-                  chip: '.chip',
-                  input: 'input',
-                  delete: '.fa',
-                  selectedChip: '.selected'
-            };
-
-            this.keyCodes = {
-                  enter: 13,
-                  backspace: 8,
-                  delete: 46,
-                  arrowLeft: 37,
-                  arrowRight: 39
-            };
-
-            if (options === 'data') {
-                  return this.$el.data('chips');
-            }
-
-            if (options === 'options') {
-                  return this.$el.data('options');
-            }
-
-            this.$el.data('options', $.extend({}, this.defaultOptions, options));
-
-            this.init = () => {
-
-                  this.$el.each((index, element) => {
-
-                        const $this = $(element);
-                        if ($this.data('initialized')) {
-                              return;
-                        }
-
-                        const options = $this.data('options');
-                        if (!options.data || !Array.isArray(options.data)) {
-                              options.data = [];
-                        }
-
-                        $this.data('chips', options.data);
-                        $this.data('index', index);
-                        $this.data('initialized', true);
-
-                        if (!$this.hasClass(this.selectors.chips)) {
-                              $this.addClass('chips');
-                        }
-
-                        this.renderChips($this);
-                  });
-            };
-
-            this.handleEvents = function () {
-
-                  this.$document.on('click', this.selectors.chips, e => {
-
-                        $(e.target).find(this.selectors.input).focus();
-                  });
-
-                  this.$document.on('click', this.selectors.chip, e => {
-
-                        $(this.selectors.chip).removeClass('selected');
-                        $(e.target).addClass('selected');
-                  });
-
-                  this.$document.on('keydown', e => {
-
-                        if ($(e.target).is('input, textarea')) {
-                              return;
-                        }
-
-                        const $selectedChip = this.$document.find(this.selectors.chip + this.selectors.selectedChip);
-                        const $chipsWrapper = $selectedChip.closest(this.selectors.chips);
-                        const siblingsLength = $selectedChip.siblings(this.selectors.chip).length;
-
-                        if (!$selectedChip.length) {
-                              return;
-                        }
-
-                        const backspacePressed = e.which === this.keyCodes.backspace;
-                        const deletePressed = e.which === this.keyCodes.delete;
-                        const leftArrowPressed = e.which === this.keyCodes.arrowLeft;
-                        const rightArrowPressed = e.which === this.keyCodes.arrowRight;
-
-                        if (backspacePressed || deletePressed) {
-
-                              e.preventDefault();
-
-                              this.deleteSelectedChip($chipsWrapper, $selectedChip, siblingsLength);
-                        } else if (leftArrowPressed) {
-
-                              this.selectLeftChip($chipsWrapper, $selectedChip);
-                        } else if (rightArrowPressed) {
-
-                              this.selectRightChip($chipsWrapper, $selectedChip, siblingsLength);
-                        }
-                  });
-
-                  this.$document.on('focusin', `${this.selectors.chips} ${this.selectors.input}`, e => {
-
-                        $(e.target).closest(this.selectors.chips).addClass('focus');
-                        $(this.selectors.chip).removeClass('selected');
-                  });
-
-                  this.$document.on('focusout', `${this.selectors.chips} ${this.selectors.input}`, e => {
-
-                        $(e.target).closest(this.selectors.chips).removeClass('focus');
-                  });
-
-                  this.$document.on('keydown', `${this.selectors.chips} ${this.selectors.input}`, e => {
-
-                        const $target = $(e.target);
-                        const $chipsWrapper = $target.closest(this.selectors.chips);
-                        const chipsIndex = $chipsWrapper.data('index');
-                        const chipsLength = $chipsWrapper.children(this.selectors.chip).length;
-
-                        const enterPressed = e.which === this.keyCodes.enter;
-
-                        if (enterPressed) {
-
-                              e.preventDefault();
-
-                              this.addChip(chipsIndex, {
-                                    tag: $target.val()
-                              }, $chipsWrapper);
-
-                              $target.val('');
-
-                              return;
-                        }
-
-                        const leftArrowOrDeletePressed = e.keyCode === this.keyCodes.arrowLeft || e.keyCode === this.keyCodes.delete;
-                        const isValueEmpty = $target.val() === '';
-
-                        if (leftArrowOrDeletePressed && isValueEmpty && chipsLength) {
-
-                              this.selectChip(chipsIndex, chipsLength - 1, $chipsWrapper);
-
-                              $target.blur();
-                        }
-                  });
-
-                  this.$document.on('click', `${this.selectors.chips} ${this.selectors.delete}`, e => {
-
-                        const $target = $(e.target);
-                        const $chipsWrapper = $target.closest(this.selectors.chips);
-                        const $chip = $target.closest(this.selectors.chip);
-
-                        e.stopPropagation();
-
-                        this.deleteChip($chipsWrapper.data('index'), $chip.index(), $chipsWrapper);
-
-                        $chipsWrapper.find('input').focus();
-                  });
-            };
-
-            this.deleteSelectedChip = ($chipsWrapper, $selectedChip, siblingsLength) => {
-
-                  const chipsIndex = $chipsWrapper.data('index');
-                  const chipIndex = $selectedChip.index();
-                  this.deleteChip(chipsIndex, chipIndex, $chipsWrapper);
-
-                  let selectIndex = null;
-
-                  if (chipIndex < siblingsLength - 1) {
-                        selectIndex = chipIndex;
-                  } else if (chipIndex === siblingsLength || chipIndex === siblingsLength - 1) {
-                        selectIndex = siblingsLength - 1;
-                  }
-
-                  if (selectIndex < 0) {
-                        selectIndex = null;
-                  }
-
-                  if (selectIndex !== null) {
-                        this.selectChip(chipsIndex, selectIndex, $chipsWrapper);
-                  }
-
-                  if (!siblingsLength) {
-                        $chipsWrapper.find('input').focus();
-                  }
-            };
-
-            this.selectLeftChip = ($chipsWrapper, $selectedChip) => {
-
-                  const chipIndex = $selectedChip.index() - 1;
-                  if (chipIndex < 0) {
-                        return;
-                  }
-
-                  $(this.selectors.chip).removeClass('selected');
-
-                  this.selectChip($chipsWrapper.data('index'), chipIndex, $chipsWrapper);
-            };
-
-            this.selectRightChip = ($chipsWrapper, $selectedChip, siblingsLength) => {
-
-                  const chipIndex = $selectedChip.index() + 1;
-                  $(this.selectors.chip).removeClass('selected');
-                  if (chipIndex > siblingsLength) {
-
-                        $chipsWrapper.find('input').focus();
-                        return;
-                  }
-
-                  this.selectChip($chipsWrapper.data('index'), chipIndex, $chipsWrapper);
-            };
-
-            this.renderChips = $chipsWrapper => {
-
-                  let html = '';
-
-                  $chipsWrapper.data('chips').forEach(elem => {
-
-                        html += this.getSingleChipHtml(elem);
-                  });
-
-                  html += '<input class="input" placeholder="">';
-
-                  $chipsWrapper.html(html);
-
-                  this.setPlaceholder($chipsWrapper);
-            };
-
-            this.getSingleChipHtml = function (elem) {
-
-                  if (!elem.tag) {
-                        return '';
-                  }
-
-                  let html = `<div class="chip">${elem.tag}`;
-
-                  if (elem.image) {
-                        html += ` <img src="${elem.image}"> `;
-                  }
-
-                  html += '<i class="close fa fa-times"></i>';
-                  html += '</div>';
-
-                  return html;
-            };
-
-            this.setPlaceholder = function ($chips) {
-
-                  const options = $chips.data('options');
-
-                  if ($chips.data('chips').length && options.placeholder) {
-
-                        $chips.find('input').prop('placeholder', options.placeholder);
-                  } else if (!$chips.data('chips').length && options.secondaryPlaceholder) {
-
-                        $chips.find('input').prop('placeholder', options.secondaryPlaceholder);
-                  }
-            };
-
-            this.isValid = function ($chipsWrapper, elem) {
-
-                  const chips = $chipsWrapper.data('chips');
-
-                  for (let i = 0; i < chips.length; i++) {
-
-                        if (chips[i].tag === elem.tag) {
-
-                              return false;
-                        }
-                  }
-
-                  return elem.tag !== '';
-            };
-
-            this.addChip = (chipsIndex, elem, $chipsWrapper) => {
-
-                  if (!this.isValid($chipsWrapper, elem)) {
-                        return;
-                  }
-
-                  const chipHtml = this.getSingleChipHtml(elem);
-
-                  $chipsWrapper.data('chips').push(elem);
-
-                  $(chipHtml).insertBefore($chipsWrapper.find('input'));
-
-                  $chipsWrapper.trigger('chip.add', elem);
-
-                  this.setPlaceholder($chipsWrapper);
-            };
-
-            this.deleteChip = (chipsIndex, chipIndex, $chipsWrapper) => {
-
-                  const chip = $chipsWrapper.data('chips')[chipIndex];
-
-                  $chipsWrapper.find('.chip').eq(chipIndex).remove();
-                  $chipsWrapper.data('chips').splice(chipIndex, 1);
-                  $chipsWrapper.trigger('chip.delete', chip);
-
-                  this.setPlaceholder($chipsWrapper);
-            };
-
-            this.selectChip = (chipsIndex, chipIndex, $chipsWrapper) => {
-
-                  const $chip = $chipsWrapper.find('.chip').eq(chipIndex);
-
-                  if ($chip && $chip.hasClass('selected') === false) {
-
-                        $chip.addClass('selected');
-                        $chipsWrapper.trigger('chip.select', $chipsWrapper.data('chips')[chipIndex]);
-                  }
-            };
-
-            this.getChipsElement = (index, $chipsWrapper) => {
-                  return $chipsWrapper.eq(index);
-            };
-
-            this.init();
-
-            if (!this.eventsHandled) {
-
-                  this.handleEvents();
-                  this.eventsHandled = true;
-            }
-
-            return this;
-      };
-
-      // Deprecated. To be deleted in future releases
-      $.fn.material_chip = $.fn.materialChip;
-})(jQuery);
-/*! npm.im/object-fit-images 3.2.4 */
-var objectFitImages = (function () {
 'use strict';
 
-var OFI = 'bfred-it:object-fit-images';
-var propRegex = /(object-fit|object-position)\s*:\s*([-.\w\s%]+)/g;
-var testImg = typeof Image === 'undefined' ? {style: {'object-position': 1}} : new Image();
-var supportsObjectFit = 'object-fit' in testImg.style;
-var supportsObjectPosition = 'object-position' in testImg.style;
-var supportsOFI = 'background-size' in testImg.style;
-var supportsCurrentSrc = typeof testImg.currentSrc === 'string';
-var nativeGetAttribute = testImg.getAttribute;
-var nativeSetAttribute = testImg.setAttribute;
-var autoModeEnabled = false;
+(function ($) {
 
-function createPlaceholder(w, h) {
-	return ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='" + w + "' height='" + h + "'%3E%3C/svg%3E");
-}
+  var chipsHandleEvents = false;
+  var materialChipsDefaults = {
+    data: [],
+    placeholder: '',
+    secondaryPlaceholder: ''
+  };
 
-function polyfillCurrentSrc(el) {
-	if (el.srcset && !supportsCurrentSrc && window.picturefill) {
-		var pf = window.picturefill._;
-		// parse srcset with picturefill where currentSrc isn't available
-		if (!el[pf.ns] || !el[pf.ns].evaled) {
-			// force synchronous srcset parsing
-			pf.fillImg(el, {reselect: true});
-		}
+  $(document).ready(function () {
+    // Handle removal of static chips.
+    $(document).on('click', '.chip .close', function () {
 
-		if (!el[pf.ns].curSrc) {
-			// force picturefill to parse srcset
-			el[pf.ns].supported = false;
-			pf.fillImg(el, {reselect: true});
-		}
+      var $this = $(this);
+      var $chips = $this.closest('.chips');
 
-		// retrieve parsed currentSrc, if any
-		el.currentSrc = el[pf.ns].curSrc || el.src;
-	}
-}
+      if ($chips.data('initialized')) {
+        return;
+      }
 
-function getStyle(el) {
-	var style = getComputedStyle(el).fontFamily;
-	var parsed;
-	var props = {};
-	while ((parsed = propRegex.exec(style)) !== null) {
-		props[parsed[1]] = parsed[2];
-	}
-	return props;
-}
+      $this.closest('.chip').remove();
+    });
+  });
 
-function setPlaceholder(img, width, height) {
-	// Default: fill width, no height
-	var placeholder = createPlaceholder(width || 1, height || 0);
+  $.fn.material_chip = function (options) {
+    var self = this;
+    this.$el = $(this);
+    this.$document = $(document);
+    this.SELS = {
+      CHIPS: '.chips',
+      CHIP: '.chip',
+      INPUT: 'input',
+      DELETE: '.fa',
+      SELECTED_CHIP: '.selected'
+    };
 
-	// Only set placeholder if it's different
-	if (nativeGetAttribute.call(img, 'src') !== placeholder) {
-		nativeSetAttribute.call(img, 'src', placeholder);
-	}
-}
+    if (options === 'data') {
+      return this.$el.data('chips');
+    }
 
-function onImageReady(img, callback) {
-	// naturalWidth is only available when the image headers are loaded,
-	// this loop will poll it every 100ms.
-	if (img.naturalWidth) {
-		callback(img);
-	} else {
-		setTimeout(onImageReady, 100, img, callback);
-	}
-}
+    if (options === 'options') {
+      return this.$el.data('options');
+    }
 
-function fixOne(el) {
-	var style = getStyle(el);
-	var ofi = el[OFI];
-	style['object-fit'] = style['object-fit'] || 'fill'; // default value
+    this.$el.data('options', $.extend({}, materialChipsDefaults, options));
 
-	// Avoid running where unnecessary, unless OFI had already done its deed
-	if (!ofi.img) {
-		// fill is the default behavior so no action is necessary
-		if (style['object-fit'] === 'fill') {
-			return;
-		}
+    // Initialize
+    this.init = function () {
+      var i = 0;
+      self.$el.each(function () {
 
-		// Where object-fit is supported and object-position isn't (Safari < 10)
-		if (
-			!ofi.skipTest && // unless user wants to apply regardless of browser support
-			supportsObjectFit && // if browser already supports object-fit
-			!style['object-position'] // unless object-position is used
-		) {
-			return;
-		}
-	}
+        var $chips = $(this);
+        if ($chips.data('initialized')) {
+          return;
+        } // Prevent double initialization.
 
-	// keep a clone in memory while resetting the original to a blank
-	if (!ofi.img) {
-		ofi.img = new Image(el.width, el.height);
-		ofi.img.srcset = nativeGetAttribute.call(el, "data-ofi-srcset") || el.srcset;
-		ofi.img.src = nativeGetAttribute.call(el, "data-ofi-src") || el.src;
+        var options = $chips.data('options');
+        if (!options.data || !(options.data instanceof Array)) {
+          options.data = [];
+        }
 
-		// preserve for any future cloneNode calls
-		// https://github.com/bfred-it/object-fit-images/issues/53
-		nativeSetAttribute.call(el, "data-ofi-src", el.src);
-		if (el.srcset) {
-			nativeSetAttribute.call(el, "data-ofi-srcset", el.srcset);
-		}
+        $chips.data('chips', options.data);
+        $chips.data('index', i);
+        $chips.data('initialized', true);
 
-		setPlaceholder(el, el.naturalWidth || el.width, el.naturalHeight || el.height);
+        if (!$chips.hasClass(self.SELS.CHIPS)) {
+          $chips.addClass('chips');
+        }
 
-		// remove srcset because it overrides src
-		if (el.srcset) {
-			el.srcset = '';
-		}
-		try {
-			keepSrcUsable(el);
-		} catch (err) {
-			if (window.console) {
-				console.warn('https://bit.ly/ofi-old-browser');
-			}
-		}
-	}
+        self.chips($chips);
+        i++;
+      });
+    };
 
-	polyfillCurrentSrc(ofi.img);
+    this.handleEvents = function () {
+      var SELS = self.SELS;
 
-	el.style.backgroundImage = "url(\"" + ((ofi.img.currentSrc || ofi.img.src).replace(/"/g, '\\"')) + "\")";
-	el.style.backgroundPosition = style['object-position'] || 'center';
-	el.style.backgroundRepeat = 'no-repeat';
-	el.style.backgroundOrigin = 'content-box';
+      self.$document.on('click', SELS.CHIPS, function (e) {
+        $(e.target).find(SELS.INPUT).focus();
+      });
 
-	if (/scale-down/.test(style['object-fit'])) {
-		onImageReady(ofi.img, function () {
-			if (ofi.img.naturalWidth > el.width || ofi.img.naturalHeight > el.height) {
-				el.style.backgroundSize = 'contain';
-			} else {
-				el.style.backgroundSize = 'auto';
-			}
-		});
-	} else {
-		el.style.backgroundSize = style['object-fit'].replace('none', 'auto').replace('fill', '100% 100%');
-	}
+      self.$document.on('click', SELS.CHIP, function () {
+        $(SELS.CHIP).removeClass('selected');
+        $(this).toggleClass('selected');
+      });
 
-	onImageReady(ofi.img, function (img) {
-		setPlaceholder(el, img.naturalWidth, img.naturalHeight);
-	});
-}
+      self.$document.on('keydown', function (e) {
+        if ($(e.target).is('input, textarea')) {
+          return;
+        }
 
-function keepSrcUsable(el) {
-	var descriptors = {
-		get: function get(prop) {
-			return el[OFI].img[prop ? prop : 'src'];
-		},
-		set: function set(value, prop) {
-			el[OFI].img[prop ? prop : 'src'] = value;
-			nativeSetAttribute.call(el, ("data-ofi-" + prop), value); // preserve for any future cloneNode
-			fixOne(el);
-			return value;
-		}
-	};
-	Object.defineProperty(el, 'src', descriptors);
-	Object.defineProperty(el, 'currentSrc', {
-		get: function () { return descriptors.get('currentSrc'); }
-	});
-	Object.defineProperty(el, 'srcset', {
-		get: function () { return descriptors.get('srcset'); },
-		set: function (ss) { return descriptors.set(ss, 'srcset'); }
-	});
-}
+        // delete
+        var $chip = self.$document.find(SELS.CHIP + SELS.SELECTED_CHIP);
+        var $chips = $chip.closest(SELS.CHIPS);
+        var length = $chip.siblings(SELS.CHIP).length;
+        var index = void 0;
 
-function hijackAttributes() {
-	function getOfiImageMaybe(el, name) {
-		return el[OFI] && el[OFI].img && (name === 'src' || name === 'srcset') ? el[OFI].img : el;
-	}
-	if (!supportsObjectPosition) {
-		HTMLImageElement.prototype.getAttribute = function (name) {
-			return nativeGetAttribute.call(getOfiImageMaybe(this, name), name);
-		};
+        if (!$chip.length) {
+          return;
+        }
 
-		HTMLImageElement.prototype.setAttribute = function (name, value) {
-			return nativeSetAttribute.call(getOfiImageMaybe(this, name), name, String(value));
-		};
-	}
-}
+        var isBackspaceOrDelete = e.which === 8 || e.which === 46;
+        var isLeftArrow = e.which === 37;
+        var isRightArrow = e.which === 39;
 
-function fix(imgs, opts) {
-	var startAutoMode = !autoModeEnabled && !imgs;
-	opts = opts || {};
-	imgs = imgs || 'img';
+        if (isBackspaceOrDelete) {
+          e.preventDefault();
+          var chipsIndex = $chips.data('index');
+          index = $chip.index();
+          self.deleteChip(chipsIndex, index, $chips);
+          var selectIndex = null;
 
-	if ((supportsObjectPosition && !opts.skipTest) || !supportsOFI) {
-		return false;
-	}
+          if (index + 1 < length) {
+            selectIndex = index;
+          } else if (index === length || index + 1 === length) {
+            selectIndex = length - 1;
+          }
 
-	// use imgs as a selector or just select all images
-	if (imgs === 'img') {
-		imgs = document.getElementsByTagName('img');
-	} else if (typeof imgs === 'string') {
-		imgs = document.querySelectorAll(imgs);
-	} else if (!('length' in imgs)) {
-		imgs = [imgs];
-	}
+          if (selectIndex < 0) {
+            selectIndex = null;
+          }
 
-	// apply fix to all
-	for (var i = 0; i < imgs.length; i++) {
-		imgs[i][OFI] = imgs[i][OFI] || {
-			skipTest: opts.skipTest
-		};
-		fixOne(imgs[i]);
-	}
+          if (selectIndex !== null) {
+            self.selectChip(chipsIndex, selectIndex, $chips);
+          }
+          if (!length) {
+            $chips.find('input').focus();
+          }
+        } else if (isLeftArrow) {
 
-	if (startAutoMode) {
-		document.body.addEventListener('load', function (e) {
-			if (e.target.tagName === 'IMG') {
-				fix(e.target, {
-					skipTest: opts.skipTest
-				});
-			}
-		}, true);
-		autoModeEnabled = true;
-		imgs = 'img'; // reset to a generic selector for watchMQ
-	}
+          index = $chip.index() - 1;
+          if (index < 0) {
+            return;
+          }
+          $(SELS.CHIP).removeClass('selected');
+          self.selectChip($chips.data('index'), index, $chips);
+        } else if (isRightArrow) {
 
-	// if requested, watch media queries for object-fit change
-	if (opts.watchMQ) {
-		window.addEventListener('resize', fix.bind(null, imgs, {
-			skipTest: opts.skipTest
-		}));
-	}
-}
+          index = $chip.index() + 1;
+          $(SELS.CHIP).removeClass('selected');
+          if (index > length) {
+            $chips.find('input').focus();
+            return;
+          }
+          self.selectChip($chips.data('index'), index, $chips);
+        }
+      });
 
-fix.supportsObjectFit = supportsObjectFit;
-fix.supportsObjectPosition = supportsObjectPosition;
+      self.$document.on('focusin', SELS.CHIPS + ' ' + SELS.INPUT, function (e) {
+        $(e.target).closest(SELS.CHIPS).addClass('focus');
+        $(SELS.CHIP).removeClass('selected');
+      });
 
-hijackAttributes();
+      self.$document.on('focusout', SELS.CHIPS + ' ' + SELS.INPUT, function (e) {
+        $(e.target).closest(SELS.CHIPS).removeClass('focus');
+      });
 
-return fix;
+      self.$document.on('keydown', SELS.CHIPS + ' ' + SELS.INPUT, function (e) {
+        var $target = $(e.target);
+        var $chips = $target.closest(SELS.CHIPS);
+        var chipsIndex = $chips.data('index');
+        var chipsLength = $chips.children(SELS.CHIP).length;
 
-}());
+        var isEnter = e.which === 13;
 
+        if (isEnter) {
+          e.preventDefault();
+          self.addChip(chipsIndex, {
+            tag: $target.val()
+          }, $chips);
+          $target.val('');
+          return;
+        }
+
+        var isLeftArrowOrDelete = e.keyCode === 8 || e.keyCode === 37;
+        var isValueEmpty = $target.val() === '';
+
+        if (isLeftArrowOrDelete && isValueEmpty && chipsLength) {
+          self.selectChip(chipsIndex, chipsLength - 1, $chips);
+          $target.blur();
+          return;
+        }
+      });
+
+      self.$document.on('click', SELS.CHIPS + ' ' + SELS.DELETE, function (e) {
+        var $target = $(e.target);
+        var $chips = $target.closest(SELS.CHIPS);
+        var $chip = $target.closest(SELS.CHIP);
+        e.stopPropagation();
+        self.deleteChip($chips.data('index'), $chip.index(), $chips);
+        $chips.find('input').focus();
+      });
+    };
+
+    this.chips = function ($chips) {
+      var html = '';
+      $chips.data('chips').forEach(function (elem) {
+        html += self.renderChip(elem);
+      });
+      html += '<input class="input" placeholder="">';
+      $chips.html(html);
+      self.setPlaceholder($chips);
+    };
+
+    this.renderChip = function (elem) {
+      if (!elem.tag) {
+        return;
+      }
+
+      var html = '<div class="chip">' + elem.tag;
+
+      if (elem.image) {
+        html += ' <img src="' + elem.image + '"> ';
+      }
+
+      html += '<i class="close fa fa-times"></i>';
+      html += '</div>';
+      return html;
+    };
+
+    this.setPlaceholder = function ($chips) {
+      var options = $chips.data('options');
+      if ($chips.data('chips').length && options.placeholder) {
+        $chips.find('input').prop('placeholder', options.placeholder);
+      } else if (!$chips.data('chips').length && options.secondaryPlaceholder) {
+        $chips.find('input').prop('placeholder', options.secondaryPlaceholder);
+      }
+    };
+
+    this.isValid = function ($chips, elem) {
+      var chips = $chips.data('chips');
+      var exists = false;
+      for (var i = 0; i < chips.length; i++) {
+        if (chips[i].tag === elem.tag) {
+          exists = true;
+          return;
+        }
+      }
+      return elem.tag !== '' && !exists;
+    };
+
+    this.addChip = function (chipsIndex, elem, $chips) {
+      if (!self.isValid($chips, elem)) {
+        return;
+      }
+
+      var chipHtml = self.renderChip(elem);
+      $chips.data('chips').push(elem);
+      $(chipHtml).insertBefore($chips.find('input'));
+      $chips.trigger('chip.add', elem);
+      self.setPlaceholder($chips);
+    };
+
+    this.deleteChip = function (chipsIndex, chipIndex, $chips) {
+      var chip = $chips.data('chips')[chipIndex];
+      $chips.find('.chip').eq(chipIndex).remove();
+      $chips.data('chips').splice(chipIndex, 1);
+      $chips.trigger('chip.delete', chip);
+      self.setPlaceholder($chips);
+    };
+
+    this.selectChip = function (chipsIndex, chipIndex, $chips) {
+      var $chip = $chips.find('.chip').eq(chipIndex);
+      if ($chip && $chip.hasClass('selected') === false) {
+        $chip.addClass('selected');
+        $chips.trigger('chip.select', $chips.data('chips')[chipIndex]);
+      }
+    };
+
+    this.getChipsElement = function (index, $chips) {
+      return $chips.eq(index);
+    };
+
+    // init
+    this.init();
+
+    if (!chipsHandleEvents) {
+      this.handleEvents();
+      chipsHandleEvents = true;
+    }
+  };
+})(jQuery);
 /*!
  * Name    : Just Another Parallax [Jarallax]
- * Version : 1.10.4
- * Author  : nK <https://nkdev.info>
+ * Version : 1.8.0
+ * Author  : _nK https://nkdev.info
  * GitHub  : https://github.com/nk-o/jarallax
  */
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */,
-/* 1 */,
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+(function (window) {
+    'use strict';
 
-"use strict";
+    // Adapted from https://gist.github.com/paulirish/1579671
+    if(!Date.now) {
+        Date.now = function () { return new Date().getTime(); };
+    }
+    if(!window.requestAnimationFrame) {
+        (function () {
 
+            var vendors = ['webkit', 'moz'];
+            for (var i = 0; i < vendors.length && !window.requestAnimationFrame; ++i) {
+                var vp = vendors[i];
+                window.requestAnimationFrame = window[vp+'RequestAnimationFrame'];
+                window.cancelAnimationFrame = window[vp+'CancelAnimationFrame']
+                                           || window[vp+'CancelRequestAnimationFrame'];
+            }
+            if (/iP(ad|hone|od).*OS 6/.test(window.navigator.userAgent) // iOS6 is buggy
+                || !window.requestAnimationFrame || !window.cancelAnimationFrame) {
+                var lastTime = 0;
+                window.requestAnimationFrame = function (callback) {
+                    var now = Date.now();
+                    var nextTime = Math.max(lastTime + 16, now);
+                    return setTimeout(function () { callback(lastTime = nextTime); },
+                                      nextTime - now);
+                };
+                window.cancelAnimationFrame = clearTimeout;
+            }
+        }());
+    }
 
-module.exports = function (callback) {
-
-	if (document.readyState === 'complete' || document.readyState === 'interactive') {
-		// Already ready or interactive, execute callback
-		callback.call();
-	} else if (document.attachEvent) {
-		// Old browsers
-		document.attachEvent('onreadystatechange', function () {
-			if (document.readyState === 'interactive') callback.call();
-		});
-	} else if (document.addEventListener) {
-		// Modern browsers
-		document.addEventListener('DOMContentLoaded', callback);
-	}
-};
-
-/***/ }),
-/* 3 */,
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-var win;
-
-if (typeof window !== "undefined") {
-    win = window;
-} else if (typeof global !== "undefined") {
-    win = global;
-} else if (typeof self !== "undefined") {
-    win = self;
-} else {
-    win = {};
-}
-
-module.exports = win;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(5)))
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var g;
-
-// This works in non-strict mode
-g = function () {
-	return this;
-}();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1, eval)("this");
-} catch (e) {
-	// This works if the window reference is available
-	if ((typeof window === "undefined" ? "undefined" : _typeof(window)) === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-/***/ }),
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(12);
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _liteReady = __webpack_require__(2);
-
-var _liteReady2 = _interopRequireDefault(_liteReady);
-
-var _global = __webpack_require__(4);
-
-var _jarallax = __webpack_require__(13);
-
-var _jarallax2 = _interopRequireDefault(_jarallax);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// no conflict
-var oldPlugin = _global.window.jarallax;
-_global.window.jarallax = _jarallax2.default;
-_global.window.jarallax.noConflict = function () {
-    _global.window.jarallax = oldPlugin;
-    return this;
-};
-
-// jQuery support
-if (typeof _global.jQuery !== 'undefined') {
-    var jQueryPlugin = function jQueryPlugin() {
-        var args = arguments || [];
-        Array.prototype.unshift.call(args, this);
-        var res = _jarallax2.default.apply(_global.window, args);
-        return (typeof res === 'undefined' ? 'undefined' : _typeof(res)) !== 'object' ? res : this;
-    };
-    jQueryPlugin.constructor = _jarallax2.default.constructor;
-
-    // no conflict
-    var oldJqPlugin = _global.jQuery.fn.jarallax;
-    _global.jQuery.fn.jarallax = jQueryPlugin;
-    _global.jQuery.fn.jarallax.noConflict = function () {
-        _global.jQuery.fn.jarallax = oldJqPlugin;
-        return this;
-    };
-}
-
-// data-jarallax initialization
-(0, _liteReady2.default)(function () {
-    (0, _jarallax2.default)(document.querySelectorAll('[data-jarallax]'));
-});
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _liteReady = __webpack_require__(2);
-
-var _liteReady2 = _interopRequireDefault(_liteReady);
-
-var _rafl = __webpack_require__(14);
-
-var _rafl2 = _interopRequireDefault(_rafl);
-
-var _global = __webpack_require__(4);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var isIE = navigator.userAgent.indexOf('MSIE ') > -1 || navigator.userAgent.indexOf('Trident/') > -1 || navigator.userAgent.indexOf('Edge/') > -1;
-
-var supportTransform = function () {
-    var prefixes = 'transform WebkitTransform MozTransform'.split(' ');
-    var div = document.createElement('div');
-    for (var i = 0; i < prefixes.length; i++) {
-        if (div && div.style[prefixes[i]] !== undefined) {
-            return prefixes[i];
+    // test if css property supported by browser
+    // like "transform"
+    var tempDiv = document.createElement('div');
+    function isPropertySupported (property) {
+        var prefixes = ['O','Moz','ms','Ms','Webkit'];
+        var i = prefixes.length;
+        if (tempDiv.style[property] !== undefined) {
+            return true;
         }
-    }
-    return false;
-}();
-
-// Window data
-var wndW = void 0;
-var wndH = void 0;
-var wndY = void 0;
-var forceResizeParallax = false;
-var forceScrollParallax = false;
-function updateWndVars(e) {
-    wndW = _global.window.innerWidth || document.documentElement.clientWidth;
-    wndH = _global.window.innerHeight || document.documentElement.clientHeight;
-    if ((typeof e === 'undefined' ? 'undefined' : _typeof(e)) === 'object' && (e.type === 'load' || e.type === 'dom-loaded')) {
-        forceResizeParallax = true;
-    }
-}
-updateWndVars();
-_global.window.addEventListener('resize', updateWndVars);
-_global.window.addEventListener('orientationchange', updateWndVars);
-_global.window.addEventListener('load', updateWndVars);
-(0, _liteReady2.default)(function () {
-    updateWndVars({
-        type: 'dom-loaded'
-    });
-});
-
-// list with all jarallax instances
-// need to render all in one scroll/resize event
-var jarallaxList = [];
-
-// Animate if changed window size or scrolled page
-var oldPageData = false;
-function updateParallax() {
-    if (!jarallaxList.length) {
-        return;
+        property = property.charAt(0).toUpperCase() + property.substr(1);
+        while (--i > -1 && tempDiv.style[prefixes[i] + property] === undefined) { }
+        return i >= 0;
     }
 
-    if (_global.window.pageYOffset !== undefined) {
-        wndY = _global.window.pageYOffset;
-    } else {
-        wndY = (document.documentElement || document.body.parentNode || document.body).scrollTop;
+    var supportTransform = isPropertySupported('transform');
+    var supportTransform3D = isPropertySupported('perspective');
+
+    var ua = navigator.userAgent;
+    var isAndroid = ua.toLowerCase().indexOf('android') > -1;
+    var isIOs = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    var isFirefox = ua.toLowerCase().indexOf('firefox') > -1;
+    var isIE = ua.indexOf('MSIE ') > -1    // IE 10 or older
+            || ua.indexOf('Trident/') > -1 // IE 11
+            || ua.indexOf('Edge/') > -1;   // Edge
+    var isIElt10 = document.all && !window.atob; // IE 9 or older
+
+    var wndW;
+    var wndH;
+    function updateWndVars () {
+        wndW = window.innerWidth || document.documentElement.clientWidth;
+        wndH = window.innerHeight || document.documentElement.clientHeight;
     }
+    updateWndVars();
 
-    var isResized = forceResizeParallax || !oldPageData || oldPageData.width !== wndW || oldPageData.height !== wndH;
-    var isScrolled = forceScrollParallax || isResized || !oldPageData || oldPageData.y !== wndY;
+    // list with all jarallax instances
+    // need to render all in one scroll/resize event
+    var jarallaxList = [];
 
-    forceResizeParallax = false;
-    forceScrollParallax = false;
+    // Jarallax instance
+    var Jarallax = (function () {
+        var instanceID = 0;
 
-    if (isResized || isScrolled) {
-        jarallaxList.forEach(function (item) {
-            if (isResized) {
-                item.onResize();
-            }
-            if (isScrolled) {
-                item.onScroll();
-            }
-        });
+        function Jarallax_inner (item, userOptions) {
+            var _this = this,
+                dataOptions;
 
-        oldPageData = {
-            width: wndW,
-            height: wndH,
-            y: wndY
-        };
-    }
+            _this.$item      = item;
 
-    (0, _rafl2.default)(updateParallax);
-}
+            _this.defaults   = {
+                type              : 'scroll', // type of parallax: scroll, scale, opacity, scale-opacity, scroll-opacity
+                speed             : 0.5, // supported value from -1 to 2
+                imgSrc            : null,
+                imgWidth          : null,
+                imgHeight         : null,
+                elementInViewport : null,
+                zIndex            : -100,
+                noAndroid         : false,
+                noIos             : true,
 
-// ResizeObserver
-var resizeObserver = global.ResizeObserver ? new global.ResizeObserver(function (entry) {
-    if (entry && entry.length) {
-        (0, _rafl2.default)(function () {
-            entry.forEach(function (item) {
-                if (item.target && item.target.jarallax) {
-                    if (!forceResizeParallax) {
-                        item.target.jarallax.onResize();
-                    }
-                    forceScrollParallax = true;
-                }
-            });
-        });
-    }
-}) : false;
-
-var instanceID = 0;
-
-// Jarallax class
-
-var Jarallax = function () {
-    function Jarallax(item, userOptions) {
-        _classCallCheck(this, Jarallax);
-
-        var self = this;
-
-        self.instanceID = instanceID++;
-
-        self.$item = item;
-
-        self.defaults = {
-            type: 'scroll', // type of parallax: scroll, scale, opacity, scale-opacity, scroll-opacity
-            speed: 0.5, // supported value from -1 to 2
-            imgSrc: null,
-            imgElement: '.jarallax-img',
-            imgSize: 'cover',
-            imgPosition: '50% 50%',
-            imgRepeat: 'no-repeat', // supported only for background, not for <img> tag
-            keepImg: false, // keep <img> tag in it's default place
-            elementInViewport: null,
-            zIndex: -100,
-            disableParallax: false,
-            disableVideo: false,
-            automaticResize: true, // use ResizeObserver to recalculate position and size of parallax image
-
-            // video
-            videoSrc: null,
-            videoStartTime: 0,
-            videoEndTime: 0,
-            videoVolume: 0,
-            videoPlayOnlyVisible: true,
-
-            // events
-            onScroll: null, // function(calculations) {}
-            onInit: null, // function() {}
-            onDestroy: null, // function() {}
-            onCoverImage: null // function() {}
-        };
-
-        // DEPRECATED: old data-options
-        var deprecatedDataAttribute = self.$item.getAttribute('data-jarallax');
-        var oldDataOptions = JSON.parse(deprecatedDataAttribute || '{}');
-        if (deprecatedDataAttribute) {
-            // eslint-disable-next-line no-console
-            console.warn('Detected usage of deprecated data-jarallax JSON options, you should use pure data-attribute options. See info here - https://github.com/nk-o/jarallax/issues/53');
-        }
-
-        // prepare data-options
-        var dataOptions = self.$item.dataset || {};
-        var pureDataOptions = {};
-        Object.keys(dataOptions).forEach(function (key) {
-            var loweCaseOption = key.substr(0, 1).toLowerCase() + key.substr(1);
-            if (loweCaseOption && typeof self.defaults[loweCaseOption] !== 'undefined') {
-                pureDataOptions[loweCaseOption] = dataOptions[key];
-            }
-        });
-
-        self.options = self.extend({}, self.defaults, oldDataOptions, pureDataOptions, userOptions);
-        self.pureOptions = self.extend({}, self.options);
-
-        // prepare 'true' and 'false' strings to boolean
-        Object.keys(self.options).forEach(function (key) {
-            if (self.options[key] === 'true') {
-                self.options[key] = true;
-            } else if (self.options[key] === 'false') {
-                self.options[key] = false;
-            }
-        });
-
-        // fix speed option [-1.0, 2.0]
-        self.options.speed = Math.min(2, Math.max(-1, parseFloat(self.options.speed)));
-
-        // deprecated noAndroid and noIos options
-        if (self.options.noAndroid || self.options.noIos) {
-            // eslint-disable-next-line no-console
-            console.warn('Detected usage of deprecated noAndroid or noIos options, you should use disableParallax option. See info here - https://github.com/nk-o/jarallax/#disable-on-mobile-devices');
-
-            // prepare fallback if disableParallax option is not used
-            if (!self.options.disableParallax) {
-                if (self.options.noIos && self.options.noAndroid) {
-                    self.options.disableParallax = /iPad|iPhone|iPod|Android/;
-                } else if (self.options.noIos) {
-                    self.options.disableParallax = /iPad|iPhone|iPod/;
-                } else if (self.options.noAndroid) {
-                    self.options.disableParallax = /Android/;
-                }
-            }
-        }
-
-        // prepare disableParallax callback
-        if (typeof self.options.disableParallax === 'string') {
-            self.options.disableParallax = new RegExp(self.options.disableParallax);
-        }
-        if (self.options.disableParallax instanceof RegExp) {
-            var disableParallaxRegexp = self.options.disableParallax;
-            self.options.disableParallax = function () {
-                return disableParallaxRegexp.test(navigator.userAgent);
+                // events
+                onScroll          : null, // function(calculations) {}
+                onInit            : null, // function() {}
+                onDestroy         : null, // function() {}
+                onCoverImage      : null  // function() {}
             };
-        }
-        if (typeof self.options.disableParallax !== 'function') {
-            self.options.disableParallax = function () {
-                return false;
-            };
-        }
+            dataOptions      = JSON.parse(_this.$item.getAttribute('data-jarallax') || '{}');
+            _this.options    = _this.extend({}, _this.defaults, dataOptions, userOptions);
 
-        // prepare disableVideo callback
-        if (typeof self.options.disableVideo === 'string') {
-            self.options.disableVideo = new RegExp(self.options.disableVideo);
-        }
-        if (self.options.disableVideo instanceof RegExp) {
-            var disableVideoRegexp = self.options.disableVideo;
-            self.options.disableVideo = function () {
-                return disableVideoRegexp.test(navigator.userAgent);
-            };
-        }
-        if (typeof self.options.disableVideo !== 'function') {
-            self.options.disableVideo = function () {
-                return false;
-            };
-        }
-
-        // custom element to check if parallax in viewport
-        var elementInVP = self.options.elementInViewport;
-        // get first item from array
-        if (elementInVP && (typeof elementInVP === 'undefined' ? 'undefined' : _typeof(elementInVP)) === 'object' && typeof elementInVP.length !== 'undefined') {
-            var _elementInVP = elementInVP;
-
-            var _elementInVP2 = _slicedToArray(_elementInVP, 1);
-
-            elementInVP = _elementInVP2[0];
-        }
-        // check if dom element
-        if (!(elementInVP instanceof Element)) {
-            elementInVP = null;
-        }
-        self.options.elementInViewport = elementInVP;
-
-        self.image = {
-            src: self.options.imgSrc || null,
-            $container: null,
-            useImgTag: false,
-
-            // position fixed is needed for the most of browsers because absolute position have glitches
-            // on MacOS with smooth scroll there is a huge lags with absolute position - https://github.com/nk-o/jarallax/issues/75
-            // on mobile devices better scrolled with absolute position
-            position: /iPad|iPhone|iPod|Android/.test(navigator.userAgent) ? 'absolute' : 'fixed'
-        };
-
-        if (self.initImg() && self.canInitParallax()) {
-            self.init();
-        }
-    }
-
-    // add styles to element
-
-
-    _createClass(Jarallax, [{
-        key: 'css',
-        value: function css(el, styles) {
-            if (typeof styles === 'string') {
-                return _global.window.getComputedStyle(el).getPropertyValue(styles);
+            // stop init if android or ios
+            if(!supportTransform || isAndroid && _this.options.noAndroid || isIOs && _this.options.noIos) {
+                return;
             }
 
-            // add transform property with vendor prefix
-            if (styles.transform && supportTransform) {
-                styles[supportTransform] = styles.transform;
-            }
+            // fix speed option [-1.0, 2.0]
+            _this.options.speed = Math.min(2, Math.max(-1, parseFloat(_this.options.speed)));
 
-            Object.keys(styles).forEach(function (key) {
-                el.style[key] = styles[key];
-            });
-            return el;
-        }
-
-        // Extend like jQuery.extend
-
-    }, {
-        key: 'extend',
-        value: function extend(out) {
-            var _arguments = arguments;
-
-            out = out || {};
-            Object.keys(arguments).forEach(function (i) {
-                if (!_arguments[i]) {
-                    return;
-                }
-                Object.keys(_arguments[i]).forEach(function (key) {
-                    out[key] = _arguments[i][key];
-                });
-            });
-            return out;
-        }
-
-        // get window size and scroll position. Useful for extensions
-
-    }, {
-        key: 'getWindowData',
-        value: function getWindowData() {
-            return {
-                width: wndW,
-                height: wndH,
-                y: wndY
-            };
-        }
-
-        // Jarallax functions
-
-    }, {
-        key: 'initImg',
-        value: function initImg() {
-            var self = this;
-
-            // find image element
-            var $imgElement = self.options.imgElement;
-            if ($imgElement && typeof $imgElement === 'string') {
-                $imgElement = self.$item.querySelector($imgElement);
+            // custom element to check if parallax in viewport
+            var elementInVP = _this.options.elementInViewport;
+            // get first item from array
+            if(elementInVP && typeof elementInVP === 'object' && typeof elementInVP.length !== 'undefined') {
+                elementInVP = elementInVP[0];
             }
             // check if dom element
-            if (!($imgElement instanceof Element)) {
-                $imgElement = null;
+            if(!elementInVP instanceof Element) {
+                elementInVP = null;
             }
+            _this.options.elementInViewport = elementInVP;
 
-            if ($imgElement) {
-                if (self.options.keepImg) {
-                    self.image.$item = $imgElement.cloneNode(true);
-                } else {
-                    self.image.$item = $imgElement;
-                    self.image.$itemParent = $imgElement.parentNode;
-                }
-                self.image.useImgTag = true;
-            }
+            _this.instanceID = instanceID++;
 
-            // true if there is img tag
-            if (self.image.$item) {
-                return true;
-            }
+            _this.image      = {
+                src        : _this.options.imgSrc || null,
+                $container : null,
+                $item      : null,
+                width      : _this.options.imgWidth || null,
+                height     : _this.options.imgHeight || null,
+                // fix for some devices
+                // use <img> instead of background image - more smoothly
+                useImgTag  : isIOs || isAndroid || isIE,
 
-            // get image src
-            if (self.image.src === null) {
-                self.image.src = self.css(self.$item, 'background-image').replace(/^url\(['"]?/g, '').replace(/['"]?\)$/g, '');
-            }
-            return !(!self.image.src || self.image.src === 'none');
-        }
-    }, {
-        key: 'canInitParallax',
-        value: function canInitParallax() {
-            return supportTransform && !this.options.disableParallax();
-        }
-    }, {
-        key: 'init',
-        value: function init() {
-            var self = this;
-            var containerStyles = {
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                overflow: 'hidden',
-                pointerEvents: 'none'
+                // position absolute is needed on IE9 and FireFox because fixed position have glitches
+                position   : !supportTransform3D || isFirefox ? 'absolute' : 'fixed'
             };
-            var imageStyles = {};
 
-            if (!self.options.keepImg) {
-                // save default user styles
-                var curStyle = self.$item.getAttribute('style');
-                if (curStyle) {
-                    self.$item.setAttribute('data-jarallax-original-styles', curStyle);
+            if(_this.initImg()) {
+                _this.init();
+            }
+        }
+
+        return Jarallax_inner;
+    }());
+
+    // add styles to element
+    Jarallax.prototype.css = function (el, styles) {
+        if(typeof styles === 'string') {
+            if(window.getComputedStyle) {
+                return window.getComputedStyle(el).getPropertyValue(styles);
+            }
+            return el.style[styles];
+        }
+
+        // add transform property with vendor prefixes
+        if(styles.transform) {
+            if (supportTransform3D) {
+                styles.transform += ' translateZ(0)';
+            }
+            styles.WebkitTransform = styles.MozTransform = styles.msTransform = styles.OTransform = styles.transform;
+        }
+
+        for(var k in styles) {
+            el.style[k] = styles[k];
+        }
+        return el;
+    };
+    // Extend like jQuery.extend
+    Jarallax.prototype.extend = function (out) {
+        out = out || {};
+        for (var i = 1; i < arguments.length; i++) {
+            if (!arguments[i]) {
+                continue;
+            }
+            for (var key in arguments[i]) {
+                if (arguments[i].hasOwnProperty(key)) {
+                    out[key] = arguments[i][key];
                 }
-                if (self.image.useImgTag) {
-                    var curImgStyle = self.image.$item.getAttribute('style');
-                    if (curImgStyle) {
-                        self.image.$item.setAttribute('data-jarallax-original-styles', curImgStyle);
-                    }
-                }
             }
+        }
+        return out;
+    };
 
-            // set relative position and z-index to the parent
-            if (self.css(self.$item, 'position') === 'static') {
-                self.css(self.$item, {
-                    position: 'relative'
-                });
-            }
-            if (self.css(self.$item, 'z-index') === 'auto') {
-                self.css(self.$item, {
-                    zIndex: 0
-                });
-            }
+    // Jarallax functions
+    Jarallax.prototype.initImg = function () {
+        var _this = this;
 
-            // container for parallax image
-            self.image.$container = document.createElement('div');
-            self.css(self.image.$container, containerStyles);
-            self.css(self.image.$container, {
-                'z-index': self.options.zIndex
+        // get image src
+        if(_this.image.src === null) {
+            _this.image.src = _this.css(_this.$item, 'background-image').replace(/^url\(['"]?/g,'').replace(/['"]?\)$/g,'');
+        }
+        return !(!_this.image.src || _this.image.src === 'none');
+    };
+
+    Jarallax.prototype.init = function () {
+        var _this = this,
+            containerStyles = {
+                position         : 'absolute',
+                top              : 0,
+                left             : 0,
+                width            : '100%',
+                height           : '100%',
+                overflow         : 'hidden',
+                pointerEvents    : 'none'
+            },
+            imageStyles = {};
+
+        // save default user styles
+        _this.$item.setAttribute('data-jarallax-original-styles', _this.$item.getAttribute('style'));
+
+        // set relative position and z-index to the parent
+        if (_this.css(_this.$item, 'position') === 'static') {
+            _this.css(_this.$item, {
+                position: 'relative'
             });
+        }
+        if (_this.css(_this.$item, 'z-index') === 'auto') {
+            _this.css(_this.$item, {
+                zIndex: 0
+            });
+        }
 
-            // fix for IE https://github.com/nk-o/jarallax/issues/110
-            if (isIE) {
-                self.css(self.image.$container, {
-                    opacity: 0.9999
+        // container for parallax image
+        _this.image.$container = document.createElement('div');
+        _this.css(_this.image.$container, containerStyles);
+        _this.css(_this.image.$container, {
+            visibility : 'hidden',
+            'z-index'  : _this.options.zIndex
+        });
+        _this.image.$container.setAttribute('id', 'jarallax-container-' + _this.instanceID);
+        _this.$item.appendChild(_this.image.$container);
+
+        // use img tag
+        if(_this.image.useImgTag) {
+            _this.image.$item = document.createElement('img');
+            _this.image.$item.setAttribute('src', _this.image.src);
+            imageStyles = _this.extend({
+                'max-width' : 'none'
+            }, containerStyles, imageStyles);
+        }
+
+        // use div with background image
+        else {
+            _this.image.$item = document.createElement('div');
+            imageStyles = _this.extend({
+                'background-position' : '50% 50%',
+                'background-size'     : '100% auto',
+                'background-repeat'   : 'no-repeat no-repeat',
+                'background-image'    : 'url("' + _this.image.src + '")'
+            }, containerStyles, imageStyles);
+        }
+
+        // check if one of parents have transform style (without this check, scroll transform will be inverted)
+        // discussion - https://github.com/nk-o/jarallax/issues/9
+        var parentWithTransform = 0;
+        var $itemParents = _this.$item;
+        while ($itemParents !== null && $itemParents !== document && parentWithTransform === 0) {
+            var parent_transform = _this.css($itemParents, '-webkit-transform') || _this.css($itemParents, '-moz-transform') || _this.css($itemParents, 'transform');
+            if(parent_transform && parent_transform !== 'none') {
+                parentWithTransform = 1;
+
+                // add transform on parallax container if there is parent with transform
+                _this.css(_this.image.$container, {
+                    transform: 'translateX(0) translateY(0)'
                 });
             }
+            $itemParents = $itemParents.parentNode;
+        }
 
-            self.image.$container.setAttribute('id', 'jarallax-container-' + self.instanceID);
-            self.$item.appendChild(self.image.$container);
+        // absolute position if one of parents have transformations or parallax without scroll
+        if (parentWithTransform || _this.options.type === 'opacity'|| _this.options.type === 'scale' || _this.options.type === 'scale-opacity') {
+            _this.image.position = 'absolute';
+        }
 
-            // use img tag
-            if (self.image.useImgTag) {
-                imageStyles = self.extend({
-                    'object-fit': self.options.imgSize,
-                    'object-position': self.options.imgPosition,
-                    // support for plugin https://github.com/bfred-it/object-fit-images
-                    'font-family': 'object-fit: ' + self.options.imgSize + '; object-position: ' + self.options.imgPosition + ';',
-                    'max-width': 'none'
-                }, containerStyles, imageStyles);
+        // add position to parallax block
+        imageStyles.position = _this.image.position;
 
-                // use div with background image
-            } else {
-                self.image.$item = document.createElement('div');
-                if (self.image.src) {
-                    imageStyles = self.extend({
-                        'background-position': self.options.imgPosition,
-                        'background-size': self.options.imgSize,
-                        'background-repeat': self.options.imgRepeat,
-                        'background-image': 'url("' + self.image.src + '")'
-                    }, containerStyles, imageStyles);
-                }
-            }
+        // parallax image
+        _this.css(_this.image.$item, imageStyles);
+        _this.image.$container.appendChild(_this.image.$item);
 
-            if (self.options.type === 'opacity' || self.options.type === 'scale' || self.options.type === 'scale-opacity' || self.options.speed === 1) {
-                self.image.position = 'absolute';
-            }
-
-            // check if one of parents have transform style (without this check, scroll transform will be inverted if used parallax with position fixed)
-            // discussion - https://github.com/nk-o/jarallax/issues/9
-            if (self.image.position === 'fixed') {
-                var parentWithTransform = 0;
-                var $itemParents = self.$item;
-                while ($itemParents !== null && $itemParents !== document && parentWithTransform === 0) {
-                    var parentTransform = self.css($itemParents, '-webkit-transform') || self.css($itemParents, '-moz-transform') || self.css($itemParents, 'transform');
-                    if (parentTransform && parentTransform !== 'none') {
-                        parentWithTransform = 1;
-                        self.image.position = 'absolute';
-                    }
-                    $itemParents = $itemParents.parentNode;
-                }
-            }
-
-            // add position to parallax block
-            imageStyles.position = self.image.position;
-
-            // insert parallax image
-            self.css(self.image.$item, imageStyles);
-            self.image.$container.appendChild(self.image.$item);
-
-            // set initial position and size
-            self.onResize();
-            self.onScroll(true);
-
-            // ResizeObserver
-            if (self.options.automaticResize && resizeObserver) {
-                resizeObserver.observe(self.$item);
-            }
+        // cover image if width and height is ready
+        function initAfterReady () {
+            _this.coverImage();
+            _this.clipContainer();
+            _this.onScroll(true);
 
             // call onInit event
-            if (self.options.onInit) {
-                self.options.onInit.call(self);
+            if(_this.options.onInit) {
+                _this.options.onInit.call(_this);
             }
 
-            // remove default user background
-            if (self.css(self.$item, 'background-image') !== 'none') {
-                self.css(self.$item, {
-                    'background-image': 'none'
-                });
-            }
-
-            self.addToParallaxList();
-        }
-
-        // add to parallax instances list
-
-    }, {
-        key: 'addToParallaxList',
-        value: function addToParallaxList() {
-            jarallaxList.push(this);
-
-            if (jarallaxList.length === 1) {
-                updateParallax();
-            }
-        }
-
-        // remove from parallax instances list
-
-    }, {
-        key: 'removeFromParallaxList',
-        value: function removeFromParallaxList() {
-            var self = this;
-
-            jarallaxList.forEach(function (item, key) {
-                if (item.instanceID === self.instanceID) {
-                    jarallaxList.splice(key, 1);
+            // timeout to fix IE blinking
+            setTimeout(function () {
+                if(_this.$item) {
+                    // remove default user background
+                    _this.css(_this.$item, {
+                        'background-image'      : 'none',
+                        'background-attachment' : 'scroll',
+                        'background-size'       : 'auto'
+                    });
                 }
+            }, 0);
+        }
+
+        if(_this.image.width && _this.image.height) {
+            // init if width and height already exists
+            initAfterReady();
+        } else {
+            // load image and get width and height
+            _this.getImageSize(_this.image.src, function (width, height) {
+                _this.image.width  = width;
+                _this.image.height = height;
+                initAfterReady();
             });
         }
-    }, {
-        key: 'destroy',
-        value: function destroy() {
-            var self = this;
 
-            self.removeFromParallaxList();
+        jarallaxList.push(_this);
+    };
 
-            // return styles on container as before jarallax init
-            var originalStylesTag = self.$item.getAttribute('data-jarallax-original-styles');
-            self.$item.removeAttribute('data-jarallax-original-styles');
-            // null occurs if there is no style tag before jarallax init
-            if (!originalStylesTag) {
-                self.$item.removeAttribute('style');
-            } else {
-                self.$item.setAttribute('style', originalStylesTag);
-            }
+    Jarallax.prototype.destroy = function () {
+        var _this = this;
 
-            if (self.image.useImgTag) {
-                // return styles on img tag as before jarallax init
-                var originalStylesImgTag = self.image.$item.getAttribute('data-jarallax-original-styles');
-                self.image.$item.removeAttribute('data-jarallax-original-styles');
-                // null occurs if there is no style tag before jarallax init
-                if (!originalStylesImgTag) {
-                    self.image.$item.removeAttribute('style');
-                } else {
-                    self.image.$item.setAttribute('style', originalStylesTag);
-                }
-
-                // move img tag to its default position
-                if (self.image.$itemParent) {
-                    self.image.$itemParent.appendChild(self.image.$item);
-                }
-            }
-
-            // remove additional dom elements
-            if (self.$clipStyles) {
-                self.$clipStyles.parentNode.removeChild(self.$clipStyles);
-            }
-            if (self.image.$container) {
-                self.image.$container.parentNode.removeChild(self.image.$container);
-            }
-
-            // call onDestroy event
-            if (self.options.onDestroy) {
-                self.options.onDestroy.call(self);
-            }
-
-            // delete jarallax from item
-            delete self.$item.jarallax;
-        }
-
-        // it will remove some image overlapping
-        // overlapping occur due to an image position fixed inside absolute position element
-
-    }, {
-        key: 'clipContainer',
-        value: function clipContainer() {
-            // needed only when background in fixed position
-            if (this.image.position !== 'fixed') {
-                return;
-            }
-
-            var self = this;
-            var rect = self.image.$container.getBoundingClientRect();
-            var width = rect.width,
-                height = rect.height;
-
-
-            if (!self.$clipStyles) {
-                self.$clipStyles = document.createElement('style');
-                self.$clipStyles.setAttribute('type', 'text/css');
-                self.$clipStyles.setAttribute('id', 'jarallax-clip-' + self.instanceID);
-                var head = document.head || document.getElementsByTagName('head')[0];
-                head.appendChild(self.$clipStyles);
-            }
-
-            var styles = '#jarallax-container-' + self.instanceID + ' {\n           clip: rect(0 ' + width + 'px ' + height + 'px 0);\n           clip: rect(0, ' + width + 'px, ' + height + 'px, 0);\n        }';
-
-            // add clip styles inline (this method need for support IE8 and less browsers)
-            if (self.$clipStyles.styleSheet) {
-                self.$clipStyles.styleSheet.cssText = styles;
-            } else {
-                self.$clipStyles.innerHTML = styles;
+        // remove from instances list
+        for(var k = 0, len = jarallaxList.length; k < len; k++) {
+            if(jarallaxList[k].instanceID === _this.instanceID) {
+                jarallaxList.splice(k, 1);
+                break;
             }
         }
-    }, {
-        key: 'coverImage',
-        value: function coverImage() {
-            var self = this;
 
-            var rect = self.image.$container.getBoundingClientRect();
-            var contH = rect.height;
-            var speed = self.options.speed;
+        // return styles on container as before jarallax init
+        var originalStylesTag = _this.$item.getAttribute('data-jarallax-original-styles');
+        _this.$item.removeAttribute('data-jarallax-original-styles');
+        // null occurs if there is no style tag before jarallax init
+        if(originalStylesTag === 'null') {
+            _this.$item.removeAttribute('style');
+        } else {
+            _this.$item.setAttribute('style', originalStylesTag);
+        }
 
-            var isScroll = self.options.type === 'scroll' || self.options.type === 'scroll-opacity';
-            var scrollDist = 0;
-            var resultH = contH;
-            var resultMT = 0;
+        // remove additional dom elements
+        if(_this.$clipStyles) {
+            _this.$clipStyles.parentNode.removeChild(_this.$clipStyles);
+        }
+        _this.image.$container.parentNode.removeChild(_this.image.$container);
 
-            // scroll parallax
-            if (isScroll) {
-                // scroll distance and height for image
-                if (speed < 0) {
-                    scrollDist = speed * Math.max(contH, wndH);
-                } else {
-                    scrollDist = speed * (contH + wndH);
-                }
+        // call onDestroy event
+        if(_this.options.onDestroy) {
+            _this.options.onDestroy.call(_this);
+        }
 
-                // size for scroll parallax
-                if (speed > 1) {
-                    resultH = Math.abs(scrollDist - wndH);
-                } else if (speed < 0) {
-                    resultH = scrollDist / speed + Math.abs(scrollDist);
-                } else {
-                    resultH += Math.abs(wndH - contH) * (1 - speed);
-                }
+        // delete jarallax from item
+        delete _this.$item.jarallax;
 
-                scrollDist /= 2;
-            }
+        // delete all variables
+        for(var n in _this) {
+            delete _this[n];
+        }
+    };
 
-            // store scroll distance
-            self.parallaxScrollDistance = scrollDist;
+    Jarallax.prototype.getImageSize = function (src, callback) {
+        if(!src || !callback) {
+            return;
+        }
 
-            // vertical center
-            if (isScroll) {
-                resultMT = (wndH - resultH) / 2;
+        var tempImg = new Image();
+        tempImg.onload = function () {
+            callback(tempImg.width, tempImg.height);
+        };
+        tempImg.src = src;
+    };
+
+    // it will remove some image overlapping
+    // overlapping occur due to an image position fixed inside absolute position element (webkit based browsers works without any fix)
+    Jarallax.prototype.clipContainer = function () {
+        // clip is not working properly on real IE9 and less
+        if(isIElt10) {
+            return;
+        }
+
+        var _this  = this,
+            rect   = _this.image.$container.getBoundingClientRect(),
+            width  = rect.width,
+            height = rect.height;
+
+        if(!_this.$clipStyles) {
+            _this.$clipStyles = document.createElement('style');
+            _this.$clipStyles.setAttribute('type', 'text/css');
+            _this.$clipStyles.setAttribute('id', '#jarallax-clip-' + _this.instanceID);
+            var head = document.head || document.getElementsByTagName('head')[0];
+            head.appendChild(_this.$clipStyles);
+        }
+
+        var styles = [
+            '#jarallax-container-' + _this.instanceID + ' {',
+            '   clip: rect(0 ' + width + 'px ' + height + 'px 0);',
+            '   clip: rect(0, ' + width + 'px, ' + height + 'px, 0);',
+            '}'
+        ].join('\n');
+
+        // add clip styles inline (this method need for support IE8 and less browsers)
+        if (_this.$clipStyles.styleSheet){
+            _this.$clipStyles.styleSheet.cssText = styles;
+        } else {
+            _this.$clipStyles.innerHTML = styles;
+        }
+    };
+
+    Jarallax.prototype.coverImage = function () {
+        var _this = this;
+
+        if(!_this.image.width || !_this.image.height) {
+            return;
+        }
+
+        var rect       = _this.image.$container.getBoundingClientRect(),
+            contW      = rect.width,
+            contH      = rect.height,
+            contL      = rect.left,
+            imgW       = _this.image.width,
+            imgH       = _this.image.height,
+            speed      = _this.options.speed,
+            isScroll   = _this.options.type === 'scroll' || _this.options.type === 'scroll-opacity',
+            scrollDist = 0,
+            resultW    = 0,
+            resultH    = contH,
+            resultML   = 0,
+            resultMT   = 0;
+
+        // scroll parallax
+        if(isScroll) {
+            // scroll distance and height for image
+            if (speed < 0) {
+                scrollDist = speed * Math.max(contH, wndH);
             } else {
-                resultMT = (contH - resultH) / 2;
+                scrollDist = speed * (contH + wndH);
             }
 
-            // apply result to item
-            self.css(self.image.$item, {
-                height: resultH + 'px',
-                marginTop: resultMT + 'px',
-                left: self.image.position === 'fixed' ? rect.left + 'px' : '0',
-                width: rect.width + 'px'
-            });
-
-            // call onCoverImage event
-            if (self.options.onCoverImage) {
-                self.options.onCoverImage.call(self);
+            // size for scroll parallax
+            if (speed > 1) {
+                resultH = Math.abs(scrollDist - wndH);
+            } else if (speed < 0) {
+                resultH = scrollDist / speed + Math.abs(scrollDist);
+            }  else {
+                resultH += Math.abs(wndH - contH) * (1 - speed);
             }
 
-            // return some useful data. Used in the video cover function
-            return {
-                image: {
-                    height: resultH,
-                    marginTop: resultMT
-                },
-                container: rect
+            scrollDist /= 2;
+        }
+
+        // calculate width relative to height and image size
+        resultW = resultH * imgW / imgH;
+        if(resultW < contW) {
+            resultW = contW;
+            resultH = resultW * imgH / imgW;
+        }
+
+        // center parallax image
+        if(isScroll) {
+            resultML = contL + (contW - resultW) / 2;
+            resultMT = (wndH - resultH) / 2;
+        } else {
+            resultML = (contW - resultW) / 2;
+            resultMT = (contH - resultH) / 2;
+        }
+
+        // fix if parallax block in absolute position
+        if(_this.image.position === 'absolute') {
+            resultML -= contL;
+        }
+
+        // store scroll distance
+        _this.parallaxScrollDistance = scrollDist;
+
+        // apply result to item
+        _this.css(_this.image.$item, {
+            width: resultW + 'px',
+            height: resultH + 'px',
+            marginLeft: resultML + 'px',
+            marginTop: resultMT + 'px'
+        });
+
+        // call onCoverImage event
+        if(_this.options.onCoverImage) {
+            _this.options.onCoverImage.call(_this);
+        }
+    };
+
+    Jarallax.prototype.isVisible = function () {
+        return this.isElementInViewport || false;
+    };
+
+    Jarallax.prototype.onScroll = function (force) {
+        var _this = this;
+
+        if(!_this.image.width || !_this.image.height) {
+            return;
+        }
+
+        var rect   = _this.$item.getBoundingClientRect(),
+            contT  = rect.top,
+            contH  = rect.height,
+            styles = {
+                visibility         : 'visible',
+                backgroundPosition : '50% 50%'
             };
+
+        // check if in viewport
+        var viewportRect = rect;
+        if(_this.options.elementInViewport) {
+            viewportRect = _this.options.elementInViewport.getBoundingClientRect();
         }
-    }, {
-        key: 'isVisible',
-        value: function isVisible() {
-            return this.isElementInViewport || false;
+        _this.isElementInViewport =
+            viewportRect.bottom >= 0 &&
+            viewportRect.right >= 0 &&
+            viewportRect.top <= wndH &&
+            viewportRect.left <= wndW;
+
+        // stop calculations if item is not in viewport
+        if (force ? false : !_this.isElementInViewport) {
+            return;
         }
-    }, {
-        key: 'onScroll',
-        value: function onScroll(force) {
-            var self = this;
 
-            var rect = self.$item.getBoundingClientRect();
-            var contT = rect.top;
-            var contH = rect.height;
-            var styles = {};
+        // calculate parallax helping variables
+        var beforeTop = Math.max(0, contT),
+            beforeTopEnd = Math.max(0, contH + contT),
+            afterTop = Math.max(0, -contT),
+            beforeBottom = Math.max(0, contT + contH - wndH),
+            beforeBottomEnd = Math.max(0, contH - (contT + contH - wndH)),
+            afterBottom = Math.max(0, -contT + wndH - contH),
+            fromViewportCenter = 1 - 2 * (wndH - contT) / (wndH + contH);
 
-            // check if in viewport
-            var viewportRect = rect;
-            if (self.options.elementInViewport) {
-                viewportRect = self.options.elementInViewport.getBoundingClientRect();
-            }
-            self.isElementInViewport = viewportRect.bottom >= 0 && viewportRect.right >= 0 && viewportRect.top <= wndH && viewportRect.left <= wndW;
-
-            // stop calculations if item is not in viewport
-            if (force ? false : !self.isElementInViewport) {
-                return;
-            }
-
-            // calculate parallax helping variables
-            var beforeTop = Math.max(0, contT);
-            var beforeTopEnd = Math.max(0, contH + contT);
-            var afterTop = Math.max(0, -contT);
-            var beforeBottom = Math.max(0, contT + contH - wndH);
-            var beforeBottomEnd = Math.max(0, contH - (contT + contH - wndH));
-            var afterBottom = Math.max(0, -contT + wndH - contH);
-            var fromViewportCenter = 1 - 2 * (wndH - contT) / (wndH + contH);
-
-            // calculate on how percent of section is visible
-            var visiblePercent = 1;
-            if (contH < wndH) {
-                visiblePercent = 1 - (afterTop || beforeBottom) / contH;
-            } else if (beforeTopEnd <= wndH) {
+        // calculate on how percent of section is visible
+        var visiblePercent = 1;
+        if(contH < wndH) {
+            visiblePercent = 1 - (afterTop || beforeBottom) / contH;
+        } else {
+            if(beforeTopEnd <= wndH) {
                 visiblePercent = beforeTopEnd / wndH;
             } else if (beforeBottomEnd <= wndH) {
                 visiblePercent = beforeBottomEnd / wndH;
             }
-
-            // opacity
-            if (self.options.type === 'opacity' || self.options.type === 'scale-opacity' || self.options.type === 'scroll-opacity') {
-                styles.transform = 'translate3d(0,0,0)';
-                styles.opacity = visiblePercent;
-            }
-
-            // scale
-            if (self.options.type === 'scale' || self.options.type === 'scale-opacity') {
-                var scale = 1;
-                if (self.options.speed < 0) {
-                    scale -= self.options.speed * visiblePercent;
-                } else {
-                    scale += self.options.speed * (1 - visiblePercent);
-                }
-                styles.transform = 'scale(' + scale + ') translate3d(0,0,0)';
-            }
-
-            // scroll
-            if (self.options.type === 'scroll' || self.options.type === 'scroll-opacity') {
-                var positionY = self.parallaxScrollDistance * fromViewportCenter;
-
-                // fix if parallax block in absolute position
-                if (self.image.position === 'absolute') {
-                    positionY -= contT;
-                }
-
-                styles.transform = 'translate3d(0,' + positionY + 'px,0)';
-            }
-
-            self.css(self.image.$item, styles);
-
-            // call onScroll event
-            if (self.options.onScroll) {
-                self.options.onScroll.call(self, {
-                    section: rect,
-
-                    beforeTop: beforeTop,
-                    beforeTopEnd: beforeTopEnd,
-                    afterTop: afterTop,
-                    beforeBottom: beforeBottom,
-                    beforeBottomEnd: beforeBottomEnd,
-                    afterBottom: afterBottom,
-
-                    visiblePercent: visiblePercent,
-                    fromViewportCenter: fromViewportCenter
-                });
-            }
         }
-    }, {
-        key: 'onResize',
-        value: function onResize() {
-            this.coverImage();
-            this.clipContainer();
+
+        // opacity
+        if(_this.options.type === 'opacity' || _this.options.type === 'scale-opacity' || _this.options.type === 'scroll-opacity') {
+            styles.transform = ''; // empty to add translateZ(0) where it is possible
+            styles.opacity = visiblePercent;
         }
-    }]);
 
-    return Jarallax;
-}();
-
-// global definition
-
-
-var plugin = function plugin(items) {
-    // check for dom element
-    // thanks: http://stackoverflow.com/questions/384286/javascript-isdom-how-do-you-check-if-a-javascript-object-is-a-dom-object
-    if ((typeof HTMLElement === 'undefined' ? 'undefined' : _typeof(HTMLElement)) === 'object' ? items instanceof HTMLElement : items && (typeof items === 'undefined' ? 'undefined' : _typeof(items)) === 'object' && items !== null && items.nodeType === 1 && typeof items.nodeName === 'string') {
-        items = [items];
-    }
-
-    var options = arguments[1];
-    var args = Array.prototype.slice.call(arguments, 2);
-    var len = items.length;
-    var k = 0;
-    var ret = void 0;
-
-    for (k; k < len; k++) {
-        if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) === 'object' || typeof options === 'undefined') {
-            if (!items[k].jarallax) {
-                items[k].jarallax = new Jarallax(items[k], options);
+        // scale
+        if(_this.options.type === 'scale' || _this.options.type === 'scale-opacity') {
+            var scale = 1;
+            if(_this.options.speed < 0) {
+                scale -= _this.options.speed * visiblePercent;
+            } else {
+                scale += _this.options.speed * (1 - visiblePercent);
             }
-        } else if (items[k].jarallax) {
-            // eslint-disable-next-line prefer-spread
-            ret = items[k].jarallax[options].apply(items[k].jarallax, args);
+            styles.transform = 'scale(' + scale + ')';
         }
-        if (typeof ret !== 'undefined') {
-            return ret;
+
+        // scroll
+        if(_this.options.type === 'scroll' || _this.options.type === 'scroll-opacity') {
+            var positionY = _this.parallaxScrollDistance * fromViewportCenter;
+
+            // fix if parallax block in absolute position
+            if(_this.image.position === 'absolute') {
+                positionY -= contT;
+            }
+
+            styles.transform = 'translateY(' + positionY + 'px)';
+        }
+
+        _this.css(_this.image.$item, styles);
+
+        // call onScroll event
+        if(_this.options.onScroll) {
+            _this.options.onScroll.call(_this, {
+                section: rect,
+
+                beforeTop: beforeTop,
+                beforeTopEnd: beforeTopEnd,
+                afterTop: afterTop,
+                beforeBottom: beforeBottom,
+                beforeBottomEnd: beforeBottomEnd,
+                afterBottom: afterBottom,
+
+                visiblePercent: visiblePercent,
+                fromViewportCenter: fromViewportCenter
+            });
+        }
+    };
+
+
+    // init events
+    function addEventListener (el, eventName, handler) {
+        if (el.addEventListener) {
+            el.addEventListener(eventName, handler);
+        } else {
+            el.attachEvent('on' + eventName, function (){
+                handler.call(el);
+            });
         }
     }
 
-    return items;
-};
-plugin.constructor = Jarallax;
+    function update (e) {
+        window.requestAnimationFrame(function () {
+            if(e.type !== 'scroll') {
+                updateWndVars();
+            }
+            for(var k = 0, len = jarallaxList.length; k < len; k++) {
+                // cover image and clip needed only when parallax container was changed
+                if(e.type !== 'scroll') {
+                    jarallaxList[k].coverImage();
+                    jarallaxList[k].clipContainer();
+                }
+                jarallaxList[k].onScroll();
+            }
+        });
+    }
+    addEventListener(window, 'scroll', update);
+    addEventListener(window, 'resize', update);
+    addEventListener(window, 'orientationchange', update);
+    addEventListener(window, 'load', update);
 
-exports.default = plugin;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(5)))
 
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
+    // global definition
+    var plugin = function (items) {
+        // check for dom element
+        // thanks: http://stackoverflow.com/questions/384286/javascript-isdom-how-do-you-check-if-a-javascript-object-is-a-dom-object
+        if(typeof HTMLElement === "object" ? items instanceof HTMLElement : items && typeof items === "object" && items !== null && items.nodeType === 1 && typeof items.nodeName==="string") {
+            items = [items];
+        }
 
-"use strict";
+        var options = arguments[1],
+            args = Array.prototype.slice.call(arguments, 2),
+            len = items.length,
+            k = 0,
+            ret;
 
+        for (k; k < len; k++) {
+            if (typeof options === 'object' || typeof options === 'undefined') {
+                if(!items[k].jarallax) {
+                    items[k].jarallax = new Jarallax(items[k], options);
+                }
+            }
+            else if(items[k].jarallax) {
+                ret = items[k].jarallax[options].apply(items[k].jarallax, args);
+            }
+            if (typeof ret !== 'undefined') {
+                return ret;
+            }
+        }
 
-var global = __webpack_require__(4);
+        return items;
+    };
+    plugin.constructor = Jarallax;
 
-/**
- * `requestAnimationFrame()`
- */
+    // no conflict
+    var oldPlugin = window.jarallax;
+    window.jarallax = plugin;
+    window.jarallax.noConflict = function () {
+        window.jarallax = oldPlugin;
+        return this;
+    };
 
-var request = global.requestAnimationFrame || global.webkitRequestAnimationFrame || global.mozRequestAnimationFrame || fallback;
+    // jQuery support
+    if(typeof jQuery !== 'undefined') {
+        var jQueryPlugin = function () {
+            var args = arguments || [];
+            Array.prototype.unshift.call(args, this);
+            var res = plugin.apply(window, args);
+            return typeof res !== 'object' ? res : this;
+        };
+        jQueryPlugin.constructor = Jarallax;
 
-var prev = +new Date();
-function fallback(fn) {
-  var curr = +new Date();
-  var ms = Math.max(0, 16 - (curr - prev));
-  var req = setTimeout(fn, ms);
-  return prev = curr, req;
-}
+        // no conflict
+        var oldJqPlugin = jQuery.fn.jarallax;
+        jQuery.fn.jarallax = jQueryPlugin;
+        jQuery.fn.jarallax.noConflict = function () {
+            jQuery.fn.jarallax = oldJqPlugin;
+            return this;
+        };
+    }
 
-/**
- * `cancelAnimationFrame()`
- */
+    // data-jarallax initialization
+    addEventListener(window, 'DOMContentLoaded', function () {
+        plugin(document.querySelectorAll('[data-jarallax], [data-jarallax-video]'));
+    });
+}(window));
 
-var cancel = global.cancelAnimationFrame || global.webkitCancelAnimationFrame || global.mozCancelAnimationFrame || clearTimeout;
-
-if (Function.prototype.bind) {
-  request = request.bind(global);
-  cancel = cancel.bind(global);
-}
-
-exports = module.exports = request;
-exports.cancel = cancel;
-
-/***/ })
-/******/ ]);
 /*!
- * Name    : Video Background Extension for Jarallax
- * Version : 1.0.1
- * Author  : nK <https://nkdev.info>
+ * Name    : Video Worker (wrapper for Youtube, Vimeo and Local videos)
+ * Version : 1.2.1
+ * Author  : _nK https://nkdev.info
  * GitHub  : https://github.com/nk-o/jarallax
  */
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */,
-/* 1 */,
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = function (callback) {
-
-	if (document.readyState === 'complete' || document.readyState === 'interactive') {
-		// Already ready or interactive, execute callback
-		callback.call();
-	} else if (document.attachEvent) {
-		// Old browsers
-		document.attachEvent('onreadystatechange', function () {
-			if (document.readyState === 'interactive') callback.call();
-		});
-	} else if (document.addEventListener) {
-		// Modern browsers
-		document.addEventListener('DOMContentLoaded', callback);
-	}
-};
-
-/***/ }),
-/* 3 */,
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-var win;
-
-if (typeof window !== "undefined") {
-    win = window;
-} else if (typeof global !== "undefined") {
-    win = global;
-} else if (typeof self !== "undefined") {
-    win = self;
-} else {
-    win = {};
-}
-
-module.exports = win;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(5)))
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var g;
-
-// This works in non-strict mode
-g = function () {
-	return this;
-}();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1, eval)("this");
-} catch (e) {
-	// This works if the window reference is available
-	if ((typeof window === "undefined" ? "undefined" : _typeof(window)) === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(7);
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _videoWorker = __webpack_require__(8);
-
-var _videoWorker2 = _interopRequireDefault(_videoWorker);
-
-var _global = __webpack_require__(4);
-
-var _global2 = _interopRequireDefault(_global);
-
-var _liteReady = __webpack_require__(2);
-
-var _liteReady2 = _interopRequireDefault(_liteReady);
-
-var _jarallaxVideo = __webpack_require__(10);
-
-var _jarallaxVideo2 = _interopRequireDefault(_jarallaxVideo);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// add video worker globally to fallback jarallax < 1.10 versions
-_global2.default.VideoWorker = _global2.default.VideoWorker || _videoWorker2.default;
-
-(0, _jarallaxVideo2.default)();
-
-// data-jarallax-video initialization
-(0, _liteReady2.default)(function () {
-    if (typeof jarallax !== 'undefined') {
-        jarallax(document.querySelectorAll('[data-jarallax-video]'));
-    }
-});
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = __webpack_require__(9);
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-// Deferred
-// thanks http://stackoverflow.com/questions/18096715/implement-deferred-object-without-using-jquery
-function Deferred() {
-    this._done = [];
-    this._fail = [];
-}
-Deferred.prototype = {
-    execute: function execute(list, args) {
-        var i = list.length;
-        args = Array.prototype.slice.call(args);
-        while (i--) {
-            list[i].apply(null, args);
-        }
-    },
-    resolve: function resolve() {
-        this.execute(this._done, arguments);
-    },
-    reject: function reject() {
-        this.execute(this._fail, arguments);
-    },
-    done: function done(callback) {
-        this._done.push(callback);
-    },
-    fail: function fail(callback) {
-        this._fail.push(callback);
-    }
-};
-
-var ID = 0;
-var YoutubeAPIadded = 0;
-var VimeoAPIadded = 0;
-var loadingYoutubePlayer = 0;
-var loadingVimeoPlayer = 0;
-var loadingYoutubeDefer = new Deferred();
-var loadingVimeoDefer = new Deferred();
-
-var VideoWorker = function () {
-    function VideoWorker(url, options) {
-        _classCallCheck(this, VideoWorker);
-
-        var self = this;
-
-        self.url = url;
-
-        self.options_default = {
-            autoplay: false,
-            loop: false,
-            mute: false,
-            volume: 100,
-            showContols: true,
-
-            // start / end video time in seconds
-            startTime: 0,
-            endTime: 0
-        };
-
-        self.options = self.extend({}, self.options_default, options);
-
-        // check URL
-        self.videoID = self.parseURL(url);
-
-        // init
-        if (self.videoID) {
-            self.ID = ID++;
-            self.loadAPI();
-            self.init();
-        }
-    }
+(function (window) {
+    'use strict';
 
     // Extend like jQuery.extend
-
-
-    _createClass(VideoWorker, [{
-        key: 'extend',
-        value: function extend(out) {
-            var _arguments = arguments;
-
-            out = out || {};
-            Object.keys(arguments).forEach(function (i) {
-                if (!_arguments[i]) {
-                    return;
+    function extend (out) {
+        out = out || {};
+        for (var i = 1; i < arguments.length; i++) {
+            if (!arguments[i]) {
+                continue;
+            }
+            for (var key in arguments[i]) {
+                if (arguments[i].hasOwnProperty(key)) {
+                    out[key] = arguments[i][key];
                 }
-                Object.keys(_arguments[i]).forEach(function (key) {
-                    out[key] = _arguments[i][key];
-                });
+            }
+        }
+        return out;
+    }
+
+    // Deferred
+    // thanks http://stackoverflow.com/questions/18096715/implement-deferred-object-without-using-jquery
+    function Deferred () {
+        this._done = [];
+        this._fail = [];
+    }
+    Deferred.prototype = {
+        execute: function (list, args) {
+            var i = list.length;
+            args = Array.prototype.slice.call(args);
+            while(i--) {
+                list[i].apply(null, args);
+            }
+        },
+        resolve: function () {
+            this.execute(this._done, arguments);
+        },
+        reject: function () {
+            this.execute(this._fail, arguments);
+        },
+        done: function (callback) {
+            this._done.push(callback);
+        },
+        fail: function (callback) {
+            this._fail.push(callback);
+        }
+    };
+
+    // init events
+    function addEventListener (el, eventName, handler) {
+        if (el.addEventListener) {
+            el.addEventListener(eventName, handler);
+        } else {
+            el.attachEvent('on' + eventName, function (){
+                handler.call(el);
             });
-            return out;
         }
-    }, {
-        key: 'parseURL',
-        value: function parseURL(url) {
-            // parse youtube ID
-            function getYoutubeID(ytUrl) {
-                // eslint-disable-next-line no-useless-escape
-                var regExp = /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
-                var match = ytUrl.match(regExp);
-                return match && match[1].length === 11 ? match[1] : false;
-            }
+    }
 
-            // parse vimeo ID
-            function getVimeoID(vmUrl) {
-                // eslint-disable-next-line no-useless-escape
-                var regExp = /https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/;
-                var match = vmUrl.match(regExp);
-                return match && match[3] ? match[3] : false;
-            }
+    var VideoWorker = (function () {
+        var ID = 0;
 
-            // parse local string
-            function getLocalVideos(locUrl) {
-                // eslint-disable-next-line no-useless-escape
-                var videoFormats = locUrl.split(/,(?=mp4\:|webm\:|ogv\:|ogg\:)/);
-                var result = {};
-                var ready = 0;
-                videoFormats.forEach(function (val) {
-                    // eslint-disable-next-line no-useless-escape
-                    var match = val.match(/^(mp4|webm|ogv|ogg)\:(.*)/);
-                    if (match && match[1] && match[2]) {
-                        // eslint-disable-next-line prefer-destructuring
-                        result[match[1] === 'ogv' ? 'ogg' : match[1]] = match[2];
-                        ready = 1;
-                    }
-                });
-                return ready ? result : false;
-            }
-
-            var Youtube = getYoutubeID(url);
-            var Vimeo = getVimeoID(url);
-            var Local = getLocalVideos(url);
-
-            if (Youtube) {
-                this.type = 'youtube';
-                return Youtube;
-            } else if (Vimeo) {
-                this.type = 'vimeo';
-                return Vimeo;
-            } else if (Local) {
-                this.type = 'local';
-                return Local;
-            }
-
-            return false;
-        }
-    }, {
-        key: 'isValid',
-        value: function isValid() {
-            return !!this.videoID;
-        }
-
-        // events
-
-    }, {
-        key: 'on',
-        value: function on(name, callback) {
-            this.userEventsList = this.userEventsList || [];
-
-            // add new callback in events list
-            (this.userEventsList[name] || (this.userEventsList[name] = [])).push(callback);
-        }
-    }, {
-        key: 'off',
-        value: function off(name, callback) {
+        function VideoWorker_inner (url, options) {
             var _this = this;
 
-            if (!this.userEventsList || !this.userEventsList[name]) {
-                return;
-            }
+            _this.url = url;
 
-            if (!callback) {
-                delete this.userEventsList[name];
-            } else {
-                this.userEventsList[name].forEach(function (val, key) {
-                    if (val === callback) {
-                        _this.userEventsList[name][key] = false;
-                    }
-                });
+            _this.options_default = {
+                autoplay: 1,
+                loop: 1,
+                mute: 1,
+                controls: 0,
+
+                // start / end video time in ms
+                startTime: 0,
+                endTime: 0
+            };
+
+            _this.options = extend({}, _this.options_default, options);
+
+            // check URL
+            _this.videoID = _this.parseURL(url);
+
+            // init
+            if(_this.videoID) {
+                _this.ID = ID++;
+                _this.loadAPI();
+                _this.init();
             }
         }
-    }, {
-        key: 'fire',
-        value: function fire(name) {
-            var _this2 = this;
 
-            var args = [].slice.call(arguments, 1);
-            if (this.userEventsList && typeof this.userEventsList[name] !== 'undefined') {
-                this.userEventsList[name].forEach(function (val) {
-                    // call with all arguments
-                    if (val) {
-                        val.apply(_this2, args);
-                    }
-                });
-            }
+        return VideoWorker_inner;
+    }());
+
+    VideoWorker.prototype.parseURL = function (url) {
+        // parse youtube ID
+        function getYoutubeID (ytUrl) {
+            var regExp = /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
+            var match = ytUrl.match(regExp);
+            return match && match[1].length === 11 ? match[1] : false;
         }
-    }, {
-        key: 'play',
-        value: function play(start) {
-            var self = this;
-            if (!self.player) {
-                return;
-            }
 
-            if (self.type === 'youtube' && self.player.playVideo) {
-                if (typeof start !== 'undefined') {
-                    self.player.seekTo(start || 0);
-                }
-                if (YT.PlayerState.PLAYING !== self.player.getPlayerState()) {
-                    self.player.playVideo();
-                }
-            }
+        // parse vimeo ID
+        function getVimeoID (vmUrl) {
+            var regExp = /https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/;
+            var match = vmUrl.match(regExp);
+            return match && match[3] ? match[3] : false;
+        }
 
-            if (self.type === 'vimeo') {
-                if (typeof start !== 'undefined') {
-                    self.player.setCurrentTime(start);
-                }
-                self.player.getPaused().then(function (paused) {
-                    if (paused) {
-                        self.player.play();
-                    }
-                });
-            }
-
-            if (self.type === 'local') {
-                if (typeof start !== 'undefined') {
-                    self.player.currentTime = start;
-                }
-                if (self.player.paused) {
-                    self.player.play();
+        // parse local string
+        function getLocalVideos (locUrl) {
+            var videoFormats = locUrl.split(/,(?=mp4\:|webm\:|ogv\:|ogg\:)/);
+            var result = {};
+            var ready = 0;
+            for(var k = 0; k < videoFormats.length; k++) {
+                var match = videoFormats[k].match(/^(mp4|webm|ogv|ogg)\:(.*)/);
+                if(match && match[1] && match[2]) {
+                    result[match[1] === 'ogv' ? 'ogg' : match[1]] = match[2];
+                    ready = 1;
                 }
             }
+            return ready ? result : false;
         }
-    }, {
-        key: 'pause',
-        value: function pause() {
-            var self = this;
-            if (!self.player) {
-                return;
-            }
 
-            if (self.type === 'youtube' && self.player.pauseVideo) {
-                if (YT.PlayerState.PLAYING === self.player.getPlayerState()) {
-                    self.player.pauseVideo();
+        var Youtube = getYoutubeID(url);
+        var Vimeo = getVimeoID(url);
+        var Local = getLocalVideos(url);
+
+        if(Youtube) {
+            this.type = 'youtube';
+            return Youtube;
+        } else if (Vimeo) {
+            this.type = 'vimeo';
+            return Vimeo;
+        } else if (Local) {
+            this.type = 'local';
+            return Local;
+        }
+
+        return false;
+    };
+
+    VideoWorker.prototype.isValid = function () {
+        return !!this.videoID;
+    };
+
+    // events
+    VideoWorker.prototype.on = function (name, callback) {
+        this.userEventsList = this.userEventsList || [];
+
+        // add new callback in events list
+        (this.userEventsList[name] || (this.userEventsList[name] = [])).push(callback);
+    };
+    VideoWorker.prototype.off = function (name, callback) {
+        if(!this.userEventsList || !this.userEventsList[name]) {
+            return;
+        }
+
+        if(!callback) {
+            delete this.userEventsList[name];
+        } else {
+            for(var k = 0; k < this.userEventsList[name].length; k++) {
+                if(this.userEventsList[name][k] === callback) {
+                    this.userEventsList[name][k] = false;
                 }
             }
-
-            if (self.type === 'vimeo') {
-                self.player.getPaused().then(function (paused) {
-                    if (!paused) {
-                        self.player.pause();
-                    }
-                });
-            }
-
-            if (self.type === 'local') {
-                if (!self.player.paused) {
-                    self.player.pause();
+        }
+    };
+    VideoWorker.prototype.fire = function (name) {
+        var args = [].slice.call(arguments, 1);
+        if(this.userEventsList && typeof this.userEventsList[name] !== 'undefined') {
+            for(var k in this.userEventsList[name]) {
+                // call with all arguments
+                if(this.userEventsList[name][k]) {
+                    this.userEventsList[name][k].apply(this, args);
                 }
             }
         }
-    }, {
-        key: 'mute',
-        value: function mute() {
-            var self = this;
-            if (!self.player) {
-                return;
-            }
+    };
 
-            if (self.type === 'youtube' && self.player.mute) {
-                self.player.mute();
-            }
-
-            if (self.type === 'vimeo' && self.player.setVolume) {
-                self.player.setVolume(0);
-            }
-
-            if (self.type === 'local') {
-                self.$video.muted = true;
-            }
+    VideoWorker.prototype.play = function (start) {
+        var _this = this;
+        if(!_this.player) {
+            return;
         }
-    }, {
-        key: 'unmute',
-        value: function unmute() {
-            var self = this;
-            if (!self.player) {
-                return;
-            }
 
-            if (self.type === 'youtube' && self.player.mute) {
-                self.player.unMute();
+        if(_this.type === 'youtube' && _this.player.playVideo) {
+            if(typeof start !== 'undefined') {
+                _this.player.seekTo(start || 0);
             }
-
-            if (self.type === 'vimeo' && self.player.setVolume) {
-                self.player.setVolume(self.options.volume);
-            }
-
-            if (self.type === 'local') {
-                self.$video.muted = false;
-            }
+            _this.player.playVideo();
         }
-    }, {
-        key: 'setVolume',
-        value: function setVolume() {
-            var volume = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
-            var self = this;
-            if (!self.player || !volume) {
-                return;
+        if(_this.type === 'vimeo') {
+            if (typeof start !== 'undefined') {
+                _this.player.setCurrentTime(start);
             }
-
-            if (self.type === 'youtube' && self.player.setVolume) {
-                self.player.setVolume(volume);
-            }
-
-            if (self.type === 'vimeo' && self.player.setVolume) {
-                self.player.setVolume(volume);
-            }
-
-            if (self.type === 'local') {
-                self.$video.volume = volume / 100;
-            }
+            _this.player.getPaused().then(function(paused) {
+                if (paused) {
+                    _this.player.play();
+                }
+            });
         }
-    }, {
-        key: 'getVolume',
-        value: function getVolume(callback) {
-            var self = this;
-            if (!self.player) {
-                callback(false);
-                return;
-            }
 
-            if (self.type === 'youtube' && self.player.getVolume) {
-                callback(self.player.getVolume());
+        if(_this.type === 'local') {
+            if(typeof start !== 'undefined') {
+                _this.player.currentTime = start;
             }
-
-            if (self.type === 'vimeo' && self.player.getVolume) {
-                self.player.getVolume().then(function (volume) {
-                    callback(volume);
-                });
-            }
-
-            if (self.type === 'local') {
-                callback(self.$video.volume * 100);
-            }
+            _this.player.play();
         }
-    }, {
-        key: 'getMuted',
-        value: function getMuted(callback) {
-            var self = this;
-            if (!self.player) {
-                callback(null);
-                return;
-            }
+    };
 
-            if (self.type === 'youtube' && self.player.isMuted) {
-                callback(self.player.isMuted());
-            }
-
-            if (self.type === 'vimeo' && self.player.getVolume) {
-                self.player.getVolume().then(function (volume) {
-                    callback(!!volume);
-                });
-            }
-
-            if (self.type === 'local') {
-                callback(self.$video.muted);
-            }
+    VideoWorker.prototype.pause = function () {
+        if(!this.player) {
+            return;
         }
-    }, {
-        key: 'getImageURL',
-        value: function getImageURL(callback) {
-            var self = this;
 
-            if (self.videoImage) {
-                callback(self.videoImage);
-                return;
-            }
+        if(this.type === 'youtube' && this.player.pauseVideo) {
+            this.player.pauseVideo();
+        }
 
-            if (self.type === 'youtube') {
-                var availableSizes = ['maxresdefault', 'sddefault', 'hqdefault', '0'];
-                var step = 0;
+        if(this.type === 'vimeo') {
+            this.player.pause();
+        }
 
-                var tempImg = new Image();
-                tempImg.onload = function () {
-                    // if no thumbnail, youtube add their own image with width = 120px
-                    if ((this.naturalWidth || this.width) !== 120 || step === availableSizes.length - 1) {
-                        // ok
-                        self.videoImage = 'https://img.youtube.com/vi/' + self.videoID + '/' + availableSizes[step] + '.jpg';
-                        callback(self.videoImage);
+        if(this.type === 'local') {
+            this.player.pause();
+        }
+    };
+
+    VideoWorker.prototype.getImageURL = function (callback) {
+        var _this = this;
+
+        if(_this.videoImage) {
+            callback(_this.videoImage);
+            return;
+        }
+
+        if(_this.type === 'youtube') {
+            var availableSizes = [
+                'maxresdefault',
+                'sddefault',
+                'hqdefault',
+                '0'
+            ];
+            var step = 0;
+
+            var tempImg = new Image();
+            tempImg.onload = function () {
+                // if no thumbnail, youtube add their own image with width = 120px
+                if ((this.naturalWidth || this.width) !== 120 || step === availableSizes.length - 1) {
+                    // ok
+                    _this.videoImage = 'https://img.youtube.com/vi/' + _this.videoID + '/' + availableSizes[step] + '.jpg';
+                    callback(_this.videoImage);
+                } else {
+                    // try another size
+                    step++;
+                    this.src = 'https://img.youtube.com/vi/' + _this.videoID + '/' + availableSizes[step] + '.jpg';
+                }
+            };
+            tempImg.src = 'https://img.youtube.com/vi/' + _this.videoID + '/' + availableSizes[step] + '.jpg';
+        }
+
+        if(_this.type === 'vimeo') {
+            var request = new XMLHttpRequest();
+            request.open('GET', 'https://vimeo.com/api/v2/video/' + _this.videoID + '.json', true);
+            request.onreadystatechange = function () {
+                if (this.readyState === 4) {
+                    if (this.status >= 200 && this.status < 400) {
+                        // Success!
+                        var response = JSON.parse(this.responseText);
+                        _this.videoImage = response[0].thumbnail_large;
+                        callback(_this.videoImage);
                     } else {
-                        // try another size
-                        step++;
-                        this.src = 'https://img.youtube.com/vi/' + self.videoID + '/' + availableSizes[step] + '.jpg';
+                        // Error :(
                     }
-                };
-                tempImg.src = 'https://img.youtube.com/vi/' + self.videoID + '/' + availableSizes[step] + '.jpg';
-            }
+                }
+            };
+            request.send();
+            request = null;
+        }
+    };
 
-            if (self.type === 'vimeo') {
-                var request = new XMLHttpRequest();
-                request.open('GET', 'https://vimeo.com/api/v2/video/' + self.videoID + '.json', true);
-                request.onreadystatechange = function () {
-                    if (this.readyState === 4) {
-                        if (this.status >= 200 && this.status < 400) {
-                            // Success!
-                            var response = JSON.parse(this.responseText);
-                            self.videoImage = response[0].thumbnail_large;
-                            callback(self.videoImage);
-                        } else {
-                            // Error :(
-                        }
-                    }
-                };
-                request.send();
-                request = null;
-            }
+    VideoWorker.prototype.getIframe = function (callback) {
+        var _this = this;
+
+        // return generated iframe
+        if(_this.$iframe) {
+            callback(_this.$iframe);
+            return;
         }
 
-        // fallback to the old version.
-
-    }, {
-        key: 'getIframe',
-        value: function getIframe(callback) {
-            this.getVideo(callback);
-        }
-    }, {
-        key: 'getVideo',
-        value: function getVideo(callback) {
-            var self = this;
-
-            // return generated video block
-            if (self.$video) {
-                callback(self.$video);
-                return;
+        // generate new iframe
+        _this.onAPIready(function () {
+            var hiddenDiv;
+            if(!_this.$iframe) {
+                hiddenDiv = document.createElement('div');
+                hiddenDiv.style.display = 'none';
             }
 
-            // generate new video block
-            self.onAPIready(function () {
-                var hiddenDiv = void 0;
-                if (!self.$video) {
-                    hiddenDiv = document.createElement('div');
-                    hiddenDiv.style.display = 'none';
+            // Youtube
+            if(_this.type === 'youtube') {
+                _this.playerOptions = {};
+                _this.playerOptions.videoId = _this.videoID;
+                _this.playerOptions.playerVars = {
+                    autohide: 1,
+                    rel: 0,
+                    autoplay: 0
+                };
+
+                // hide controls
+                if(!_this.options.controls) {
+                    _this.playerOptions.playerVars.iv_load_policy = 3;
+                    _this.playerOptions.playerVars.modestbranding = 1;
+                    _this.playerOptions.playerVars.controls = 0;
+                    _this.playerOptions.playerVars.showinfo = 0;
+                    _this.playerOptions.playerVars.disablekb = 1;
                 }
 
-                // Youtube
-                if (self.type === 'youtube') {
-                    self.playerOptions = {};
-                    self.playerOptions.videoId = self.videoID;
-                    self.playerOptions.playerVars = {
-                        autohide: 1,
-                        rel: 0,
-                        autoplay: 0,
-                        // autoplay enable on mobile devices
-                        playsinline: 1
-                    };
+                // events
+                var ytStarted;
+                var ytProgressInterval;
+                _this.playerOptions.events = {
+                    onReady: function (e) {
+                        // mute
+                        if(_this.options.mute) {
+                            e.target.mute();
+                        }
+                        // autoplay
+                        if(_this.options.autoplay) {
+                            _this.play(_this.options.startTime);
+                        }
+                        _this.fire('ready', e);
+                    },
+                    onStateChange: function (e) {
+                        // loop
+                        if(_this.options.loop && e.data === YT.PlayerState.ENDED) {
+                            _this.play(_this.options.startTime);
+                        }
+                        if(!ytStarted && e.data === YT.PlayerState.PLAYING) {
+                            ytStarted = 1;
+                            _this.fire('started', e);
+                        }
+                        if(e.data === YT.PlayerState.PLAYING) {
+                            _this.fire('play', e);
+                        }
+                        if(e.data === YT.PlayerState.PAUSED) {
+                            _this.fire('pause', e);
+                        }
+                        if(e.data === YT.PlayerState.ENDED) {
+                            _this.fire('end', e);
+                        }
 
-                    // hide controls
-                    if (!self.options.showContols) {
-                        self.playerOptions.playerVars.iv_load_policy = 3;
-                        self.playerOptions.playerVars.modestbranding = 1;
-                        self.playerOptions.playerVars.controls = 0;
-                        self.playerOptions.playerVars.showinfo = 0;
-                        self.playerOptions.playerVars.disablekb = 1;
-                    }
-
-                    // events
-                    var ytStarted = void 0;
-                    var ytProgressInterval = void 0;
-                    self.playerOptions.events = {
-                        onReady: function onReady(e) {
-                            // mute
-                            if (self.options.mute) {
-                                e.target.mute();
-                            } else if (self.options.volume) {
-                                e.target.setVolume(self.options.volume);
-                            }
-
-                            // autoplay
-                            if (self.options.autoplay) {
-                                self.play(self.options.startTime);
-                            }
-                            self.fire('ready', e);
-
-                            // volumechange
-                            setInterval(function () {
-                                self.getVolume(function (volume) {
-                                    if (self.options.volume !== volume) {
-                                        self.options.volume = volume;
-                                        self.fire('volumechange', e);
-                                    }
-                                });
-                            }, 150);
-                        },
-                        onStateChange: function onStateChange(e) {
-                            // loop
-                            if (self.options.loop && e.data === YT.PlayerState.ENDED) {
-                                self.play(self.options.startTime);
-                            }
-                            if (!ytStarted && e.data === YT.PlayerState.PLAYING) {
-                                ytStarted = 1;
-                                self.fire('started', e);
-                            }
-                            if (e.data === YT.PlayerState.PLAYING) {
-                                self.fire('play', e);
-                            }
-                            if (e.data === YT.PlayerState.PAUSED) {
-                                self.fire('pause', e);
-                            }
-                            if (e.data === YT.PlayerState.ENDED) {
-                                self.fire('ended', e);
-                            }
-
-                            // progress check
-                            if (e.data === YT.PlayerState.PLAYING) {
+                        // check for end of video and play again or stop
+                        if(_this.options.endTime) {
+                            if(e.data === YT.PlayerState.PLAYING) {
                                 ytProgressInterval = setInterval(function () {
-                                    self.fire('timeupdate', e);
-
-                                    // check for end of video and play again or stop
-                                    if (self.options.endTime && self.player.getCurrentTime() >= self.options.endTime) {
-                                        if (self.options.loop) {
-                                            self.play(self.options.startTime);
+                                    if(_this.options.endTime && _this.player.getCurrentTime() >= _this.options.endTime) {
+                                        if(_this.options.loop) {
+                                            _this.play(_this.options.startTime);
                                         } else {
-                                            self.pause();
+                                            _this.pause();
                                         }
                                     }
                                 }, 150);
@@ -28761,527 +27066,417 @@ var VideoWorker = function () {
                                 clearInterval(ytProgressInterval);
                             }
                         }
-                    };
-
-                    var firstInit = !self.$video;
-                    if (firstInit) {
-                        var div = document.createElement('div');
-                        div.setAttribute('id', self.playerID);
-                        hiddenDiv.appendChild(div);
-                        document.body.appendChild(hiddenDiv);
                     }
-                    self.player = self.player || new window.YT.Player(self.playerID, self.playerOptions);
-                    if (firstInit) {
-                        self.$video = document.getElementById(self.playerID);
+                };
 
-                        // get video width and height
-                        self.videoWidth = parseInt(self.$video.getAttribute('width'), 10) || 1280;
-                        self.videoHeight = parseInt(self.$video.getAttribute('height'), 10) || 720;
-                    }
+                var firstInit = !_this.$iframe;
+                if(firstInit) {
+                    var div = document.createElement('div');
+                    div.setAttribute('id', _this.playerID);
+                    hiddenDiv.appendChild(div);
+                    document.body.appendChild(hiddenDiv);
                 }
-
-                // Vimeo
-                if (self.type === 'vimeo') {
-                    self.playerOptions = '';
-
-                    self.playerOptions += 'player_id=' + self.playerID;
-                    self.playerOptions += '&autopause=0';
-                    self.playerOptions += '&transparent=0';
-
-                    // hide controls
-                    if (!self.options.showContols) {
-                        self.playerOptions += '&badge=0&byline=0&portrait=0&title=0';
-                    }
-
-                    // autoplay
-                    self.playerOptions += '&autoplay=' + (self.options.autoplay ? '1' : '0');
-
-                    // loop
-                    self.playerOptions += '&loop=' + (self.options.loop ? 1 : 0);
-
-                    if (!self.$video) {
-                        self.$video = document.createElement('iframe');
-                        self.$video.setAttribute('id', self.playerID);
-                        self.$video.setAttribute('src', 'https://player.vimeo.com/video/' + self.videoID + '?' + self.playerOptions);
-                        self.$video.setAttribute('frameborder', '0');
-                        hiddenDiv.appendChild(self.$video);
-                        document.body.appendChild(hiddenDiv);
-                    }
-
-                    self.player = self.player || new Vimeo.Player(self.$video);
+                _this.player = _this.player || new window.YT.Player(_this.playerID, _this.playerOptions);
+                if(firstInit) {
+                    _this.$iframe = document.getElementById(_this.playerID);
 
                     // get video width and height
-                    self.player.getVideoWidth().then(function (width) {
-                        self.videoWidth = width || 1280;
-                    });
-                    self.player.getVideoHeight().then(function (height) {
-                        self.videoHeight = height || 720;
-                    });
-
-                    // set current time for autoplay
-                    if (self.options.startTime && self.options.autoplay) {
-                        self.player.setCurrentTime(self.options.startTime);
-                    }
-
-                    // mute
-                    if (self.options.mute) {
-                        self.player.setVolume(0);
-                    } else if (self.options.volume) {
-                        self.player.setVolume(self.options.volume);
-                    }
-
-                    var vmStarted = void 0;
-                    self.player.on('timeupdate', function (e) {
-                        if (!vmStarted) {
-                            self.fire('started', e);
-                            vmStarted = 1;
-                        }
-
-                        self.fire('timeupdate', e);
-
-                        // check for end of video and play again or stop
-                        if (self.options.endTime) {
-                            if (self.options.endTime && e.seconds >= self.options.endTime) {
-                                if (self.options.loop) {
-                                    self.play(self.options.startTime);
-                                } else {
-                                    self.pause();
-                                }
-                            }
-                        }
-                    });
-                    self.player.on('play', function (e) {
-                        self.fire('play', e);
-
-                        // check for the start time and start with it
-                        if (self.options.startTime && e.seconds === 0) {
-                            self.play(self.options.startTime);
-                        }
-                    });
-                    self.player.on('pause', function (e) {
-                        self.fire('pause', e);
-                    });
-                    self.player.on('ended', function (e) {
-                        self.fire('ended', e);
-                    });
-                    self.player.on('loaded', function (e) {
-                        self.fire('ready', e);
-                    });
-                    self.player.on('volumechange', function (e) {
-                        self.fire('volumechange', e);
-                    });
-                }
-
-                // Local
-                function addSourceToLocal(element, src, type) {
-                    var source = document.createElement('source');
-                    source.src = src;
-                    source.type = type;
-                    element.appendChild(source);
-                }
-                if (self.type === 'local') {
-                    if (!self.$video) {
-                        self.$video = document.createElement('video');
-
-                        // show controls
-                        if (self.options.showContols) {
-                            self.$video.controls = true;
-                        }
-
-                        // mute
-                        if (self.options.mute) {
-                            self.$video.muted = true;
-                        } else if (self.$video.volume) {
-                            self.$video.volume = self.options.volume / 100;
-                        }
-
-                        // loop
-                        if (self.options.loop) {
-                            self.$video.loop = true;
-                        }
-
-                        // autoplay enable on mobile devices
-                        self.$video.setAttribute('playsinline', '');
-                        self.$video.setAttribute('webkit-playsinline', '');
-
-                        self.$video.setAttribute('id', self.playerID);
-                        hiddenDiv.appendChild(self.$video);
-                        document.body.appendChild(hiddenDiv);
-
-                        Object.keys(self.videoID).forEach(function (key) {
-                            addSourceToLocal(self.$video, self.videoID[key], 'video/' + key);
-                        });
-                    }
-
-                    self.player = self.player || self.$video;
-
-                    var locStarted = void 0;
-                    self.player.addEventListener('playing', function (e) {
-                        if (!locStarted) {
-                            self.fire('started', e);
-                        }
-                        locStarted = 1;
-                    });
-                    self.player.addEventListener('timeupdate', function (e) {
-                        self.fire('timeupdate', e);
-
-                        // check for end of video and play again or stop
-                        if (self.options.endTime) {
-                            if (self.options.endTime && this.currentTime >= self.options.endTime) {
-                                if (self.options.loop) {
-                                    self.play(self.options.startTime);
-                                } else {
-                                    self.pause();
-                                }
-                            }
-                        }
-                    });
-                    self.player.addEventListener('play', function (e) {
-                        self.fire('play', e);
-                    });
-                    self.player.addEventListener('pause', function (e) {
-                        self.fire('pause', e);
-                    });
-                    self.player.addEventListener('ended', function (e) {
-                        self.fire('ended', e);
-                    });
-                    self.player.addEventListener('loadedmetadata', function () {
-                        // get video width and height
-                        self.videoWidth = this.videoWidth || 1280;
-                        self.videoHeight = this.videoHeight || 720;
-
-                        self.fire('ready');
-
-                        // autoplay
-                        if (self.options.autoplay) {
-                            self.play(self.options.startTime);
-                        }
-                    });
-                    self.player.addEventListener('volumechange', function (e) {
-                        self.getVolume(function (volume) {
-                            self.options.volume = volume;
-                        });
-                        self.fire('volumechange', e);
-                    });
-                }
-
-                callback(self.$video);
-            });
-        }
-    }, {
-        key: 'init',
-        value: function init() {
-            var self = this;
-
-            self.playerID = 'VideoWorker-' + self.ID;
-        }
-    }, {
-        key: 'loadAPI',
-        value: function loadAPI() {
-            var self = this;
-
-            if (YoutubeAPIadded && VimeoAPIadded) {
-                return;
-            }
-
-            var src = '';
-
-            // load Youtube API
-            if (self.type === 'youtube' && !YoutubeAPIadded) {
-                YoutubeAPIadded = 1;
-                src = 'https://www.youtube.com/iframe_api';
-            }
-
-            // load Vimeo API
-            if (self.type === 'vimeo' && !VimeoAPIadded) {
-                VimeoAPIadded = 1;
-                src = 'https://player.vimeo.com/api/player.js';
-            }
-
-            if (!src) {
-                return;
-            }
-
-            // add script in head section
-            var tag = document.createElement('script');
-            var head = document.getElementsByTagName('head')[0];
-            tag.src = src;
-
-            head.appendChild(tag);
-
-            head = null;
-            tag = null;
-        }
-    }, {
-        key: 'onAPIready',
-        value: function onAPIready(callback) {
-            var self = this;
-
-            // Youtube
-            if (self.type === 'youtube') {
-                // Listen for global YT player callback
-                if ((typeof YT === 'undefined' || YT.loaded === 0) && !loadingYoutubePlayer) {
-                    // Prevents Ready event from being called twice
-                    loadingYoutubePlayer = 1;
-
-                    // Creates deferred so, other players know when to wait.
-                    window.onYouTubeIframeAPIReady = function () {
-                        window.onYouTubeIframeAPIReady = null;
-                        loadingYoutubeDefer.resolve('done');
-                        callback();
-                    };
-                } else if ((typeof YT === 'undefined' ? 'undefined' : _typeof(YT)) === 'object' && YT.loaded === 1) {
-                    callback();
-                } else {
-                    loadingYoutubeDefer.done(function () {
-                        callback();
-                    });
+                    _this.videoWidth = parseInt(_this.$iframe.getAttribute('width'), 10) || 1280;
+                    _this.videoHeight = parseInt(_this.$iframe.getAttribute('height'), 10) || 720;
                 }
             }
 
             // Vimeo
-            if (self.type === 'vimeo') {
-                if (typeof Vimeo === 'undefined' && !loadingVimeoPlayer) {
-                    loadingVimeoPlayer = 1;
-                    var vimeoInterval = setInterval(function () {
-                        if (typeof Vimeo !== 'undefined') {
-                            clearInterval(vimeoInterval);
-                            loadingVimeoDefer.resolve('done');
-                            callback();
-                        }
-                    }, 20);
-                } else if (typeof Vimeo !== 'undefined') {
-                    callback();
-                } else {
-                    loadingVimeoDefer.done(function () {
-                        callback();
-                    });
+            if(_this.type === 'vimeo') {
+                _this.playerOptions = '';
+
+                _this.playerOptions += 'player_id=' + _this.playerID;
+                _this.playerOptions += '&autopause=0';
+
+                // hide controls
+                if(!_this.options.controls) {
+                    _this.playerOptions += '&badge=0&byline=0&portrait=0&title=0';
                 }
+
+                // autoplay
+                _this.playerOptions += '&autoplay=' + (_this.options.autoplay ? '1' : '0');
+
+                // loop
+                _this.playerOptions += '&loop=' + (_this.options.loop ? 1 : 0);
+
+                if(!_this.$iframe) {
+                    _this.$iframe = document.createElement('iframe');
+                    _this.$iframe.setAttribute('id', _this.playerID);
+                    _this.$iframe.setAttribute('src', 'https://player.vimeo.com/video/' + _this.videoID + '?' + _this.playerOptions);
+                    _this.$iframe.setAttribute('frameborder', '0');
+                    hiddenDiv.appendChild(_this.$iframe);
+                    document.body.appendChild(hiddenDiv);
+                }
+
+                _this.player = _this.player || new Vimeo.Player(_this.$iframe);
+
+                // get video width and height
+                _this.player.getVideoWidth().then(function (width) {
+                    _this.videoWidth = width || 1280;
+                });
+                _this.player.getVideoHeight().then(function (height) {
+                    _this.videoHeight = height || 720;
+                });
+
+                // mute
+                _this.player.setVolume(_this.options.mute ? 0 : 100);
+
+                var vmStarted;
+                _this.player.on('timeupdate', function (e) {
+                    if(!vmStarted) {
+                        _this.fire('started', e);
+                    }
+                    vmStarted = 1;
+
+                    // check for end of video and play again or stop
+                    if(_this.options.endTime) {
+                        if(_this.options.endTime && e.seconds >= _this.options.endTime) {
+                            if(_this.options.loop) {
+                                _this.play(_this.options.startTime);
+                            } else {
+                                _this.pause();
+                            }
+                        }
+                    }
+                });
+                _this.player.on('play', function (e) {
+                    _this.fire('play', e);
+
+                    // check for the start time and start with it
+                    if(_this.options.startTime && e.seconds === 0) {
+                        _this.play(_this.options.startTime);
+                    }
+                });
+                _this.player.on('pause', function (e) {
+                    _this.fire('pause', e);
+                });
+                _this.player.on('ended', function (e) {
+                    _this.fire('end', e);
+                });
+                _this.player.on('loaded', function (e) {
+                    _this.fire('ready', e);
+                });
             }
 
             // Local
-            if (self.type === 'local') {
+            function addSourceToLocal (element, src, type) {
+                var source = document.createElement('source');
+                source.src = src;
+                source.type = type;
+                element.appendChild(source);
+            }
+            if(_this.type === 'local') {
+                if(!_this.$iframe) {
+                    _this.$iframe = document.createElement('video');
+
+                    // mute
+                    if(_this.options.mute) {
+                        _this.$iframe.muted = true;
+                    }
+
+                    // loop
+                    if(_this.options.loop) {
+                        _this.$iframe.loop = true;
+                    }
+
+                    _this.$iframe.setAttribute('id', _this.playerID);
+                    hiddenDiv.appendChild(_this.$iframe);
+                    document.body.appendChild(hiddenDiv);
+
+                    for(var k in _this.videoID) {
+                        addSourceToLocal(_this.$iframe, _this.videoID[k], 'video/' + k);
+                    }
+                }
+
+                _this.player = _this.player || _this.$iframe;
+
+                var locStarted;
+                addEventListener(_this.player, 'playing', function (e) {
+                    if(!locStarted) {
+                        _this.fire('started', e);
+                    }
+                    locStarted = 1;
+                });
+                addEventListener(_this.player, 'timeupdate', function () {
+                    // check for end of video and play again or stop
+                    if(_this.options.endTime) {
+                        if(_this.options.endTime && this.currentTime >= _this.options.endTime) {
+                            if(_this.options.loop) {
+                                _this.play(_this.options.startTime);
+                            } else {
+                                _this.pause();
+                            }
+                        }
+                    }
+                });
+                addEventListener(_this.player, 'play', function (e) {
+                    _this.fire('play', e);
+                });
+                addEventListener(_this.player, 'pause', function (e) {
+                    _this.fire('pause', e);
+                });
+                addEventListener(_this.player, 'ended', function (e) {
+                    _this.fire('end', e);
+                });
+                addEventListener(_this.player, 'loadedmetadata', function () {
+                    // get video width and height
+                    _this.videoWidth = this.videoWidth || 1280;
+                    _this.videoHeight = this.videoHeight || 720;
+
+                    _this.fire('ready');
+
+                    // autoplay
+                    if(_this.options.autoplay) {
+                        _this.play(_this.options.startTime);
+                    }
+                });
+            }
+
+            callback(_this.$iframe);
+        });
+    };
+
+    VideoWorker.prototype.init = function () {
+        var _this = this;
+
+        _this.playerID = 'VideoWorker-' + _this.ID;
+    };
+
+    var YoutubeAPIadded = 0;
+    var VimeoAPIadded = 0;
+    VideoWorker.prototype.loadAPI = function () {
+        var _this = this;
+
+        if(YoutubeAPIadded && VimeoAPIadded) {
+            return;
+        }
+
+        var src = '';
+
+        // load Youtube API
+        if(_this.type === 'youtube' && !YoutubeAPIadded) {
+            YoutubeAPIadded = 1;
+            src = '//www.youtube.com/iframe_api';
+        }
+
+        // load Vimeo API
+        if(_this.type === 'vimeo' && !VimeoAPIadded) {
+            VimeoAPIadded = 1;
+            src = '//player.vimeo.com/api/player.js';
+        }
+
+        if(!src) {
+            return;
+        }
+
+        if (window.location.origin === 'file://') {
+            src = 'http:' + src;
+        }
+
+        // add script in head section
+        var tag = document.createElement('script');
+        var head = document.getElementsByTagName('head')[0];
+        tag.src = src;
+
+        head.appendChild(tag);
+
+        head = null;
+        tag = null;
+    };
+
+    var loadingYoutubePlayer = 0;
+    var loadingVimeoPlayer = 0;
+    var loadingYoutubeDeffer = new Deferred();
+    var loadingVimeoDeffer = new Deferred();
+    VideoWorker.prototype.onAPIready = function (callback) {
+        var _this = this;
+
+        // Youtube
+        if(_this.type === 'youtube') {
+            // Listen for global YT player callback
+            if ((typeof YT === 'undefined' || YT.loaded === 0) && !loadingYoutubePlayer) {
+                // Prevents Ready event from being called twice
+                loadingYoutubePlayer = 1;
+
+                // Creates deferred so, other players know when to wait.
+                window.onYouTubeIframeAPIReady = function () {
+                    window.onYouTubeIframeAPIReady = null;
+                    loadingYoutubeDeffer.resolve('done');
+                    callback();
+                };
+            } else if (typeof YT === 'object' && YT.loaded === 1)  {
                 callback();
+            } else {
+                loadingYoutubeDeffer.done(function () {
+                    callback();
+                });
             }
         }
-    }]);
 
-    return VideoWorker;
-}();
+        // Vimeo
+        if(_this.type === 'vimeo') {
+            if(typeof Vimeo === 'undefined' && !loadingVimeoPlayer) {
+                loadingVimeoPlayer = 1;
+                var vimeo_interval = setInterval(function () {
+                    if(typeof Vimeo !== 'undefined') {
+                        clearInterval(vimeo_interval);
+                        loadingVimeoDeffer.resolve('done');
+                        callback();
+                    }
+                }, 20);
+            } else if (typeof Vimeo !== 'undefined') {
+                callback();
+            } else {
+                loadingVimeoDeffer.done(function () {
+                    callback();
+                });
+            }
+        }
 
-exports.default = VideoWorker;
+        // Local
+        if(_this.type === 'local') {
+            callback();
+        }
+    };
 
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
+    window.VideoWorker = VideoWorker;
+}(window));
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = jarallaxVideo;
 
-var _videoWorker = __webpack_require__(8);
+/*!
+ * Name    : Video Background Extension for Jarallax
+ * Version : 1.0.0
+ * Author  : _nK http://nkdev.info
+ * GitHub  : https://github.com/nk-o/jarallax
+ */
+(function () {
+    'use strict';
 
-var _videoWorker2 = _interopRequireDefault(_videoWorker);
-
-var _global = __webpack_require__(4);
-
-var _global2 = _interopRequireDefault(_global);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function jarallaxVideo() {
-    var jarallax = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _global2.default.jarallax;
-
-    if (typeof jarallax === 'undefined') {
+    if(typeof jarallax === 'undefined') {
         return;
     }
 
     var Jarallax = jarallax.constructor;
 
     // append video after init Jarallax
-    var defInit = Jarallax.prototype.init;
+    var def_init = Jarallax.prototype.init;
     Jarallax.prototype.init = function () {
-        var self = this;
+        var _this = this;
 
-        defInit.apply(self);
+        def_init.apply(_this);
 
-        if (self.video && !self.options.disableVideo()) {
-            self.video.getVideo(function (video) {
-                var $parent = video.parentNode;
-                self.css(video, {
-                    position: self.image.position,
-                    top: '0px',
-                    left: '0px',
-                    right: '0px',
-                    bottom: '0px',
+        if(_this.video) {
+            _this.video.getIframe(function (iframe) {
+                var $parent = iframe.parentNode;
+                _this.css(iframe, {
+                    position: _this.image.position,
+                    top: '0px', left: '0px', right: '0px', bottom: '0px',
                     width: '100%',
                     height: '100%',
                     maxWidth: 'none',
                     maxHeight: 'none',
+                    visibility: 'hidden',
                     margin: 0,
                     zIndex: -1
                 });
-                self.$video = video;
-                self.image.$container.appendChild(video);
+                _this.$video = iframe;
+                _this.image.$container.appendChild(iframe);
 
-                // remove parent video element (created by VideoWorker)
+                // remove parent iframe element (created by VideoWorker)
                 $parent.parentNode.removeChild($parent);
             });
         }
     };
 
     // cover video
-    var defCoverImage = Jarallax.prototype.coverImage;
+    var def_coverImage = Jarallax.prototype.coverImage;
     Jarallax.prototype.coverImage = function () {
-        var self = this;
-        var imageData = defCoverImage.apply(self);
-        var node = self.image.$item ? self.image.$item.nodeName : false;
+        var _this = this;
 
-        if (imageData && self.video && node && (node === 'IFRAME' || node === 'VIDEO')) {
-            var h = imageData.image.height;
-            var w = h * self.image.width / self.image.height;
-            var ml = (imageData.container.width - w) / 2;
-            var mt = imageData.image.marginTop;
+        def_coverImage.apply(_this);
 
-            if (imageData.container.width > w) {
-                w = imageData.container.width;
-                h = w * self.image.height / self.image.width;
-                ml = 0;
-                mt += (imageData.image.height - h) / 2;
-            }
-
-            // add video height over than need to hide controls
-            if (node === 'IFRAME') {
-                h += 400;
-                mt -= 200;
-            }
-
-            self.css(self.$video, {
-                width: w + 'px',
-                marginLeft: ml + 'px',
-                height: h + 'px',
-                marginTop: mt + 'px'
+        // add video height over than need to hide controls
+        if(_this.video && _this.image.$item.nodeName === 'IFRAME') {
+            _this.css(_this.image.$item, {
+                height: _this.image.$item.getBoundingClientRect().height + 400 + 'px',
+                marginTop: (-200 + parseFloat(_this.css(_this.image.$item, 'margin-top'))) + 'px'
             });
         }
-
-        return imageData;
     };
 
     // init video
-    var defInitImg = Jarallax.prototype.initImg;
+    var def_initImg = Jarallax.prototype.initImg;
     Jarallax.prototype.initImg = function () {
-        var self = this;
-        var defaultResult = defInitImg.apply(self);
+        var _this = this;
+        var defaultResult = def_initImg.apply(_this);
 
-        if (!self.options.videoSrc) {
-            self.options.videoSrc = self.$item.getAttribute('data-jarallax-video') || null;
+        if(!_this.options.videoSrc) {
+            _this.options.videoSrc = _this.$item.getAttribute('data-jarallax-video') || false;
         }
 
-        if (self.options.videoSrc) {
-            self.defaultInitImgResult = defaultResult;
-            return true;
-        }
+        if(_this.options.videoSrc) {
+            var video = new VideoWorker(_this.options.videoSrc, {
+                startTime: _this.options.videoStartTime || 0,
+                endTime: _this.options.videoEndTime || 0
+            });
 
-        return defaultResult;
-    };
+            if(video.isValid()) {
+                _this.image.useImgTag = true;
 
-    var defCanInitParallax = Jarallax.prototype.canInitParallax;
-    Jarallax.prototype.canInitParallax = function () {
-        var self = this;
-        var defaultResult = defCanInitParallax.apply(self);
-
-        if (!self.options.videoSrc) {
-            return defaultResult;
-        }
-
-        var video = new _videoWorker2.default(self.options.videoSrc, {
-            autoplay: true,
-            loop: true,
-            showContols: false,
-            startTime: self.options.videoStartTime || 0,
-            endTime: self.options.videoEndTime || 0,
-            mute: self.options.videoVolume ? 0 : 1,
-            volume: self.options.videoVolume || 0
-        });
-
-        if (video.isValid()) {
-            // if parallax will not be inited, we can add thumbnail on background.
-            if (!defaultResult) {
-                if (!self.defaultInitImgResult) {
-                    video.getImageURL(function (url) {
-                        // save default user styles
-                        var curStyle = self.$item.getAttribute('style');
-                        if (curStyle) {
-                            self.$item.setAttribute('data-jarallax-original-styles', curStyle);
-                        }
-
-                        // set new background
-                        self.css(self.$item, {
-                            'background-image': 'url("' + url + '")',
-                            'background-position': 'center',
-                            'background-size': 'cover'
-                        });
-                    });
-                }
-
-                // init video
-            } else {
                 video.on('ready', function () {
-                    if (self.options.videoPlayOnlyVisible) {
-                        var oldOnScroll = self.onScroll;
-                        self.onScroll = function () {
-                            oldOnScroll.apply(self);
-                            if (self.isVisible()) {
-                                video.play();
-                            } else {
-                                video.pause();
-                            }
-                        };
-                    } else {
-                        video.play();
-                    }
+                    var oldOnScroll = _this.onScroll;
+                    _this.onScroll = function () {
+                        oldOnScroll.apply(_this);
+                        if(_this.isVisible()) {
+                            video.play();
+                        } else {
+                            video.pause();
+                        }
+                    };
                 });
 
                 video.on('started', function () {
-                    self.image.$default_item = self.image.$item;
-                    self.image.$item = self.$video;
+                    _this.image.$default_item = _this.image.$item;
+                    _this.image.$item = _this.$video;
 
                     // set video width and height
-                    self.image.width = self.video.videoWidth || 1280;
-                    self.image.height = self.video.videoHeight || 720;
-                    self.options.imgWidth = self.image.width;
-                    self.options.imgHeight = self.image.height;
-                    self.coverImage();
-                    self.clipContainer();
-                    self.onScroll();
+                    _this.image.width  = _this.options.imgWidth = _this.video.videoWidth || 1280;
+                    _this.image.height = _this.options.imgHeight = _this.video.videoHeight || 720;
+                    _this.coverImage();
+                    _this.clipContainer();
+                    _this.onScroll();
 
                     // hide image
-                    if (self.image.$default_item) {
-                        self.image.$default_item.style.display = 'none';
+                    if(_this.image.$default_item) {
+                        _this.image.$default_item.style.display = 'none';
                     }
                 });
 
-                self.video = video;
+                _this.video = video;
 
-                // set image if not exists
-                if (!self.defaultInitImgResult) {
-                    if (video.type !== 'local') {
-                        video.getImageURL(function (url) {
-                            self.image.src = url;
-                            self.init();
-                        });
-
-                        return false;
-                    }
-
-                    // set empty image on local video if not defined
-                    self.image.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-                    return true;
+                if(video.type !== 'local') {
+                    video.getImageURL(function (url) {
+                        _this.image.src = url;
+                        _this.init();
+                    });
                 }
+            }
+
+            // prevent default image loading when not local video
+            if(video.type !== 'local') {
+                return false;
+            }
+
+            // set empty image on local video if not defined
+            else if (!defaultResult) {
+                _this.image.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                return true;
             }
         }
 
@@ -29289,29 +27484,29 @@ function jarallaxVideo() {
     };
 
     // Destroy video parallax
-    var defDestroy = Jarallax.prototype.destroy;
+    var def_destroy = Jarallax.prototype.destroy;
     Jarallax.prototype.destroy = function () {
-        var self = this;
+        var _this = this;
 
-        if (self.image.$default_item) {
-            self.image.$item = self.image.$default_item;
-            delete self.image.$default_item;
-        }
-
-        defDestroy.apply(self);
+        def_destroy.apply(_this);
     };
-}
+}());
 
-/***/ })
-/******/ ]);
+'use strict';
+
+/* 
+ * Material Design for Bootstrap 
+ * MDB Autocomplete Plugin
+ */
+
 $.fn.mdb_autocomplete = function (options) {
 
   // Default options
-  const defaults = {
+  var defaults = {
     data: {}
   };
 
-  const ENTER_CHAR_CODE = 13;
+  var ENTER_CHAR_CODE = 13;
 
   // Get options
   options = $.extend(defaults, options);
@@ -29319,35 +27514,35 @@ $.fn.mdb_autocomplete = function (options) {
   return this.each(function () {
 
     // text input
-    const $input = $(this);
-    let $autocomplete;
+    var $input = $(this);
+    var $autocomplete = void 0;
 
     // assign data from options
-    const data = options.data;
+    var data = options.data;
 
     if (Object.keys(data).length) {
 
       $autocomplete = $('<ul class="mdb-autocomplete-wrap"></ul>');
+
       $autocomplete.insertAfter($(this));
-    }
+    };
 
     // Listen if key was pressed
-    $input.on('keyup', e => {
+    $input.on('keyup', function (e) {
 
       // get value from input
-      const q = $input.val();
+      var q = $input.val();
 
       $autocomplete.empty();
 
       // check if input isn't empty
       if (q.length) {
 
-        for (const item in data) {
+        for (var item in data) {
 
           // check if item contains value that we're looking for
           if (data[item].toLowerCase().indexOf(q.toLowerCase()) !== -1) {
-
-            const option = $(`<li>${data[item]}</li>`);
+            var option = $('<li>' + data[item] + '</li>');
 
             $autocomplete.append(option);
           }
@@ -29355,16 +27550,13 @@ $.fn.mdb_autocomplete = function (options) {
       }
 
       if (e.which === ENTER_CHAR_CODE) {
-
-        $autocomplete.children(':first').trigger('click');
+        $autocomplete.children(":first").trigger('click');
         $autocomplete.empty();
       }
 
       if (q.length === 0) {
-
         $('.mdb-autocomplete-clear').css('visibility', 'hidden');
       } else {
-
         $('.mdb-autocomplete-clear').css('visibility', 'visible');
       }
     });
@@ -29379,9 +27571,7 @@ $.fn.mdb_autocomplete = function (options) {
     });
 
     $('.mdb-autocomplete-clear').on('click', function (e) {
-
       e.preventDefault();
-
       $input.val('');
       $(this).css('visibility', 'hidden');
       $autocomplete.empty();

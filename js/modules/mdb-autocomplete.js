@@ -1,11 +1,18 @@
+'use strict';
+
+/* 
+ * Material Design for Bootstrap 
+ * MDB Autocomplete Plugin
+ */
+
 $.fn.mdb_autocomplete = function (options) {
 
   // Default options
-  const defaults = {
+  var defaults = {
     data: {}
   };
 
-  const ENTER_CHAR_CODE = 13;
+  var ENTER_CHAR_CODE = 13;
 
   // Get options
   options = $.extend(defaults, options);
@@ -13,35 +20,35 @@ $.fn.mdb_autocomplete = function (options) {
   return this.each(function () {
 
     // text input
-    const $input = $(this);
-    let $autocomplete;
+    var $input = $(this);
+    var $autocomplete = void 0;
 
     // assign data from options
-    const data = options.data;
+    var data = options.data;
 
     if (Object.keys(data).length) {
 
       $autocomplete = $('<ul class="mdb-autocomplete-wrap"></ul>');
+
       $autocomplete.insertAfter($(this));
-    }
+    };
 
     // Listen if key was pressed
-    $input.on('keyup', e => {
+    $input.on('keyup', function (e) {
 
       // get value from input
-      const q = $input.val();
+      var q = $input.val();
 
       $autocomplete.empty();
 
       // check if input isn't empty
       if (q.length) {
 
-        for (const item in data) {
+        for (var item in data) {
 
           // check if item contains value that we're looking for
           if (data[item].toLowerCase().indexOf(q.toLowerCase()) !== -1) {
-
-            const option = $(`<li>${data[item]}</li>`);
+            var option = $('<li>' + data[item] + '</li>');
 
             $autocomplete.append(option);
           }
@@ -49,16 +56,13 @@ $.fn.mdb_autocomplete = function (options) {
       }
 
       if (e.which === ENTER_CHAR_CODE) {
-
-        $autocomplete.children(':first').trigger('click');
+        $autocomplete.children(":first").trigger('click');
         $autocomplete.empty();
       }
 
       if (q.length === 0) {
-
         $('.mdb-autocomplete-clear').css('visibility', 'hidden');
       } else {
-
         $('.mdb-autocomplete-clear').css('visibility', 'visible');
       }
     });
@@ -73,9 +77,7 @@ $.fn.mdb_autocomplete = function (options) {
     });
 
     $('.mdb-autocomplete-clear').on('click', function (e) {
-
       e.preventDefault();
-
       $input.val('');
       $(this).css('visibility', 'hidden');
       $autocomplete.empty();

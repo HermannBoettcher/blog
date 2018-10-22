@@ -1,23 +1,22 @@
+'use strict';
+
+/** *****************
+*  File input     *
+******************/
 (function ($) {
 
-  $(document).on('change', '.file-field input[type="file"]', e => {
+  $(document).on('change', '.file-field input[type="file"]', function (e) {
 
-    const $this = $(e.target);
-    const $fileField = $this.closest('.file-field');
-    const $pathInput = $fileField.find('input.file-path');
-    const files = $this[0].files;
-    const fileNames = [];
-    // files.forEach((file) => fileNames.push(file.name));
-    if (Array.isArray(files)) {
-      files.forEach(function (file) {
-        return fileNames.push(file.name);
-      });
-    } else {
-      Object.keys(files).forEach(key => {
-        fileNames.push(files[key].name);
-      });
+    var $this = $(e.target);
+    var $file_field = $this.closest('.file-field');
+    var $path_input = $file_field.find('input.file-path');
+    var files = $this[0].files;
+    var file_names = [];
+    for (var i = 0; i < files.length; i++) {
+      var file_name = files[i].name;
+      file_names.push(file_name);
     }
-    $pathInput.val(fileNames.join(', '));
-    $pathInput.trigger('change');
+    $path_input.val(file_names.join(', '));
+    $path_input.trigger('change');
   });
 })(jQuery);
