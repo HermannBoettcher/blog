@@ -46,4 +46,3 @@
 <!--/.Main layout-->
 </main>
 <?php  get_footer(); ?>
-            
