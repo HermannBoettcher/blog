@@ -55,8 +55,19 @@ function mdb_widgets_init() {
     'after_title'   => '',
   ) );
 
+  register_sidebar( array(
+    'name'          => 'Navbar',
+    'id'            => 'navbar',
+    'class'         => 'navbar-nav mr-auto',
+    'before_widget' => '<ul class="navbar-nav mr-auto">',
+    'after_widget'  => '</ul>',
+    'before_title'  => '',
+    'after_title'   => '',
+  ) );
+
 }
 add_action( 'widgets_init', 'mdb_widgets_init' );
+
 
 /**
  * Include external files
@@ -64,8 +75,21 @@ add_action( 'widgets_init', 'mdb_widgets_init' );
 require_once('inc/mdb_bootstrap_navwalker.php');
 require_once('inc/mdb_pagination.php');
 
-
-
-
-
 ?>
+
+<?php
+  function callback_comment($comment, $args, $depth) {
+  $GLOBALS['comment']=$comment;
+?>
+  <li <?php comment_class(); ?>
+    id="li-comment-<?php comment_ID() ?>">
+
+    <?php echo get_avatar($comment, $size='64'); ?>
+    <p class="comment-author"><?php echo get_comment_author_link(); ?></p>
+    <p class="comment-meta">
+      <?php echo get_comment_date("d.m.Y"); ?>,
+      <?php echo get_comment_time(); ?> Uhr
+    </p>
+    <?php comment_text(); ?>
+    <div class="clear"></div>
+    <?php }  ?>

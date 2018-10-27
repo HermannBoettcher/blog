@@ -27,6 +27,7 @@
                 <!-- Post Content -->
                 <p><?php the_content(); ?></p>
             </div>
+            <?php comments_template(); ?>
             <!--/.Post-->
             <hr>
             <?php

@@ -1,5 +1,7 @@
 <?php get_header(); ?>
-<h1 class="archive">Ihre Suche nach: &quot;<?php echo get_search_query(); ?>&quot;</h1>
+
+<h1 class="archive">Tag: <?php single_tag_title(); ?></h1>
+<?php echo tag_description(); ?>
 
 <?php if (have_posts()):
   while (have_posts()): the_post(); ?>
