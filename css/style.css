@@ -3,7 +3,7 @@ Theme Name: HermannBoettcher blog theme
 Theme URI:
 Description: A WordPress theme built with Bootstrap 4 & material design
 Author: Hermann Boettcher;
-Author URI: 
+Author URI:
 */
 
 /* main navbar layout */
@@ -19,16 +19,18 @@ html, body, header {
     margin-left: auto;
 }
 .view {
-    background: url("../img/photos/DSCF9057.jpg");
-    background-repeat: no-repeat;
-    background-position: center center;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+
+.intro {
+  height: 100%;
     background-size: cover;
-    width: 100%;
-    height: 100%;
 }
 
 .navbar {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 .top-nav-collapse {

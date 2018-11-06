@@ -11,7 +11,7 @@
     <?php comments_popup_link('Keine Kommentare', '1 Kommentar', '% Kommentare', '', 'Kommentare geschlossen'); ?></p>
     <?php the_content('Weiterlesen ...'); ?>
   </div>
-<?php endwhile else: ?>
+<?php endwhile; else: ?>
   <p>Es wurden leider keine Beiträge gefunden.</p>
 <?php endif; ?>
 <p><?php posts_nav_link(' | ', '&laquo; Ältere Artikel', 'Neuere Artikel &raquo;'); ?></p>

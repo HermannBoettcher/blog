@@ -23,22 +23,28 @@ add_action( 'wp_enqueue_scripts', 'theme_enqueue_scripts' );
  */
 require_once('inc/mdb_bootstrap_navwalker.php');
 
+// Register Custom Navigation Walker
+require_once(get_template_directory() . '/class-wp-bootstrap-navwalker.php');
+
+
 /**
  * Setup Theme
  */
 function MDB_setup() {
   // Navigation Menus
   register_nav_menus(array(
+    'primary' => __( 'Primary Menu', 'MainNav' ),
     'navbar' => __( 'Navbar Menu'),
     'footer1' => __( 'Footer #1 Column'),
     'footer2' => __( 'Footer #2 Column'),
     'footer3' => __( 'Footer #3 Column')
     ));
   // Add featured image support
-    add_theme_support('post-thumbnails');
-    add_image_size('main-full', 1078, 516, false); // main post image in full width
+  add_theme_support('post-thumbnails');
+  add_image_size('main-full', 1078, 516, false); // main post image in full width
   }
   add_action('after_setup_theme', 'MDB_setup');
+
 
 
 /**
@@ -74,6 +80,25 @@ add_action( 'widgets_init', 'mdb_widgets_init' );
  */
 require_once('inc/mdb_bootstrap_navwalker.php');
 require_once('inc/mdb_pagination.php');
+
+
+
+/**
+* Removes width and height attributes from image tags
+*
+* @param string $html
+*
+* @return string
+*/
+function remove_image_size_attributes( $html ) {
+return preg_replace( '/(width|height)="\d*"/', '', $html );
+}
+
+// Remove image size attributes from post thumbnails
+add_filter( 'post_thumbnail_html', 'remove_image_size_attributes' );
+
+// Remove image size attributes from images added to a WordPress post
+add_filter( 'image_send_to_editor', 'remove_image_size_attributes' );
 
 ?>
 

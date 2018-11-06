@@ -1,40 +1,29 @@
+<?php  get_header(); ?><?php get_header(); ?>
 
-<?php  get_header(); ?>
+
+<div class="container-fluid intro view" style="background: url('<?php the_post_thumbnail_url(); ?>') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center">
+      <div class="container text-center white-text wow fadeInUp">
+        <h1><?php the_title(); ?></h1>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
 <main>
 <!--Main layout-->
 <div class="container">
-    <div class="row">
-        <!--Main column-->
-        <div class="col-md-8">
-            <?php
-            if ( have_posts() ) {
-            while ( have_posts() ) {
-            the_post();
-            ?>
-            <!--Post-->
-            <div class="post-wrapper">
-                <!--Post data-->
-                <a href="<?php echo get_permalink() ?>"><h1 class="h1-responsive"><?php the_title(); ?></h1></a>
-                <h5>Written by <a href=""><?php the_author(); ?></a>, <?php echo get_the_date(); ?></h5>
-                <br>
-                <!--Featured image -->
-                <div class="view overlay hm-white-light z-depth-1-half">
-                    <?php the_post_thumbnail( 'full', array( 'class'=> 'img-fluid z-depth-2')); ?>
-                    <div class="mask">
-                    </div>
-                </div>
-                <br>
-                <!-- Post Content -->
-                <p><?php the_content(); ?></p>
-            </div>
-            <?php comments_template(); ?>
-            <!--/.Post-->
-            <hr>
-            <?php
-            } // end while
-            } // end if
-            ?>
-        </div>
+  <!--Main column-->
+  <div class="col-md-8">
+    <?php
+        if ( have_posts() ) {
+        the_post(); }
+    ?>
+  </div
+
+
         <!--Sidebar-->
         <div class="col-md-4">
             <?php if ( is_active_sidebar( 'sidebar' ) ) : ?>
@@ -42,7 +31,6 @@
             <?php endif; ?>
         </div>
         <!--/.Sidebar-->
-    </div>
 </div>
 <!--/.Main layout-->
 </main>

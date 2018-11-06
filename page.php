@@ -1,12 +1,14 @@
 <?php get_header(); ?>
+<!-- Section: Blog v.4 -->
+
+<section class="my-5">
 
 <?php if (have_posts()):
   while (have_posts()):the_post(); ?>
-  <div class="entry">
-      <h1><?php the_title(); ?></h1>
       <?php the_content('Weiterlesen ...'); ?>
-  </div>
 <?php endwhile; endif; ?>
+
+</section>
 
 <?php get_sidebar(); ?>
 <?php get_footer(); ?>
