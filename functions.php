@@ -13,6 +13,7 @@ function theme_enqueue_scripts() {
         wp_enqueue_script( 'Tether', get_template_directory_uri() . '/js/popper.min.js', array(), '1.0.0', true );
         wp_enqueue_script( 'Bootstrap', get_template_directory_uri() . '/js/bootstrap.min.js', array(), '1.0.0', true );
         wp_enqueue_script( 'MDB', get_template_directory_uri() . '/js/mdb.min.js', array(), '1.0.0', true );
+        wp_enqueue_script( 'MyJS', get_template_directory_uri() . '/js/my.js', array(), '1.0.0', true );
 
         }
 add_action( 'wp_enqueue_scripts', 'theme_enqueue_scripts' );

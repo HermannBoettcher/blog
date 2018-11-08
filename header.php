@@ -19,3 +19,4 @@
 
 <header>
   <?php require_once('components/navbar.inc.php'); ?>
+</header>

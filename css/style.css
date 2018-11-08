@@ -7,6 +7,9 @@ Author URI:
 */
 
 /* main navbar layout */
+
+/* old stuff
+
 nav {
   margin-top: 25px;
 }
@@ -29,6 +32,9 @@ html, body, header {
     background-size: cover;
 }
 
+*/
+
+/* transparent navbar */
 .navbar {
   background-color: transparent;
 }
@@ -37,8 +43,7 @@ html, body, header {
     background-color: #4285F4;
 }
 
-@media only screen and (max-width: 768px) {
-    .navbar {
-        background-color: #4285F4;
-    }
+/* jarallax heights */
+.jarallax-100vh {
+  height: 100vh;
 }

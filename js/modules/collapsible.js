@@ -1,61 +1,32 @@
-'use strict';
-
-/* COLLAPSIBLE */
+"use strict";
 
 (function ($) {
   $.fn.collapsible = function (options) {
     var defaults = {
       accordion: undefined
     };
-
     options = $.extend(defaults, options);
 
-    return this.each(function () {
+    function accordionOpen($collapsible, object) {
+      $panelHeaders = $collapsible.find('> li > .collapsible-header');
 
-      var $this = $(this);
+      if (object.hasClass('active')) {
+        object.parent().addClass('active');
+      } else {
+        object.parent().removeClass('active');
+      }
 
-      var $panel_headers = $(this).find('> li > .collapsible-header');
-
-      var collapsible_type = $this.data('collapsible');
-
-      // Turn off any existing event handlers
-      $this.off('click.collapse', '.collapsible-header');
-      $panel_headers.off('click.collapse');
-
-      /** **************
-            Helper Functions
-            ****************/
-
-      // Accordion Open
-      function accordionOpen(object) {
-        $panel_headers = $this.find('> li > .collapsible-header');
-        if (object.hasClass('active')) {
-          object.parent().addClass('active');
-        } else {
-          object.parent().removeClass('active');
-        }
-        if (object.parent().hasClass('active')) {
-          object.siblings('.collapsible-body').stop(true, false).slideDown({
-            duration: 350,
-            easing: 'easeOutQuart',
-            queue: false,
-            complete: function complete() {
-              $(this).css('height', '');
-            }
-          });
-        } else {
-          object.siblings('.collapsible-body').stop(true, false).slideUp({
-            duration: 350,
-            easing: 'easeOutQuart',
-            queue: false,
-            complete: function complete() {
-              $(this).css('height', '');
-            }
-          });
-        }
-
-        $panel_headers.not(object).removeClass('active').parent().removeClass('active');
-        $panel_headers.not(object).parent().children('.collapsible-body').stop(true, false).slideUp({
+      if (object.parent().hasClass('active')) {
+        object.siblings('.collapsible-body').stop(true, false).slideDown({
+          duration: 350,
+          easing: 'easeOutQuart',
+          queue: false,
+          complete: function complete() {
+            $(this).css('height', '');
+          }
+        });
+      } else {
+        object.siblings('.collapsible-body').stop(true, false).slideUp({
           duration: 350,
           easing: 'easeOutQuart',
           queue: false,
@@ -65,63 +36,65 @@
         });
       }
 
-      // Expandable Open
-      function expandableOpen(object) {
-        if (object.hasClass('active')) {
-          object.parent().addClass('active');
-        } else {
-          object.parent().removeClass('active');
+      $panelHeaders.not(object).removeClass('active').parent().removeClass('active');
+      $panelHeaders.not(object).parent().children('.collapsible-body').stop(true, false).slideUp({
+        duration: 350,
+        easing: 'easeOutQuart',
+        queue: false,
+        complete: function complete() {
+          $(this).css('height', '');
         }
-        if (object.parent().hasClass('active')) {
-          object.siblings('.collapsible-body').stop(true, false).slideDown({
-            duration: 350,
-            easing: 'easeOutQuart',
-            queue: false,
-            complete: function complete() {
-              $(this).css('height', '');
-            }
-          });
-        } else {
-          object.siblings('.collapsible-body').stop(true, false).slideUp({
-            duration: 350,
-            easing: 'easeOutQuart',
-            queue: false,
-            complete: function complete() {
-              $(this).css('height', '');
-            }
-          });
-        }
+      });
+    }
+
+    function expandableOpen(object) {
+      if (object.hasClass('active')) {
+        object.parent().addClass('active');
+      } else {
+        object.parent().removeClass('active');
       }
 
-      /**
-             * Check if object is children of panel header
-             * @param  {Object}  object Jquery object
-             * @return {Boolean} true if it is children
-             */
-      function isChildrenOfPanelHeader(object) {
-
-        var panelHeader = getPanelHeader(object);
-
-        return panelHeader.length > 0;
+      if (object.parent().hasClass('active')) {
+        object.siblings('.collapsible-body').stop(true, false).slideDown({
+          duration: 350,
+          easing: 'easeOutQuart',
+          queue: false,
+          complete: function complete() {
+            $(this).css('height', '');
+          }
+        });
+      } else {
+        object.siblings('.collapsible-body').stop(true, false).slideUp({
+          duration: 350,
+          easing: 'easeOutQuart',
+          queue: false,
+          complete: function complete() {
+            $(this).css('height', '');
+          }
+        });
       }
+    }
 
-      /**
-             * Get panel header from a children element
-             * @param  {Object} object Jquery object
-             * @return {Object} panel header object
-             */
-      function getPanelHeader(object) {
+    function isChildrenOfPanelHeader(object) {
+      var panelHeader = getPanelHeader(object);
+      return panelHeader.length > 0;
+    }
 
-        return object.closest('li > .collapsible-header');
-      }
+    function getPanelHeader(object) {
+      return object.closest('li > .collapsible-header');
+    }
 
-      /** ***  End Helper Functions  *****/
+    return this.each(function () {
+      var $this = $(this);
+      var $panelHeaders = $(this).find('> li > .collapsible-header');
+      var collapsibleType = $this.data('collapsible'); // Turn off any existing event handlers
 
-      if (options.accordion || collapsible_type === 'accordion' || collapsible_type === undefined) {
-        // Handle Accordion
-        // Add click handler to only direct collapsible header children
-        $panel_headers = $this.find('> li > .collapsible-header');
-        $panel_headers.on('click.collapse', function (e) {
+      $this.off('click.collapse', '.collapsible-header');
+      $panelHeaders.off('click.collapse');
+
+      if (options.accordion || collapsibleType === 'accordion' || collapsibleType === undefined) {
+        $panelHeaders = $this.find('> li > .collapsible-header');
+        $panelHeaders.on('click.collapse', function (e) {
           var element = $(e.target);
 
           if (isChildrenOfPanelHeader(element)) {
@@ -129,23 +102,22 @@
           }
 
           element.toggleClass('active');
-          accordionOpen(element);
+          accordionOpen($this, element);
         });
-        // Open first active
-        accordionOpen($panel_headers.filter('.active').first());
+        accordionOpen($this, $panelHeaders.filter('.active').first());
       } else {
-        // Handle Expandables
-        $panel_headers.each(function () {
-          // Add click handler to only direct collapsible header children
+        $panelHeaders.each(function () {
           $(this).on('click.collapse', function (e) {
             var element = $(e.target);
+
             if (isChildrenOfPanelHeader(element)) {
               element = getPanelHeader(element);
             }
+
             element.toggleClass('active');
             expandableOpen(element);
           });
-          // Open any bodies that have the active class
+
           if ($(this).hasClass('active')) {
             expandableOpen($(this));
           }
@@ -154,7 +126,5 @@
     });
   };
 
-  $(document).ready(function () {
-    $('.collapsible').collapsible();
-  });
+  $('.collapsible').collapsible();
 })(jQuery);
